@@ -1,0 +1,1 @@
+window.redis = require('redis');
