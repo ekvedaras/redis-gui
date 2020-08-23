@@ -4,11 +4,6 @@ import { redis } from '@/services/redis'
 
 Vue.use(Vuex)
 
-const unloadedKey = {
-  name: undefined,
-  value: undefined,
-}
-
 export default new Vuex.Store({
   state: {
     databases: [],
@@ -16,7 +11,7 @@ export default new Vuex.Store({
     currentDatabase: 0,
     keys: [],
     nextKeysCursor: 0,
-    currentKey: unloadedKey,
+    currentKey: undefined,
   },
   mutations: {
     setTotalDatabases (state, total) {
@@ -38,7 +33,7 @@ export default new Vuex.Store({
       state.currentKey = key
     },
     unloadKey (state) {
-      state.currentKey = unloadedKey
+      state.currentKey = undefined
     },
   },
   actions: {
@@ -79,7 +74,12 @@ export default new Vuex.Store({
       })
     },
     loadKey ({ commit }, key) {
-      return redis.async('get', key).then(value => commit('setCurrentKey', { name: key, value }))
+      switch (key.type) {
+        case 'string':
+          return redis.async('get', key.name).then(value => commit('setCurrentKey', { name: key, value }))
+        default:
+          Vue.toasted.error(`${key.type} type is not supported`)
+      }
     },
   },
   modules: {},

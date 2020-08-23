@@ -1,21 +1,47 @@
 <template>
   <div>
-    <template v-if="!currentKey.name">
+    <template v-if="!currentKey">
       <span class="text-xl2 font-light">Select key</span>
     </template>
     <template v-else>
-      <h2 class="text-xl">{{ currentKey.name }}</h2>
-      <pre>{{ currentKey.value }}</pre>
+      <div class="flex">
+        <h2 class="text-xl flex-1">{{ currentKey.name }}</h2>
+        <div>Controls todo</div>
+      </div>
+      <div>
+        <component v-if="currentType" :is="currentType" :name="currentKey.name"/>
+        <template v-else>
+          Key type {{ currentKey.type }} is not supported
+        </template>
+      </div>
     </template>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import StringContent from '@/components/Content/StringContent'
 
 export default {
   name: 'KeyContent',
-  computed: mapState(['currentKey'])
+  components: { StringContent },
+  computed: {
+    ...mapState(['currentKey']),
+    currentType () {
+      if (!this.currentKey) {
+        return undefined
+      }
+
+      const type = this.currentKey.type
+      const component = `${type.charAt(0).toUpperCase()}${type.slice(1)}Content`
+
+      if (!Object.prototype.hasOwnProperty.call(this.$options.components, component)) {
+        return undefined
+      }
+
+      return component
+    },
+  },
 }
 </script>
 
