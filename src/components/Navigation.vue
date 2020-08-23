@@ -1,13 +1,15 @@
 <template>
-  <div class="w-full flex justify-center space-x-2 mb-5 p-2">
-    <router-link to="/">Home</router-link>
-    <router-link to="/about">About</router-link>
+  <div class="w-full flex justify-between space-x-2 mb-5 p-2">
+    <div>Redis GUI</div>
+    <DatabaseSelect/>
   </div>
 </template>
 
 <script>
+import DatabaseSelect from '@/components/DatabaseSelect'
 export default {
   name: 'Navigation',
+  components: { DatabaseSelect },
 }
 </script>
 

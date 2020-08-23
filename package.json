@@ -14,24 +14,23 @@
     "core-js": "^3.6.5",
     "lowdb": "^1.0.0",
     "redis": "^3.0.2",
-    "vue": "^3.0.0-0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vue": "^2.6.12",
+    "vue-toasted": "^1.1.28",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-plugin-babel": "~4.5.4",
+    "@vue/cli-plugin-eslint": "~4.5.4",
+    "@vue/cli-plugin-vuex": "~4.5.4",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0-0",
     "babel-eslint": "^10.1.0",
     "electron": "^9.0.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0-0",
+    "eslint-plugin-vue": "^6.2.2",
     "vue-cli-plugin-electron-builder": "^2.0.0-rc.4",
-    "vue-cli-plugin-tailwind": "^1.4.2"
+    "vue-cli-plugin-tailwind": "^1.4.2",
+    "vue-template-compiler": "^2.6.12"
   },
   "eslintConfig": {
     "root": true,
@@ -39,7 +38,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/vue3-essential",
+      "plugin:vue/essential",
       "eslint:recommended"
     ],
     "parserOptions": {
