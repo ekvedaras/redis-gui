@@ -6,7 +6,9 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-Vue.use(Toasted)
+Vue.use(Toasted, {
+  duration: 3000,
+})
 
 new Vue({
   render: h => h(App),

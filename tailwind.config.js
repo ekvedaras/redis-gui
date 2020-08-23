@@ -1,7 +1,11 @@
 module.exports = {
   purge: [],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateRows: {
+        'layout': '40px 1fr',
+      }
+    },
   },
   variants: {},
   plugins: [],

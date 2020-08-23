@@ -1,18 +1,20 @@
 <template>
-  <div id="app">
-    <Navigation/>
-    <div class="text-center">
-    </div>
+  <div id="app" class="h-screen grid grid-rows-layout grid-cols-12">
+    <Header class="col-span-12 row-span-1"/>
+    <Keys class="col-span-3"/>
+    <KeyContent class="col-span-9"/>
   </div>
 </template>
 
 <script>
-import Navigation from '@/components/Navigation'
 import { redis } from '@/services/redis'
 import { mapActions } from 'vuex'
+import Header from '@/components/Header'
+import Keys from '@/components/Keys'
+import KeyContent from '@/components/KeyContent'
 
 export default {
-  components: { Navigation },
+  components: { KeyContent, Keys, Header },
   mounted () {
     redis.connect()
     this.loadDatabases()

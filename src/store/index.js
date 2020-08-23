@@ -4,12 +4,19 @@ import { redis } from '@/services/redis'
 
 Vue.use(Vuex)
 
+const unloadedKey = {
+  name: undefined,
+  value: undefined,
+}
+
 export default new Vuex.Store({
   state: {
     databases: [],
     totalDatabases: 0,
     currentDatabase: 0,
     keys: [],
+    nextKeysCursor: 0,
+    currentKey: unloadedKey,
   },
   mutations: {
     setTotalDatabases (state, total) {
@@ -23,6 +30,15 @@ export default new Vuex.Store({
     },
     setKeys (state, keys) {
       state.keys = keys
+    },
+    setNextKeysCursor(state, cursor) {
+      state.nextKeysCursor = cursor
+    },
+    setCurrentKey (state, key) {
+      state.currentKey = key
+    },
+    unloadKey (state) {
+      state.currentKey = unloadedKey
     },
   },
   actions: {
@@ -49,14 +65,21 @@ export default new Vuex.Store({
       ])
     },
     loadKeys ({ commit }) {
-      return redis.async('keys', '*').then(keys => commit('setKeys', keys))
+      return redis.keys().then(result => {
+        commit('setNextKeysCursor', result.nextCursor)
+        commit('setKeys', result.keys)
+      })
     },
     selectDb ({ commit, dispatch }, index) {
       index = parseInt(index)
       return redis.async('select', index).then(() => {
         commit('setCurrentDatabase', index)
+        commit('unloadKey', index)
         dispatch('loadKeys')
       })
+    },
+    loadKey ({ commit }, key) {
+      return redis.async('get', key).then(value => commit('setCurrentKey', { name: key, value }))
     },
   },
   modules: {},
