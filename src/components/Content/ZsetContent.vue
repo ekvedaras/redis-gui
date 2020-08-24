@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <pre class="bg-gray-900 text-white">{{ value }}</pre>
+    <div class="bg-gray-900 text-white font-mono overflow-x-auto rounded shadow-md p-4">{{ value }}</div>
   </div>
 </template>
 

@@ -1,15 +1,14 @@
 <template>
-  <div>
+  <div class="h-full overflow-auto relative">
     <template v-if="!currentKey">
       <span class="text-xl2 font-light">Select key</span>
     </template>
     <template v-else>
-      <div class="flex">
+      <div class="flex sticky top-0 bg-white pt-2">
         <h2 class="text-xl flex-1">{{ currentKey.name }}</h2>
-        <div>Controls todo</div>
       </div>
       <div>
-        <component v-if="currentType" :is="currentType" :name="currentKey.name" :key="currentKey.name"/>
+        <component class="max-h-full overflow-y-auto" v-if="currentType" :is="currentType" :name="currentKey.name" :key="currentKey.name"/>
         <template v-else>
           Key type {{ currentKey.type }} is not supported
         </template>
