@@ -9,7 +9,7 @@
         <div>Controls todo</div>
       </div>
       <div>
-        <component v-if="currentType" :is="currentType" :name="currentKey.name"/>
+        <component v-if="currentType" :is="currentType" :name="currentKey.name" :key="currentKey.name"/>
         <template v-else>
           Key type {{ currentKey.type }} is not supported
         </template>
@@ -21,10 +21,14 @@
 <script>
 import { mapState } from 'vuex'
 import StringContent from '@/components/Content/StringContent'
+import ListContent from '@/components/Content/ListContent'
+import SetContent from '@/components/Content/SetContent'
+import ZsetContent from '@/components/Content/ZsetContent'
+import HashContent from '@/components/Content/HashContent'
 
 export default {
   name: 'KeyContent',
-  components: { StringContent },
+  components: { StringContent, ListContent, SetContent, ZsetContent, HashContent },
   computed: {
     ...mapState(['currentKey']),
     currentType () {
