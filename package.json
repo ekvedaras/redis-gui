@@ -2,6 +2,7 @@
   "name": "redis-gui",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
@@ -12,6 +13,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "lodash": "^4.17.20",
     "lowdb": "^1.0.0",
     "redis": "^3.0.2",
     "vue": "^2.6.12",
