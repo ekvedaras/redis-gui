@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="h-screen grid grid-rows-layout grid-cols-12">
-    <Header class="col-span-12 row-span-1"/>
-    <Keys class="col-span-3"/>
-    <KeyContent class="col-span-9"/>
+    <Header class="col-span-12 row-span-1 z-20"/>
+    <Keys class="col-span-3 pt-2 px-2 pb-10 overflow-auto max-h-screen"/>
+    <KeyContent class="col-span-9 py-2 px-4"/>
   </div>
 </template>
 
