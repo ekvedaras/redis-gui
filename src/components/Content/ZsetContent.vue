@@ -1,14 +1,16 @@
 <template>
   <div class="p-4">
-    <div class="bg-gray-900 text-white font-mono overflow-x-auto rounded shadow-md p-4">{{ value }}</div>
+    <PlainRenderer>{{ value }}</PlainRenderer>
   </div>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
+import PlainRenderer from '@/components/Renderer/PlainRenderer'
 
 export default {
   name: 'ZsetContent',
+  components: { PlainRenderer },
   props: ['name'],
   data: () => ({
     value: ''

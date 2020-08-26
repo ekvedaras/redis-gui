@@ -1,14 +1,16 @@
 <template>
   <div class="p-4">
-    <div class="bg-gray-900 text-white font-mono overflow-x-auto rounded shadow-md p-4">{{ value }}</div>
+    <JsonRenderer :data="value"/>
   </div>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
+import JsonRenderer from '@/components/Renderer/JsonRenderer'
 
 export default {
   name: 'HashContent',
+  components: { JsonRenderer },
   props: ['name'],
   data: () => ({
     value: ''
