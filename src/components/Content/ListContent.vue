@@ -1,19 +1,19 @@
 <template>
   <div class="p-4">
-    <PlainRenderer>{{ value }}</PlainRenderer>
+    <ValueRenderer v-for="(item, i) in value" :key="i" :value="item"/>
   </div>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
-import PlainRenderer from '@/components/Renderer/PlainRenderer'
+import ValueRenderer from '@/components/Renderer/ValueRenderer'
 
 export default {
   name: 'ListContent',
-  components: { PlainRenderer },
+  components: { ValueRenderer },
   props: ['name'],
   data: () => ({
-    value: ''
+    value: []
   }),
   async mounted () {
     this.value = await redis.async('lrange', this.name, 0, 100)

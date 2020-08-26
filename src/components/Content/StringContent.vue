@@ -1,16 +1,16 @@
 <template>
   <div class="p-4">
-    <PlainRenderer>{{ value }}</PlainRenderer>
+    <ValueRenderer :value="value"/>
   </div>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
-import PlainRenderer from '@/components/Renderer/PlainRenderer'
+import ValueRenderer from '@/components/Renderer/ValueRenderer'
 
 export default {
   name: 'StringContent',
-  components: { PlainRenderer },
+  components: { ValueRenderer },
   props: ['name'],
   data: () => ({
     value: ''

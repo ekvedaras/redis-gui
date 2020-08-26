@@ -1,5 +1,5 @@
 <template>
-  <div class="flex cursor-pointer hover:bg-gray-200" :class="{'bg-red-200': redisKey.name === currentKey.name}" @click="setCurrentKey(redisKey)">
+  <div class="flex cursor-pointer hover:bg-gray-200" :class="{'bg-red-200': currentKey && redisKey.name === currentKey.name}" @click="setCurrentKey(redisKey)">
     <LevelTab :level="level"></LevelTab>
     <component :is="icon" class="w-5 text-gray-600"/>
     <div class="ml-2">{{ name }} ({{ redisKey.type }})</div>
