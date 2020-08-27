@@ -4,11 +4,12 @@
       <span class="text-xl2 font-light">Select key</span>
     </template>
     <template v-else>
-      <div class="flex sticky top-0 bg-white pt-2">
+      <div class="flex sticky top-0 bg-white pt-2 items-center">
+        <component class="text-gray-600 mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
         <h2 class="text-xl flex-1">{{ currentKey.name }}</h2>
       </div>
       <div>
-        <component class="max-h-full overflow-y-auto" v-if="currentType" :is="currentType" :name="currentKey.name" :key="currentKey.name"/>
+        <component class="max-h-full overflow-y-auto" v-if="currentContent" :is="currentContent" :name="currentKey.name" :key="currentKey.name"/>
         <template v-else>
           Key type {{ currentKey.type }} is not supported
         </template>
@@ -24,19 +25,41 @@ import ListContent from '@/components/Content/ListContent'
 import SetContent from '@/components/Content/SetContent'
 import ZsetContent from '@/components/Content/ZsetContent'
 import HashContent from '@/components/Content/HashContent'
+import StringIcon from '@/components/Icons/StringIcon'
+import ListIcon from '@/components/Icons/ListIcon'
+import SetIcon from '@/components/Icons/SetIcon'
+import ZsetIcon from '@/components/Icons/ZsetIcon'
+import HashIcon from '@/components/Icons/HashIcon'
 
 export default {
   name: 'KeyContent',
-  components: { StringContent, ListContent, SetContent, ZsetContent, HashContent },
+  components: {
+    StringContent, ListContent, SetContent, ZsetContent, HashContent,
+    StringIcon, ListIcon, SetIcon, ZsetIcon, HashIcon
+  },
   computed: {
     ...mapState(['currentKey']),
-    currentType () {
+    currentContent () {
       if (!this.currentKey) {
         return undefined
       }
 
       const type = this.currentKey.type
       const component = `${type.charAt(0).toUpperCase()}${type.slice(1)}Content`
+
+      if (!Object.prototype.hasOwnProperty.call(this.$options.components, component)) {
+        return undefined
+      }
+
+      return component
+    },
+    currentIcon () {
+      if (!this.currentKey) {
+        return undefined
+      }
+
+      const type = this.currentKey.type
+      const component = `${type.charAt(0).toUpperCase()}${type.slice(1)}Icon`
 
       if (!Object.prototype.hasOwnProperty.call(this.$options.components, component)) {
         return undefined

@@ -1,8 +1,8 @@
 <template>
-  <div class="flex cursor-pointer hover:bg-gray-200" :class="{'bg-red-200': currentKey && redisKey.name === currentKey.name}" @click="setCurrentKey(redisKey)">
+  <div class="flex cursor-pointer hover:bg-gray-200" :class="{'font-bold text-red-700': isSelected}" @click="setCurrentKey(redisKey)">
     <LevelTab :level="level"></LevelTab>
-    <component :is="icon" class="w-5 text-gray-600"/>
-    <div class="ml-2">{{ name }} ({{ redisKey.type }})</div>
+    <component :is="icon" :class="['w-5', isSelected ? 'text-red-700' : 'text-gray-600']" :title="redisKey.type"/>
+    <div class="ml-2">{{ name }}</div>
   </div>
 </template>
 
@@ -22,6 +22,9 @@ export default {
   methods: mapMutations(['setCurrentKey']),
   computed: {
     ...mapState(['currentKey']),
+    isSelected() {
+      return this.currentKey && this.redisKey.name === this.currentKey.name
+    },
     icon () {
       switch (this.redisKey.type) {
         case 'string':
