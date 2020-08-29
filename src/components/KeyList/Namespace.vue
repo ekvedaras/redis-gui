@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="flex cursor-pointer hover:bg-gray-200" @click="expanded = !expanded">
+    <div class="flex cursor-pointer hover:bg-white-10p px-2" tabindex="1" @keypress.enter="toggle" @click="toggle">
       <LevelTab :level="level"></LevelTab>
-      <OpenFolderIcon v-if="expanded" class="w-5 text-gray-600"/>
-      <FolderIcon v-else class="w-5 text-gray-600"/>
+      <OpenFolderIcon v-if="expanded" class="w-5"/>
+      <FolderIcon v-else class="w-5"/>
       <div class="ml-2">{{ namespace }}</div>
     </div>
     <Keys v-if="expanded" :keys="keys" :level="level + 1"/>
@@ -20,7 +20,12 @@ export default {
   props: ['namespace', 'keys', 'level'],
   data: () => ({
     expanded: false,
-  })
+  }),
+  methods: {
+    toggle() {
+      this.expanded = !this.expanded
+    }
+  }
 }
 </script>
 

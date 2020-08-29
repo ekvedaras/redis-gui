@@ -11,6 +11,8 @@ Vue.use(Toasted, {
   duration: 3000,
 })
 
+Vue.use(require('vue-moment'));
+
 Vue.component('Keys', Keys);
 
 new Vue({

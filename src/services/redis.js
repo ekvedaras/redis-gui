@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import _ from 'lodash'
 
 const { promisify } = require('util')
 
@@ -35,7 +36,16 @@ export const redis = {
       await Promise.all(result[1].map(key => this.async('type', key))).then(types => {
         types.forEach((type, index) => {
           let name = result[1][index]
-          keys.keys[name] = { name, type }
+          _.set(keys.keys, `${name}.name`, name)
+          _.set(keys.keys, `${name}.type`, type)
+        })
+      })
+
+      await Promise.all(result[1].map(key => this.async('ttl', key))).then(ttls => {
+        ttls.forEach((ttl, index) => {
+          let name = result[1][index]
+          _.set(keys.keys, `${name}.name`, name)
+          _.set(keys.keys, `${name}.ttl`, ttl)
         })
       })
 

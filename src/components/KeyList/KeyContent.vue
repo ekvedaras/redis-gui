@@ -5,8 +5,9 @@
     </template>
     <template v-else>
       <div class="flex sticky top-0 bg-white pt-2 items-center">
-        <component class="text-gray-600 mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
+        <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
         <h2 class="text-xl flex-1">{{ currentKey.name }}</h2>
+        <TTL v-if="currentKey.ttl > -1" :seconds="currentKey.ttl"/>
       </div>
       <div>
         <component class="max-h-full overflow-y-auto" v-if="currentContent" :is="currentContent" :name="currentKey.name" :key="currentKey.name"/>
@@ -30,10 +31,14 @@ import ListIcon from '@/components/Icons/ListIcon'
 import SetIcon from '@/components/Icons/SetIcon'
 import ZsetIcon from '@/components/Icons/ZsetIcon'
 import HashIcon from '@/components/Icons/HashIcon'
+import TimeIcon from '@/components/Icons/TimeIcon'
+import TTL from '@/components/Elements/TTL'
 
 export default {
   name: 'KeyContent',
   components: {
+    TTL,
+    TimeIcon,
     StringContent, ListContent, SetContent, ZsetContent, HashContent,
     StringIcon, ListIcon, SetIcon, ZsetIcon, HashIcon
   },

@@ -1,8 +1,9 @@
 <template>
-  <div class="flex cursor-pointer hover:bg-gray-200" :class="{'font-bold text-red-700': isSelected}" @click="setCurrentKey(redisKey)">
+  <div class="flex cursor-pointer px-2 hover:bg-white-10p" :class="{'font-bold text-redis': isSelected}" tabindex="1" @keypress.enter="setCurrentKey(redisKey)" @click="setCurrentKey(redisKey)">
     <LevelTab :level="level"></LevelTab>
-    <component :is="icon" :class="['w-5', isSelected ? 'text-red-700' : 'text-gray-600']" :title="redisKey.type"/>
-    <div class="ml-2">{{ name }}</div>
+    <component :is="icon" class="w-5"/>
+    <div class="ml-2 flex-1">{{ name }}</div>
+    <TimeIcon class="w-3 text-gray-600" v-if="redisKey.ttl > -1"/>
   </div>
 </template>
 
@@ -14,15 +15,16 @@ import ZsetIcon from '@/components/Icons/ZsetIcon'
 import LevelTab from '@/components/KeyList/LevelTab'
 import ListIcon from '@/components/Icons/ListIcon'
 import HashIcon from '@/components/Icons/HashIcon'
+import TimeIcon from '@/components/Icons/TimeIcon'
 
 export default {
   name: 'Key',
-  components: { LevelTab, StringIcon },
+  components: { TimeIcon, LevelTab, StringIcon },
   props: ['redisKey', 'name', 'level'],
   methods: mapMutations(['setCurrentKey']),
   computed: {
     ...mapState(['currentKey']),
-    isSelected() {
+    isSelected () {
       return this.currentKey && this.redisKey.name === this.currentKey.name
     },
     icon () {

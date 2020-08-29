@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="h-screen grid grid-rows-layout grid-cols-12">
-    <Header class="col-span-12 row-span-1 z-20"/>
-    <Keys :keys="groupedKeys" :level="0" class="col-span-3 pt-2 px-2 pb-10 overflow-auto max-h-screen"/>
-    <KeyContent class="col-span-9 pb-2 px-4 overflow-auto max-h-screen"/>
+    <Header class="col-span-12 row-span-1 z-20 shadow-md bg-redis-gray-900 text-white"/>
+    <Keys :keys="groupedKeys" :level="0" class="bg-redis-gray-50 col-span-3 pt-2 pb-10 overflow-auto max-h-screen"/>
+    <KeyContent class="col-span-9 pb-2 px-4 overflow-auto max-h-screen shadow-md"/>
   </div>
 </template>
 

@@ -1,12 +1,9 @@
+@import "fonts.css";
+
 @tailwind base;
 
-@font-face {
-    font-family: 'Work Sans';
-    src: url('./WorkSans-VariableFont_wght.ttf') format('truetype')
-}
-
 body {
-    font-family: 'Work Sans', sans-serif;
+    font-family: 'Open Sans', Helvetica, sans-serif;
 }
 
 @tailwind components;

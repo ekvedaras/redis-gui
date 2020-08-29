@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { redis } from '@/services/redis'
+import _ from 'lodash'
 
 Vue.use(Vuex)
+
+let ttlTimer
 
 export default new Vuex.Store({
   state: {
@@ -12,6 +15,9 @@ export default new Vuex.Store({
     keys: [],
     nextKeysCursor: 0,
     currentKey: undefined,
+  },
+  getters: {
+    keysWithTTL: state => _.filter(state.keys, key => key.ttl > -1),
   },
   mutations: {
     setTotalDatabases (state, total) {
@@ -26,7 +32,7 @@ export default new Vuex.Store({
     setKeys (state, keys) {
       state.keys = keys
     },
-    setNextKeysCursor(state, cursor) {
+    setNextKeysCursor (state, cursor) {
       state.nextKeysCursor = cursor
     },
     setCurrentKey (state, key) {
@@ -35,6 +41,9 @@ export default new Vuex.Store({
     unloadKey (state) {
       state.currentKey = undefined
     },
+    removeKey (state, key) {
+      Vue.delete(state.keys, key.name)
+    }
   },
   actions: {
     loadDatabases ({ commit }) {
@@ -59,10 +68,29 @@ export default new Vuex.Store({
         }),
       ])
     },
-    loadKeys ({ commit }) {
+    loadKeys ({ commit, getters, state }) {
       return redis.keys().then(result => {
         commit('setNextKeysCursor', result.nextCursor)
         commit('setKeys', result.keys)
+
+        if (!ttlTimer) {
+          ttlTimer = setInterval(() =>
+              Object
+              .values(getters.keysWithTTL)
+              .forEach(key => {
+                state.keys[key.name].ttl--;
+                if (state.keys[key.name].ttl <= 0) {
+                  commit('removeKey', key)
+                  if (state.currentKey.name === key.name) {
+                    commit('unloadKey', key)
+                  }
+
+                  Vue.toasted.info(`Key ${key.name} has expired`)
+                }
+              }),
+            1000,
+          )
+        }
       })
     },
     selectDb ({ commit, dispatch }, index) {
