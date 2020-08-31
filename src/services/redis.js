@@ -4,9 +4,14 @@ import _ from 'lodash'
 const { promisify } = require('util')
 
 export const redis = {
+  pageSize: 100,
   client: undefined,
   promises: {},
   connect () {
+    if (this.client) {
+      return
+    }
+
     this.client = window.redis.createClient()
       .on('connect', () => Vue.toasted.info('Connected'))
       .on('error', error => Vue.toasted.error('REDIS ERROR: ' + error))
@@ -15,6 +20,8 @@ export const redis = {
     this.client && this.client.quit()
   },
   async (command, ...args) {
+    this.connect()
+
     if (!Object.prototype.hasOwnProperty.call(this.promises, command)) {
       this.promises[command] = promisify(this.client[command]).bind(this.client)
     }
@@ -22,7 +29,7 @@ export const redis = {
     return this.promises[command](...args)
       .catch(error => Vue.toasted.error(error))
   },
-  keys (pattern = '*', limit = 100, cursor = 0) {
+  keys (pattern = '*', limit = this.pageSize, cursor = 0) {
     return this.async('scan', cursor, 'match', pattern, 'count', limit).then(async result => {
       let keys = {
         nextCursor: parseInt(result[0]),

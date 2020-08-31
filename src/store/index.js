@@ -2,10 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { redis } from '@/services/redis'
 import _ from 'lodash'
+import { registerTtlTimer } from '@/services/ttlTimer'
 
 Vue.use(Vuex)
-
-let ttlTimer
 
 export default new Vuex.Store({
   state: {
@@ -43,7 +42,7 @@ export default new Vuex.Store({
     },
     removeKey (state, key) {
       Vue.delete(state.keys, key.name)
-    }
+    },
   },
   actions: {
     loadDatabases ({ commit }) {
@@ -68,29 +67,22 @@ export default new Vuex.Store({
         }),
       ])
     },
-    loadKeys ({ commit, getters, state }, pattern = '*') {
-      return redis.keys(pattern).then(result => {
+    loadKeys ({ commit, getters, state, dispatch }, { pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
+      registerTtlTimer({ commit, getters, state })
+
+      return redis.keys(pattern, limit, cursor).then(result => {
+        result.lastLoad = Object.keys(result.keys).length
+
         commit('setNextKeysCursor', result.nextCursor)
-        commit('setKeys', result.keys)
+        commit('setKeys', result.keys = cursor ? { ...state.keys, ...result.keys } : result.keys)
 
-        if (!ttlTimer) {
-          ttlTimer = setInterval(() =>
-              Object
-              .values(getters.keysWithTTL)
-              .forEach(key => {
-                state.keys[key.name].ttl--;
-                if (state.keys[key.name].ttl <= 0) {
-                  commit('removeKey', key)
-                  if (state.currentKey.name === key.name) {
-                    commit('unloadKey', key)
-                  }
-
-                  Vue.toasted.info(`Key ${key.name} has expired`)
-                }
-              }),
-            1000,
-          )
+        return result
+      }).then(result => {
+        if (result.nextCursor && lastLoad + result.lastLoad < limit) {
+          return dispatch('loadKeys', { pattern, cursor: result.nextCursor, limit, lastLoad: lastLoad + Object.keys(result.keys).length })
         }
+
+        return result
       })
     },
     selectDb ({ commit, dispatch }, index) {
