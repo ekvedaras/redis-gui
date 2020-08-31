@@ -68,8 +68,8 @@ export default new Vuex.Store({
         }),
       ])
     },
-    loadKeys ({ commit, getters, state }) {
-      return redis.keys().then(result => {
+    loadKeys ({ commit, getters, state }, pattern = '*') {
+      return redis.keys(pattern).then(result => {
         commit('setNextKeysCursor', result.nextCursor)
         commit('setKeys', result.keys)
 

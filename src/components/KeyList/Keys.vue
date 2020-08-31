@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul class="mt-2">
     <li v-for="(key, name) in keys" :key="name">
       <Key v-if="isNamespace(key)" :name="name" :redis-key="key" :level="level"/>
       <Namespace v-else :namespace="name" :keys="key" :level="level"/>
