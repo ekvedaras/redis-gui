@@ -4,6 +4,7 @@ import store from './store'
 import './assets/tailwind.css'
 import App from './App.vue'
 import Keys from '@/components/KeyList/Keys'
+import '@/services/lodash'
 
 Vue.config.productionTip = false
 

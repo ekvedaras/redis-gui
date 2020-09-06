@@ -29,7 +29,7 @@ export default new Vuex.Store({
       state.currentDatabase = index
     },
     setKeys (state, keys) {
-      state.keys = keys
+      state.keys = _.sortKeysBy(keys)
     },
     setNextKeysCursor (state, cursor) {
       state.nextKeysCursor = cursor
