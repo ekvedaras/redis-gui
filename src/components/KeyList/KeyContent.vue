@@ -6,7 +6,10 @@
     <template v-else>
       <div class="flex sticky top-0 bg-white pt-2 items-center">
         <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
-        <h2 class="text-xl flex-1">{{ currentKey.name }}</h2>
+        <h2 class="text-xl flex-1">
+          {{ currentKey.name }}
+          <span class="text-sm ml-2">{{ currentKey.type }} ({{ currentKey.encoding }})</span>
+        </h2>
         <TTL v-if="currentKey.ttl > -1" :seconds="currentKey.ttl"/>
       </div>
       <div>

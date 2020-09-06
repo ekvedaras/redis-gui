@@ -58,6 +58,14 @@ export const redis = {
         })
       })
 
+      await Promise.all(result[1].map(key => this.async('object', 'encoding', key))).then(encodings => {
+        encodings.forEach((encoding, index) => {
+          let name = result[1][index]
+          _.set(keys.keys, `${name}.name`, name)
+          _.set(keys.keys, `${name}.encoding`, encoding)
+        })
+      })
+
       return keys
     })
   },
