@@ -1,5 +1,5 @@
 <template>
-  <div class="flex cursor-pointer px-2 hover:bg-white-10p" :class="{'font-bold text-redis': isSelected}" tabindex="1" @keypress.enter="setCurrentKey(redisKey)" @click="setCurrentKey(redisKey)">
+  <div class="flex cursor-pointer px-2 hover:bg-white-10p" :class="{'font-bold text-redis': isSelected}" tabindex="1" @keypress.enter="select(redisKey.name)" @click="select(redisKey.name)">
     <LevelTab :level="level"></LevelTab>
     <component :is="icon" class="w-5"/>
     <div class="ml-2 flex-1">{{ name }}</div>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import StringIcon from '@/components/Icons/StringIcon'
 import SetIcon from '@/components/Icons/SetIcon'
 import ZsetIcon from '@/components/Icons/ZsetIcon'
@@ -21,9 +21,9 @@ export default {
   name: 'Key',
   components: { TimeIcon, LevelTab, StringIcon },
   props: ['redisKey', 'name', 'level'],
-  methods: mapMutations(['setCurrentKey']),
+  methods: mapMutations(['select']),
   computed: {
-    ...mapState(['currentKey']),
+    ...mapGetters(['currentKey']),
     isSelected () {
       return this.currentKey && this.redisKey.name === this.currentKey.name
     },

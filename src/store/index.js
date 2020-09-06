@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { redis } from '@/services/redis'
 import _ from 'lodash'
-import { registerTtlTimer } from '@/services/ttlTimer'
+import { clearTtlTimer, registerTtlTimer } from '@/services/ttlTimer'
 
 Vue.use(Vuex)
 
@@ -11,12 +11,13 @@ export default new Vuex.Store({
     databases: [],
     totalDatabases: 0,
     currentDatabase: 0,
-    keys: [],
+    keys: {},
     nextKeysCursor: 0,
-    currentKey: undefined,
+    selected: undefined,
   },
   getters: {
     keysWithTTL: state => _.filter(state.keys, key => key.ttl > -1),
+    currentKey: state => _.find(state.keys, { name: state.selected }),
   },
   mutations: {
     setTotalDatabases (state, total) {
@@ -31,17 +32,22 @@ export default new Vuex.Store({
     setKeys (state, keys) {
       state.keys = _.sortKeysBy(keys)
     },
+    addKey (state, key) {
+      state.keys = _.sortKeysBy({ ...state.keys, [key.name]: key })
+    },
     setNextKeysCursor (state, cursor) {
       state.nextKeysCursor = cursor
     },
-    setCurrentKey (state, key) {
-      state.currentKey = key
+    select (state, key) {
+      state.selected = key
     },
     unloadKey (state) {
-      state.currentKey = undefined
+      state.selected = undefined
     },
     removeKey (state, key) {
-      Vue.delete(state.keys, key.name)
+      delete state.keys[key.name]
+      clearTtlTimer()
+      registerTtlTimer({ state, store: this })
     },
   },
   actions: {
@@ -67,8 +73,8 @@ export default new Vuex.Store({
         }),
       ])
     },
-    loadKeys ({ commit, getters, state, dispatch }, { pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
-      registerTtlTimer({ commit, getters, state })
+    loadKeys ({ commit, state, dispatch }, { pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
+      registerTtlTimer({ state, store: this })
 
       return redis.keys(pattern, limit, cursor).then(result => {
         result.lastLoad = Object.keys(result.keys).length
@@ -96,7 +102,7 @@ export default new Vuex.Store({
     loadKey ({ commit }, key) {
       switch (key.type) {
         case 'string':
-          return redis.async('get', key.name).then(value => commit('setCurrentKey', { name: key, value }))
+          return redis.async('get', key.name).then(() => commit('select', key))
         default:
           Vue.toasted.error(`${key.type} type is not supported`)
       }

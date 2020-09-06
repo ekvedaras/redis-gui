@@ -7,7 +7,9 @@
       <div class="flex sticky top-0 bg-white pt-2 items-center">
         <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
         <h2 class="text-xl flex-1">
-          {{ currentKey.name }}
+          <span ref="keyName" tabindex="0" v-show="!isRenaming" @keydown.enter="startRename" @click="startRename">{{ currentKey.name }}</span>
+          <!--suppress HtmlFormInputWithoutLabel -->
+          <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="rounded shadow-md text-sm py-0 px-2"/>
           <span class="text-sm ml-2">{{ currentKey.type }} ({{ currentKey.encoding }})</span>
         </h2>
         <TTL v-if="currentKey.ttl > -1" :seconds="currentKey.ttl"/>
@@ -23,7 +25,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
+import { redis } from '@/services/redis'
 import StringContent from '@/components/Content/StringContent'
 import ListContent from '@/components/Content/ListContent'
 import SetContent from '@/components/Content/SetContent'
@@ -43,10 +46,39 @@ export default {
     TTL,
     TimeIcon,
     StringContent, ListContent, SetContent, ZsetContent, HashContent,
-    StringIcon, ListIcon, SetIcon, ZsetIcon, HashIcon
+    StringIcon, ListIcon, SetIcon, ZsetIcon, HashIcon,
+  },
+  data: () => ({
+    isRenaming: false,
+    newName: '',
+  }),
+  methods: {
+    startRename () {
+      this.isRenaming = true
+      this.newName = this.currentKey.name
+      this.$nextTick(() => this.$refs.renameField.focus())
+    },
+    rename (save) {
+      if (save && this.isRenaming && this.newName !== this.currentKey.name) {
+        redis.async('rename', this.currentKey.name, this.newName).then(() => {
+          let oldName = this.currentKey.name
+          let newName = this.newName
+          this.$store.commit('addKey', { ...this.currentKey, name: newName })
+          this.$store.commit('select', newName)
+          this.$store.commit('removeKey', { name: oldName })
+        }).finally(() => {
+          this.isRenaming = false
+          this.$nextTick(() => this.$refs.keyName.focus())
+        })
+      } else {
+        this.isRenaming = false
+        this.$nextTick(() => this.$refs.keyName.focus())
+      }
+    },
   },
   computed: {
-    ...mapState(['currentKey']),
+    ...mapGetters(['currentKey']),
+    ...mapState(['selected']),
     currentContent () {
       if (!this.currentKey) {
         return undefined

@@ -17,12 +17,12 @@ const timer = ({state, getters, commit}) =>
       }
     })
 
-export const registerTtlTimer = ({state, getters, commit}) => {
+export const registerTtlTimer = ({state, store}) => {
   if (ttlTimer) {
     return
   }
 
-  ttlTimer = setInterval(() => timer({state, getters, commit}), 1000)
+  ttlTimer = setInterval(() => timer({...store, state}), 1000)
 }
 
 export const clearTtlTimer = () => {
