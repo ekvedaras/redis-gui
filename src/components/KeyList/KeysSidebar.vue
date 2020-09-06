@@ -5,7 +5,7 @@
       <input type="text" placeholder="Search..." v-model="search" class="p-2 rounded shadow w-full"/>
       <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
     </div>
-    <Keys :keys="groupedKeys" :level="0"/>
+    <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
     <button @click="loadMore" v-if="nextKeysCursor" tabindex="2" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
   </div>
 </template>
