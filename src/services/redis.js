@@ -26,6 +26,8 @@ export const redis = {
       this.promises[command] = promisify(this.client[command]).bind(this.client)
     }
 
+    // console.log(command, args);
+
     return this.promises[command](...args)
       .catch(error => Vue.toasted.error(error))
   },
