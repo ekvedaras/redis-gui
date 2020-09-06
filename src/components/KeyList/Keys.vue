@@ -1,7 +1,7 @@
 <template>
   <ul class="mt-2">
     <li v-for="(key, name) in keys" :key="name">
-      <Key v-if="isNamespace(key)" :name="name" :redis-key="key" :level="level"/>
+      <Key v-if="isKey(key)" :name="name.replace(/_/, '')" :redis-key="key" :level="level"/>
       <Namespace v-else :namespace="name" :keys="key" :level="level"/>
     </li>
   </ul>
@@ -16,7 +16,7 @@ export default {
   components: { Namespace, Key },
   props: ['keys', 'level'],
   methods: {
-    isNamespace (key) {
+    isKey (key) {
       return Object.prototype.hasOwnProperty.call(key, 'name') && typeof key.name === 'string'
     },
   },

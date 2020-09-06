@@ -15,6 +15,26 @@ import { mapActions, mapState } from 'vuex'
 import _ from 'lodash'
 import Spinner from '@/components/Elements/Spinner'
 
+let nestKey = (grouped, path) => {
+  let parts = path.split('.')
+  let parentPath = parts.slice(0, -1).join('.')
+  let key = _.get(grouped, parentPath)
+
+  if (!key || !Object.prototype.hasOwnProperty.call(key, 'name')) {
+    return [undefined, undefined]
+  }
+
+  _.setWith(grouped, parentPath, {}, Object)
+  parts = parentPath.split('.')
+
+  let lastPart = parts.splice(-1)
+  let keyPath = parts.join('.')
+
+  _.setWith(grouped, `${keyPath}._${lastPart}`, key, Object)
+
+  return [key, keyPath]
+}
+
 export default {
   name: 'KeysSidebar',
   components: { Spinner },
@@ -50,7 +70,17 @@ export default {
           return true
         }
 
-        _.setWith(grouped, name.replace(/:/g, '.'), key, Object)
+        let path = name.replace(/:/g, '.')
+
+        let nestedKey, folderPath
+        [nestedKey, folderPath] = nestKey(grouped, path)
+
+        _.setWith(grouped, path, key, Object)
+
+        if (nestedKey) {
+          // Sort
+          _.setWith(grouped, folderPath, _.sortKeysBy(_.get(grouped, folderPath)), Object)
+        }
       })
 
       return grouped
