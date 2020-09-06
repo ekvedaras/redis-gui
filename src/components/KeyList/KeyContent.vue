@@ -12,7 +12,7 @@
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="rounded shadow-md text-sm py-0 px-2"/>
           <span class="text-sm ml-2">{{ currentKey.type }} ({{ currentKey.encoding }})</span>
         </h2>
-        <TTL v-if="currentKey.ttl > -1" :seconds="currentKey.ttl"/>
+        <TTL :redis-key="currentKey"/>
       </div>
       <div>
         <component class="max-h-full overflow-y-auto" v-if="currentContent" :is="currentContent" :name="currentKey.name" :key="currentKey.name"/>

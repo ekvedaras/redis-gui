@@ -35,6 +35,9 @@ export default new Vuex.Store({
     addKey (state, key) {
       state.keys = _.sortKeysBy({ ...state.keys, [key.name]: key })
     },
+    updateKey(state, key) {
+      state.keys[key.name] = key
+    },
     setNextKeysCursor (state, cursor) {
       state.nextKeysCursor = cursor
     },
