@@ -1,12 +1,14 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 pb-10">
     <div class="relative flex items-center mb-2">
       <!--suppress HtmlFormInputWithoutLabel -->
-      <input type="text" placeholder="Search keys..." v-model="search" class="p-2 rounded shadow w-full"/>
+      <input type="text" placeholder="Search keys..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
       <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
     </div>
-    <JsonRenderer :data="value"/>
-    <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
+      <JsonRenderer :data="value"/>
+      <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    </div>
   </div>
 </template>
 
@@ -31,7 +33,8 @@ export default {
   },
   watch: {
     search () {
-      this.loadKeys({ pattern: `*${this.search}*` })
+      let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
+      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` })
     },
   },
   methods: {

@@ -3,9 +3,9 @@
     <img src="@/assets/redis.svg" alt="Redis logo" class="h-full"/>
     <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
     <div class="flex-1 text-center">
-      <ServerSelect class="flex-1 bg-redis-gray-500 rounded p-1"/>
+      <ServerSelect class="flex-1 bg-gray-300 rounded p-1"/>
     </div>
-    <DatabaseSelect class="bg-redis-gray-500 rounded p-1"/>
+    <DatabaseSelect class="bg-gray-300 rounded p-1"/>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <vue-json-pretty
-      class="bg-gray-100 font-mono overflow-x-auto rounded shadow-md p-4"
+      class="bg-white font-mono overflow-x-auto rounded shadow p-3"
       :data="data"
       :deep="4"
       highlight-mouseover-node

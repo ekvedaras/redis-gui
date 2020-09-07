@@ -1,10 +1,10 @@
 <template>
-  <div class="h-full overflow-auto relative">
+  <div>
     <template v-if="!currentKey">
       <span class="text-xl2 font-light">Select key</span>
     </template>
     <template v-else>
-      <div class="flex sticky top-0 bg-white pt-2 items-center">
+      <div class="flex pt-2 items-center">
         <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
         <h2 class="text-xl flex-1">
           <span ref="keyName" tabindex="0" v-show="!isRenaming" @keydown.enter="startRename" @click="startRename">{{ currentKey.name }}</span>
@@ -14,12 +14,10 @@
         </h2>
         <TTL :redis-key="currentKey"/>
       </div>
-      <div>
-        <component class="max-h-full overflow-y-auto" v-if="currentContent" :is="currentContent" :name="currentKey.name" :key="currentKey.name"/>
-        <template v-else>
-          Key type {{ currentKey.type }} is not supported
-        </template>
-      </div>
+      <component class="h-full" v-if="currentContent" :is="currentContent" :name="currentKey.name" :key="currentKey.name"/>
+      <template v-else>
+        Key type {{ currentKey.type }} is not supported
+      </template>
     </template>
   </div>
 </template>

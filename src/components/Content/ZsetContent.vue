@@ -1,15 +1,17 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 pb-10">
     <div class="relative flex items-center mb-2">
       <!--suppress HtmlFormInputWithoutLabel -->
-      <input type="text" placeholder="Search..." v-model="search" class="p-2 rounded shadow w-full"/>
+      <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
       <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
     </div>
-    <div v-for="(item, score) in value" :key="score">
-      <b>{{ score }}</b>
-      <ValueRenderer :value="item"/>
+    <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
+      <div v-for="(item, score) in value" :key="score">
+        <div class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
+        <ValueRenderer :value="item" class="mb-4"/>
+      </div>
+      <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
-    <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
   </div>
 </template>
 
@@ -34,7 +36,8 @@ export default {
   },
   watch: {
     search () {
-      this.loadKeys({ pattern: `*${this.search}*` })
+      let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
+      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` })
     },
   },
   methods: {

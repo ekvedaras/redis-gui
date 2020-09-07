@@ -1,12 +1,14 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 pb-10">
     <div class="relative flex items-center mb-2">
       <!--suppress HtmlFormInputWithoutLabel -->
-      <input type="text" placeholder="Search... (client side)" v-model="search" class="p-2 rounded shadow w-full"/>
+      <input type="text" placeholder="Search... (client side, regex)" v-model="search" class="py-2 px-3 rounded shadow w-full"/>
       <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
     </div>
-    <ValueRenderer v-for="(item, i) in filtered" :key="i" :value="item"/>
-    <button @click="loadMore" v-if="start" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
+      <ValueRenderer v-for="(item, i) in filtered" :key="i" :value="item" class="mb-4"/>
+      <button @click="loadMore" v-if="start" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    </div>
   </div>
 </template>
 
@@ -32,7 +34,7 @@ export default {
         return this.value
       }
 
-      let pattern = new RegExp(`(.*?)(${this.search})(.*?)`, 'i')
+      let pattern = new RegExp(this.search, 'i')
       return this.value.filter(item => pattern.test(item))
     },
   },

@@ -6,6 +6,10 @@ body {
     font-family: 'Open Sans', Helvetica, sans-serif;
 }
 
+* {
+    outline-color: theme('colors.redis');
+}
+
 @tailwind components;
 
 @tailwind utilities;
