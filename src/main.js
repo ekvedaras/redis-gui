@@ -14,7 +14,10 @@ Vue.use(Toasted, {
 })
 
 Vue.use(require('vue-moment'));
-Vue.use(VModal);
+Vue.use(VModal, {dynamicDefaults: {
+    resizable: true,
+    height: 'auto'
+  }});
 
 Vue.component('Keys', Keys);
 

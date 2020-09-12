@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-200 h-full p-4 flex flex-col space-y-4">
+  <div class="bg-gray-200 p-4 flex flex-col space-y-4">
     <h2 class="text-lg">Add new key</h2>
     <div class="flex space-x-4">
       <input type="text" placeholder="Name" v-model="name" class="p-2 rounded shadow flex-1"/>
