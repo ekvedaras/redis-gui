@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <div tabindex="0" class="flex" ref="ttlText" @keydown.enter="startEditing" @click="startEditing">
-      <TimeIcon class="w-5"/>
+      <TimeIcon :class="['w-5', redisKey.ttl < 1 ? 'text-gray-500' : '']"/>
       <div v-show="!isEditing" v-if="redisKey.ttl > -1">
         <span class="ml-2" v-if="seconds < 60">Expires in {{ [seconds, 'seconds'] | duration('as', 'seconds') }} seconds</span>
         <span class="ml-2" v-else>Expires in {{ [seconds, 'seconds'] | duration('humanize') }}</span>
