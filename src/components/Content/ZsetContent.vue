@@ -1,18 +1,23 @@
 <template>
   <div class="p-4 pb-10">
-    <div class="relative flex items-center mb-2">
-      <!--suppress HtmlFormInputWithoutLabel -->
-      <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
-      <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
-    </div>
-    <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
-      <div v-for="(item, score) in value" :key="score">
-        <div class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
-        <ValueRenderer :value="item" class="mb-4"/>
+    <div class="flex items-center mb-2  space-x-2">
+      <div class="relative flex flex-1 justify-center">
+          <!--suppress HtmlFormInputWithoutLabel -->
+          <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
+          <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
+        </div>
+        <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
+          <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
+        </div>
       </div>
-      <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+      <div class="overflow-y-auto h-full pb-10 rounded">
+        <div v-for="(item, score) in value" :key="score">
+          <div class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
+          <ValueRenderer :value="item" class="mb-4"/>
+        </div>
+        <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -20,10 +25,12 @@ import _ from 'lodash'
 import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import Spinner from '@/components/Elements/Spinner'
+import AddIcon from '@/components/Icons/AddIcon'
+import AddKeyModal from '@/components/Modals/AddKeyModal'
 
 export default {
   name: 'ZsetContent',
-  components: { Spinner, ValueRenderer },
+  components: { AddIcon, Spinner, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
@@ -62,6 +69,9 @@ export default {
     },
     loadMore () {
       this.loadKeys({ pattern: `*${this.search}*`, cursor: this.nextCursor })
+    },
+    showKeyAddModal () {
+      this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'zset' } })
     },
   },
 }

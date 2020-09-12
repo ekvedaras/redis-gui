@@ -1,9 +1,14 @@
 <template>
   <div class="flex flex-col">
-    <div class="relative px-2 flex items-center">
-      <!--suppress HtmlFormInputWithoutLabel -->
-      <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
-      <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
+    <div class="px-2 flex items-center space-x-2">
+      <div class="relative flex items-center">
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
+        <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
+      </div>
+      <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
+        <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
+      </div>
     </div>
     <div class="overflow-y-auto mt-2 h-full px-1">
       <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
@@ -16,6 +21,8 @@
 import { mapActions, mapState } from 'vuex'
 import _ from 'lodash'
 import Spinner from '@/components/Elements/Spinner'
+import AddIcon from '@/components/Icons/AddIcon'
+import AddKeyModal from '@/components/Modals/AddKeyModal'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -39,7 +46,7 @@ let nestKey = (grouped, path) => {
 
 export default {
   name: 'KeysSidebar',
-  components: { Spinner },
+  components: { AddIcon, Spinner },
   data: () => ({
     search: '',
     isLoading: false,
@@ -61,6 +68,9 @@ export default {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
       this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.nextKeysCursor }).finally(() => this.isLoading = false)
+    },
+    showKeyAddModal () {
+      this.$modal.show(AddKeyModal)
     },
   },
   computed: {

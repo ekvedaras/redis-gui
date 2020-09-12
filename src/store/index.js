@@ -31,9 +31,11 @@ export default new Vuex.Store({
     },
     setKeys (state, keys) {
       state.keys = _.sortKeysBy(keys)
+      state.databases[state.currentDatabase].keys = Object.keys(state.keys).length
     },
     addKey (state, key) {
       state.keys = _.sortKeysBy({ ...state.keys, [key.name]: key })
+      state.databases[state.currentDatabase].keys++
     },
     updateKey(state, key) {
       state.keys[key.name] = key
@@ -48,10 +50,14 @@ export default new Vuex.Store({
       state.selected = undefined
     },
     removeKey (state, key) {
-      delete state.keys[key.name]
+      Vue.delete(state.keys, key.name);
+      state.databases[state.currentDatabase].keys++
+      this.commit('refreshTTL');
+    },
+    refreshTTL(state) {
       clearTtlTimer()
       registerTtlTimer({ state, store: this })
-    },
+    }
   },
   actions: {
     loadDatabases ({ commit }) {

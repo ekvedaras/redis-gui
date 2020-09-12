@@ -1,28 +1,28 @@
 import Vue from 'vue'
 
-let ttlTimer
+let ttlTimer;
 
-const timer = ({state, getters, commit}) =>
-  Object
-    .values(getters.keysWithTTL)
-    .forEach(key => {
-      state.keys[key.name].ttl--
-      if (state.keys[key.name].ttl <= 0) {
-        commit('removeKey', key)
-        if (state.currentKey.name === key.name) {
-          commit('unloadKey', key)
-        }
-
-        Vue.toasted.info(`Key ${key.name} has expired`)
+const timer = ({ state, getters, commit }) => Object
+  .values(getters.keysWithTTL)
+  .forEach(key => {
+    state.keys[key.name].ttl--
+    if (state.keys[key.name].ttl <= 0) {
+      if (state.selected === key.name) {
+        commit('unloadKey', key)
       }
-    })
 
-export const registerTtlTimer = ({state, store}) => {
+      commit('removeKey', key)
+
+      Vue.toasted.info(`Key ${key.name} has expired`)
+    }
+  })
+
+export const registerTtlTimer = ({ state, store }) => {
   if (ttlTimer) {
     return
   }
 
-  ttlTimer = setInterval(() => timer({...store, state}), 1000)
+  ttlTimer = setInterval(() => timer({ ...store, state }), 1000)
 }
 
 export const clearTtlTimer = () => {
@@ -31,4 +31,5 @@ export const clearTtlTimer = () => {
   }
 
   clearInterval(ttlTimer)
+  ttlTimer = 0;
 }

@@ -29,7 +29,10 @@ export const redis = {
     // console.log(command, args);
 
     return this.promises[command](...args)
-      .catch(error => Vue.toasted.error(error))
+      .catch(error => {
+        Vue.toasted.error(error)
+        throw error
+      })
   },
   keys (pattern = '*', limit = this.pageSize, cursor = 0) {
     return this.async('scan', cursor, 'match', pattern, 'count', limit).then(async result => {

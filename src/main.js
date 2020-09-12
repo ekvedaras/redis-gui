@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Toasted from 'vue-toasted'
+import VModal from 'vue-js-modal'
 import store from './store'
 import './assets/tailwind.css'
 import App from './App.vue'
@@ -13,6 +14,7 @@ Vue.use(Toasted, {
 })
 
 Vue.use(require('vue-moment'));
+Vue.use(VModal);
 
 Vue.component('Keys', Keys);
 

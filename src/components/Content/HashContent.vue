@@ -1,9 +1,14 @@
 <template>
   <div class="p-4 pb-10">
-    <div class="relative flex items-center mb-2">
-      <!--suppress HtmlFormInputWithoutLabel -->
-      <input type="text" placeholder="Search keys..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
-      <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
+    <div class="flex justify-center space-x-2 mb-2">
+      <div class="relative flex flex-1 items-center">
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <input type="text" placeholder="Search keys..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
+        <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
+      </div>
+      <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
+        <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
+      </div>
     </div>
     <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
       <JsonRenderer :data="value"/>
@@ -17,10 +22,12 @@ import { redis } from '@/services/redis'
 import JsonRenderer from '@/components/Renderer/JsonRenderer'
 import Spinner from '@/components/Elements/Spinner'
 import _ from 'lodash'
+import AddKeyModal from '@/components/Modals/AddKeyModal'
+import AddIcon from '@/components/Icons/AddIcon'
 
 export default {
   name: 'HashContent',
-  components: { Spinner, JsonRenderer },
+  components: { AddIcon, Spinner, JsonRenderer },
   props: ['name'],
   data: () => ({
     value: '',
@@ -58,6 +65,9 @@ export default {
     },
     loadMore () {
       this.loadKeys({ pattern: `*${this.search}*`, cursor: this.nextCursor })
+    },
+    showKeyAddModal () {
+      this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'hash' } })
     },
   },
 }

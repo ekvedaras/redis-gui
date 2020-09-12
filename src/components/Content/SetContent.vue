@@ -1,9 +1,14 @@
 <template>
   <div class="p-4">
-    <div class="relative flex items-center mb-2">
-      <!--suppress HtmlFormInputWithoutLabel -->
-      <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
-      <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
+    <div class="flex justify-center space-x-2 mb-2">
+      <div class="relative flex flex-1 items-center">
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
+        <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
+      </div>
+      <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
+        <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
+      </div>
     </div>
     <ValueRenderer v-for="(item, i) in value" :key="i" :value="item" class="mb-4"/>
     <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
@@ -14,10 +19,12 @@
 import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import Spinner from '@/components/Elements/Spinner'
+import AddIcon from '@/components/Icons/AddIcon'
+import AddKeyModal from '@/components/Modals/AddKeyModal'
 
 export default {
   name: 'SetContent',
-  components: { Spinner, ValueRenderer },
+  components: { AddIcon, Spinner, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
@@ -55,6 +62,9 @@ export default {
     },
     loadMore () {
       this.loadKeys({ pattern: `*${this.search}*`, cursor: this.nextCursor })
+    },
+    showKeyAddModal () {
+      this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'set' } })
     },
   },
 }

@@ -17,6 +17,7 @@
     "lowdb": "^1.0.0",
     "redis": "^3.0.2",
     "vue": "^2.6.12",
+    "vue-js-modal": "^2.0.0-rc.6",
     "vue-json-pretty": "^1.6.7",
     "vue-moment": "^4.1.0",
     "vue-toasted": "^1.1.28",
