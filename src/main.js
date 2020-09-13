@@ -13,13 +13,16 @@ Vue.use(Toasted, {
   duration: 3000,
 })
 
-Vue.use(require('vue-moment'));
-Vue.use(VModal, {dynamicDefaults: {
+Vue.use(require('vue-moment'))
+Vue.use(VModal, {
+  dialog: true,
+  dynamicDefaults: {
     resizable: true,
-    height: 'auto'
-  }});
+    height: 'auto',
+  },
+})
 
-Vue.component('Keys', Keys);
+Vue.component('Keys', Keys)
 
 new Vue({
   render: h => h(App),

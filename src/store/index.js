@@ -51,7 +51,7 @@ export default new Vuex.Store({
     },
     removeKey (state, key) {
       Vue.delete(state.keys, key.name);
-      state.databases[state.currentDatabase].keys++
+      state.databases[state.currentDatabase].keys--;
       this.commit('refreshTTL');
     },
     refreshTTL(state) {
@@ -116,6 +116,15 @@ export default new Vuex.Store({
           Vue.toasted.error(`${key.type} type is not supported`)
       }
     },
+    deleteKey ({ state, commit }, name) {
+      return redis.async('del', name).then(() => {
+        if (state.selected === name) {
+          commit('unloadKey')
+        }
+
+        commit('removeKey', {name})
+      })
+    }
   },
   modules: {},
 })
