@@ -10,8 +10,14 @@
         <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
       </div>
     </div>
-    <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
-      <JsonRenderer :data="value"/>
+    <div class="overflow-y-auto h-full pb-10 rounded">
+      <div v-for="(item, key) in value" :key="key" class="relative">
+        <div class="sticky top-0 font-bold z-10 bg-gray-100">{{ key }}</div>
+        <button type="button" @click="deleteItem(key)" class="absolute top-0 right-0 z-10">
+          <DeleteIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
+        </button>
+        <ValueRenderer :value="item" class="mb-4"/>
+      </div>
       <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
   </div>
@@ -19,16 +25,17 @@
 
 <script>
 import { redis } from '@/services/redis'
-import JsonRenderer from '@/components/Renderer/JsonRenderer'
 import Spinner from '@/components/Elements/Spinner'
 import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import AddIcon from '@/components/Icons/AddIcon'
 import { EventBus } from '@/services/eventBus'
+import DeleteIcon from '@/components/Icons/DeleteIcon'
+import ValueRenderer from '@/components/Renderer/ValueRenderer'
 
 export default {
   name: 'HashContent',
-  components: { AddIcon, Spinner, JsonRenderer },
+  components: { ValueRenderer, DeleteIcon, AddIcon, Spinner },
   props: ['name'],
   data: () => ({
     value: '',
@@ -76,6 +83,27 @@ export default {
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'hash' } })
+    },
+    deleteItem (key) {
+      this.$modal.show('dialog', {
+        title: 'Confirm',
+        text: `Are you sure you want to delete <b>${key}</b> item from ${this.name}?`,
+        buttons: [
+          {
+            title: 'Cancel',
+            handler: () => this.$modal.hide('dialog'),
+          },
+          {
+            title: 'Confirm',
+            handler: () => {
+              this.$store.dispatch('deleteHashItem', { keyName: this.name, key }).then(async () => {
+                this.loadKeys()
+              })
+              this.$modal.hide('dialog')
+            },
+          },
+        ],
+      })
     },
   },
 }

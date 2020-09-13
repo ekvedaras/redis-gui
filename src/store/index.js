@@ -136,6 +136,9 @@ export default new Vuex.Store({
     },
     deleteZsetItem(store, { keyName, value }) {
       return redis.async('zrem', keyName, value).then(() => Vue.toasted.info('Sorted set item deleted'))
+    },
+    deleteHashItem(store, { keyName, key }) {
+      return redis.async('hdel', keyName, key).then(() => Vue.toasted.info('Hash key deleted'))
     }
   },
   modules: {},
