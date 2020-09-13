@@ -21,6 +21,7 @@ import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import Spinner from '@/components/Elements/Spinner'
 import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
+import { EventBus } from '@/services/eventBus'
 
 export default {
   name: 'SetContent',
@@ -34,6 +35,13 @@ export default {
   }),
   async mounted () {
     await this.loadKeys()
+    EventBus.$on('key-updated', async name => {
+      if (name !== this.name) {
+        return
+      }
+
+      this.loadKeys()
+    })
   },
   watch: {
     search () {

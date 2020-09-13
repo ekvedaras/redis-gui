@@ -24,6 +24,7 @@ import Spinner from '@/components/Elements/Spinner'
 import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import AddIcon from '@/components/Icons/AddIcon'
+import { EventBus } from '@/services/eventBus'
 
 export default {
   name: 'HashContent',
@@ -37,6 +38,13 @@ export default {
   }),
   async mounted () {
     await this.loadKeys()
+    EventBus.$on('key-updated', async name => {
+      if (name !== this.name) {
+        return
+      }
+
+      this.loadKeys()
+    })
   },
   watch: {
     search () {
