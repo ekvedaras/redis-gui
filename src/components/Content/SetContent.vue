@@ -10,8 +10,15 @@
         <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
       </div>
     </div>
-    <ValueRenderer v-for="(item, i) in value" :key="i" :value="item" class="mb-4"/>
-    <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
+      <div v-for="(item, i) in value" :key="i" class="relative">
+        <button type="button" @click="deleteItem(item)" class="absolute top-0 right-0 mt-2 mr-2 z-10">
+          <DeleteIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
+        </button>
+        <ValueRenderer :value="item" class="mb-4"/>
+      </div>
+      <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    </div>
   </div>
 </template>
 
@@ -22,10 +29,11 @@ import Spinner from '@/components/Elements/Spinner'
 import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
+import DeleteIcon from '@/components/Icons/DeleteIcon'
 
 export default {
   name: 'SetContent',
-  components: { AddIcon, Spinner, ValueRenderer },
+  components: { DeleteIcon, AddIcon, Spinner, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
@@ -73,6 +81,27 @@ export default {
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'set' } })
+    },
+    deleteItem (value) {
+      this.$modal.show('dialog', {
+        title: 'Confirm',
+        text: `Are you sure you want to delete <b>${value.substr(0, 50)}</b> item from ${this.name}?`,
+        buttons: [
+          {
+            title: 'Cancel',
+            handler: () => this.$modal.hide('dialog'),
+          },
+          {
+            title: 'Confirm',
+            handler: () => {
+              this.$store.dispatch('deleteSetItem', { keyName: this.name, value }).then(async () => {
+                this.loadKeys()
+              })
+              this.$modal.hide('dialog')
+            },
+          },
+        ],
+      })
     },
   },
 }

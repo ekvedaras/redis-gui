@@ -129,6 +129,9 @@ export default new Vuex.Store({
       return redis.async('lset', keyName, index, 'REDIS-GUI--DELETED--')
         .then(() => redis.async('lrem', keyName, 0, 'REDIS-GUI--DELETED--'))
     },
+    deleteSetItem(store, { keyName, value }) {
+      return redis.async('srem', keyName, value)
+    }
   },
   modules: {},
 })
