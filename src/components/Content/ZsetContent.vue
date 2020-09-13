@@ -11,8 +11,11 @@
         </div>
       </div>
       <div class="overflow-y-auto h-full pb-10 rounded">
-        <div v-for="(item, score) in value" :key="score">
+        <div v-for="(item, score) in value" :key="score" class="relative">
           <div class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
+          <button type="button" @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
+            <DeleteIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
+          </button>
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
         <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
@@ -28,10 +31,11 @@ import Spinner from '@/components/Elements/Spinner'
 import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
+import DeleteIcon from '@/components/Icons/DeleteIcon'
 
 export default {
   name: 'ZsetContent',
-  components: { AddIcon, Spinner, ValueRenderer },
+  components: { DeleteIcon, AddIcon, Spinner, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
@@ -80,6 +84,27 @@ export default {
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'zset' } })
+    },
+    deleteItem (value) {
+      this.$modal.show('dialog', {
+        title: 'Confirm',
+        text: `Are you sure you want to delete <b>${value.substr(0, 50)}</b> item from ${this.name}?`,
+        buttons: [
+          {
+            title: 'Cancel',
+            handler: () => this.$modal.hide('dialog'),
+          },
+          {
+            title: 'Confirm',
+            handler: () => {
+              this.$store.dispatch('deleteZsetItem', { keyName: this.name, value }).then(async () => {
+                this.loadKeys()
+              })
+              this.$modal.hide('dialog')
+            },
+          },
+        ],
+      })
     },
   },
 }

@@ -127,10 +127,15 @@ export default new Vuex.Store({
     },
     deleteListItem (store, { keyName, index }) {
       return redis.async('lset', keyName, index, 'REDIS-GUI--DELETED--')
-        .then(() => redis.async('lrem', keyName, 0, 'REDIS-GUI--DELETED--'))
+        .then(() => redis.async('lrem', keyName, 0, 'REDIS-GUI--DELETED--').then(() => {
+          Vue.toasted.info(`Item at ${index} position deleted`)
+        }))
     },
     deleteSetItem(store, { keyName, value }) {
-      return redis.async('srem', keyName, value)
+      return redis.async('srem', keyName, value).then(() => Vue.toasted.info('Set item deleted'))
+    },
+    deleteZsetItem(store, { keyName, value }) {
+      return redis.async('zrem', keyName, value).then(() => Vue.toasted.info('Sorted set item deleted'))
     }
   },
   modules: {},
