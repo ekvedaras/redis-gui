@@ -25,6 +25,7 @@
 
 <script>
 import { redis } from '@/services/redis'
+import { EventBus } from '@/services/eventBus'
 
 export default {
   name: 'AddKeyModal',
@@ -81,6 +82,7 @@ export default {
         this.$store.dispatch('loadKeys').then(() => {
           this.$store.commit('select', this.name)
           this.$store.commit('refreshTTL')
+          EventBus.$emit('key-updated', this.name)
         })
       })
     },

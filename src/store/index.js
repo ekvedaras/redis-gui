@@ -37,7 +37,7 @@ export default new Vuex.Store({
       state.keys = _.sortKeysBy({ ...state.keys, [key.name]: key })
       state.databases[state.currentDatabase].keys++
     },
-    updateKey(state, key) {
+    updateKey (state, key) {
       state.keys[key.name] = key
     },
     setNextKeysCursor (state, cursor) {
@@ -50,14 +50,14 @@ export default new Vuex.Store({
       state.selected = undefined
     },
     removeKey (state, key) {
-      Vue.delete(state.keys, key.name);
-      state.databases[state.currentDatabase].keys--;
-      this.commit('refreshTTL');
+      Vue.delete(state.keys, key.name)
+      state.databases[state.currentDatabase].keys--
+      this.commit('refreshTTL')
     },
-    refreshTTL(state) {
+    refreshTTL (state) {
       clearTtlTimer()
       registerTtlTimer({ state, store: this })
-    }
+    },
   },
   actions: {
     loadDatabases ({ commit }) {
@@ -122,9 +122,13 @@ export default new Vuex.Store({
           commit('unloadKey')
         }
 
-        commit('removeKey', {name})
+        commit('removeKey', { name })
       })
-    }
+    },
+    deleteListItem (store, { keyName, index }) {
+      return redis.async('lset', keyName, index, 'REDIS-GUI--DELETED--')
+        .then(() => redis.async('lrem', keyName, 0, 'REDIS-GUI--DELETED--'))
+    },
   },
   modules: {},
 })

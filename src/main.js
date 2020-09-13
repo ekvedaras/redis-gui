@@ -17,6 +17,7 @@ Vue.use(require('vue-moment'))
 Vue.use(VModal, {
   dialog: true,
   dynamicDefaults: {
+    focusTrap: true,
     resizable: true,
     height: 'auto',
   },
