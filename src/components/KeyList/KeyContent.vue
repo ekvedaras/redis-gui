@@ -1,8 +1,6 @@
 <template>
   <div>
-    <template v-if="!currentKey">
-      <span class="text-xl2 font-light">Select key</span>
-    </template>
+    <NoKeySelected v-if="!currentKey"/>
     <template v-else>
       <div class="flex pt-2 items-center">
         <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
@@ -41,10 +39,12 @@ import HashIcon from '@/components/Icons/HashIcon'
 import TimeIcon from '@/components/Icons/TimeIcon'
 import TTL from '@/components/Elements/TTL'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
+import NoKeySelected from '@/components/KeyList/NoKeySelected'
 
 export default {
   name: 'KeyContent',
   components: {
+    NoKeySelected,
     DeleteIcon,
     TTL,
     TimeIcon,

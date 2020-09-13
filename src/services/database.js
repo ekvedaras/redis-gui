@@ -5,13 +5,13 @@ const defaultDatabase = {
   servers: {
     default: {
       name: 'default',
-      host: '127.0.0.1',
+      host: 'localhost',
       port: 6379,
       password: null,
     },
   },
 }
 
-export const database = low(new LocalStorage('redis-gui'));
+export const database = low(new LocalStorage('redis-gui'))
 
 database.defaults(defaultDatabase).write()

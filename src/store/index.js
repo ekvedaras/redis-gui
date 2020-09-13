@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    server: 'default',
     databases: [],
     totalDatabases: 0,
     currentDatabase: 0,
