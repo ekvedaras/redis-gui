@@ -12,11 +12,21 @@
     </div>
     <div class="overflow-y-auto h-full pb-10 rounded">
       <div v-for="(item, key) in value" :key="key" class="relative">
-        <div class="sticky top-0 font-bold z-10 bg-gray-100">{{ key }}</div>
-        <button type="button" @click="deleteItem(key)" class="absolute top-0 right-0 z-10">
+        <div v-if="!isEditing[key]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ key }}</div>
+        <input type="text" v-if="isEditing[key]" v-model="editKey" @keydown.esc="close(key)" @keydown.ctrl.enter="save(key)" class="p-1 shadow rounded"/>
+        <button type="button" @click="editItem(item, key)" class="absolute top-0 right-0 mr-6 z-10">
+          <EditIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
+        </button>
+        <button type="button" @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
           <DeleteIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
         </button>
-        <ValueRenderer :value="item" class="mb-4"/>
+        <div v-if="!isEditing[key]">
+          <ValueRenderer :value="item" class="mb-4"/>
+        </div>
+        <div v-if="isEditing[key]">
+          <textarea class="p-2 w-full shadow h-64" :ref="`editor_${key}`" v-model="editValue" @keydown.esc="close(key)" @keydown.ctrl.enter="save(key)"/>
+          <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
+        </div>
       </div>
       <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
@@ -32,16 +42,20 @@ import AddIcon from '@/components/Icons/AddIcon'
 import { EventBus } from '@/services/eventBus'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
+import EditIcon from '@/components/Icons/EditIcon'
 
 export default {
   name: 'HashContent',
-  components: { ValueRenderer, DeleteIcon, AddIcon, Spinner },
+  components: { EditIcon, ValueRenderer, DeleteIcon, AddIcon, Spinner },
   props: ['name'],
   data: () => ({
     value: '',
     search: '',
     isLoading: true,
+    isEditing: [],
     nextCursor: 0,
+    editValue: '',
+    editKey: '',
   }),
   async mounted () {
     await this.loadKeys()
@@ -83,6 +97,22 @@ export default {
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'hash' } })
+    },
+    editItem (value, key) {
+      this.editValue = value
+      this.editKey = key
+      this.$set(this.isEditing, key, true)
+      this.$nextTick(() => this.$refs[`editor_${key}`][0].focus())
+    },
+    save (key) {
+      (key === this.editKey ? Promise.resolve() : redis.async('hdel', this.name, key))
+          .then(() => redis.async('hset', this.name, this.editKey, this.editValue)
+              .then(() => this.$toasted.success('Saved'))
+              .then(() => this.loadKeys()))
+          .finally(() => this.close(key))
+    },
+    close (key) {
+      this.$set(this.isEditing, key, false)
     },
     deleteItem (key) {
       this.$modal.show('dialog', {
