@@ -8,6 +8,7 @@
     </div>
     <input type="password" placeholder="Password" v-model="password" class="p-2 rounded shadow"/>
     <div class="flex justify-end space-x-4">
+      <button @click="test" class="flex relative transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Test</button>
       <button @click="save" class="transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Save</button>
     </div>
   </div>
@@ -42,6 +43,19 @@ export default {
       this.setServers(database.read().get('servers').value())
       this.$emit('close')
     },
+    test() {
+      let connection = window.redis.createClient({
+        ...this.$data,
+        retry_strategy: () => {
+          return undefined
+        }
+      }).on('connect', () => {
+        this.$toasted.success('Connection successful')
+        connection.quit(() => {
+          connection.end(true)
+        })
+      }).on('error', error => this.$toasted.error('REDIS ERROR: ' + error))
+    }
   },
   computed: {
     title() {

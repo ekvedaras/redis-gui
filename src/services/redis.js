@@ -30,7 +30,6 @@ export const redis = {
     this.client[server] = window.redis.createClient(database.get(`servers.${server}`).value())
       .on('connect', () => Vue.toasted.info('Connected'))
       .on('error', error => {
-        console.log({ error })
         Vue.toasted.error('REDIS ERROR: ' + error)
       })
   },

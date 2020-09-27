@@ -3,7 +3,7 @@
     <Header class="col-span-12 row-span-1 z-20"/>
     <KeysSidebar class="col-span-3 pt-2 px-1 overflow-auto max-h-screen"/>
     <KeyContent class="col-span-9 pb-2 px-4 overflow-hidden"/>
-    <v-dialog/>
+    <v-dialog :style="{zIndex: 1000}"/>
   </div>
 </template>
 
