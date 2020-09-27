@@ -1,7 +1,7 @@
 <template>
   <div>
     <JsonRenderer v-if="isJSON(value)" :data="JSON.parse(value)"/>
-    <PlainRenderer v-else>{{ value }}</PlainRenderer>
+    <PlainRenderer class="whitespace-pre" v-else>{{ value }}</PlainRenderer>
   </div>
 </template>
 
