@@ -52,7 +52,7 @@ export default {
     value: '',
     search: '',
     isLoading: true,
-    isEditing: [],
+    isEditing: {},
     nextCursor: 0,
     editValue: '',
     editKey: '',

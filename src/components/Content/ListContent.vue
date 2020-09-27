@@ -50,7 +50,7 @@ export default {
     size: 0,
     start: 0,
     isLoading: true,
-    isEditing: [],
+    isEditing: {},
     search: '',
     editValue: '',
   }),
