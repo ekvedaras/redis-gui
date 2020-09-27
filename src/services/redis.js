@@ -1,29 +1,47 @@
 import Vue from 'vue'
 import _ from 'lodash'
+import { database } from '@/services/database'
 
 const { promisify } = require('util')
 
 export const redis = {
   pageSize: 100,
-  client: undefined,
+  current: 'default',
+  client: {},
   promises: {},
-  connect () {
-    if (this.client) {
+  connect (server = 'default') {
+    if (server !== this.current) {
+      Object.entries(this.client).forEach(([key, client]) => {
+        if (!client.connected) {
+          this.client[key].quit(() => {
+            this.client[key].end(true)
+            delete this.client[key]
+          })
+        }
+      })
+    }
+
+    if (this.client[server]) {
       return
     }
 
-    this.client = window.redis.createClient()
+    this.current = server
+
+    this.client[server] = window.redis.createClient(database.get(`servers.${server}`).value())
       .on('connect', () => Vue.toasted.info('Connected'))
-      .on('error', error => Vue.toasted.error('REDIS ERROR: ' + error))
+      .on('error', error => {
+        console.log({ error })
+        Vue.toasted.error('REDIS ERROR: ' + error)
+      })
   },
-  disconnect () {
-    this.client && this.client.quit()
+  disconnect (server = 'default') {
+    this.client[server] && this.client[server].quit()
   },
   async (command, ...args) {
-    this.connect()
+    this.connect(this.current)
 
     if (!Object.prototype.hasOwnProperty.call(this.promises, command)) {
-      this.promises[command] = promisify(this.client[command]).bind(this.client)
+      this.promises[command] = promisify(this.client[this.current][command]).bind(this.client[this.current])
     }
 
     // console.log(command, args);

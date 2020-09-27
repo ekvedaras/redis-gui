@@ -3,12 +3,14 @@ import Vuex from 'vuex'
 import { redis } from '@/services/redis'
 import _ from 'lodash'
 import { clearTtlTimer, registerTtlTimer } from '@/services/ttlTimer'
+import { database } from '@/services/database'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     server: 'default',
+    servers: database.get('servers').value(),
     databases: [],
     totalDatabases: 0,
     currentDatabase: 0,
@@ -21,6 +23,12 @@ export default new Vuex.Store({
     currentKey: state => _.find(state.keys, { name: state.selected }),
   },
   mutations: {
+    setServer(state, server) {
+      state.server = server
+    },
+    setServers(state, servers) {
+      state.servers = servers
+    },
     setTotalDatabases (state, total) {
       state.totalDatabases = total
     },
