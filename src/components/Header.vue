@@ -13,6 +13,9 @@
       <div @click="refresh">
         <RefreshIcon class="w-8 cursor-pointer"/>
       </div>
+      <div @click="openTerminal">
+        <TerminalIcon class="w-6 cursor-pointer"/>
+      </div>
     </div>
     <DatabaseSelect class="bg-gray-300 rounded p-1"/>
   </div>
@@ -26,9 +29,11 @@ import AddIcon from '@/components/Icons/AddIcon'
 import ServerModal from '@/components/Modals/ServerModal'
 import EditIcon from '@/components/Icons/EditIcon'
 import ServerListModal from '@/components/Modals/ServerListModal'
+import TerminalIcon from '@/components/Icons/TerminalIcon'
+import ConsoleModal from '@/components/Modals/ConsoleModal'
 
 export default {
-  components: { EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
+  components: { TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
   methods: {
     refresh() {
       this.$store.dispatch('loadKeys').then(() => this.$toasted.info('Keys refreshed'))
@@ -38,6 +43,9 @@ export default {
     },
     edit() {
       this.$modal.show(ServerListModal)
+    },
+    openTerminal() {
+      this.$modal.show(ConsoleModal)
     }
   }
 }

@@ -39,7 +39,13 @@ export const redis = {
   async (command, ...args) {
     this.connect(this.current)
 
+    console.log({command, args})
     if (!Object.prototype.hasOwnProperty.call(this.promises, command)) {
+      // TODO check if redis call is valid
+      // if (!Object.prototype.hasOwnProperty.call(this.client[this.current], command)) {
+      //   return Promise.reject('Invalid redis command')
+      // }
+
       this.promises[command] = promisify(this.client[this.current][command]).bind(this.client[this.current])
     }
 
