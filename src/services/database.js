@@ -9,6 +9,9 @@ const defaultDatabase = {
       port: 6379,
     },
   },
+  history: {
+    default: [],
+  },
 }
 
 export const database = low(new LocalStorage('redis-gui'))

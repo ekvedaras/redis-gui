@@ -40,28 +40,29 @@ export default {
     ...mapMutations(['setServers']),
     save () {
       database.get('servers').set(this.serverKey || this.name, { ...this.$data }).write()
+      database.get('history').set(this.serverKey || this.name, []).write()
       this.setServers(database.read().get('servers').value())
       this.$emit('close')
     },
-    test() {
+    test () {
       let connection = window.redis.createClient({
         ...this.$data,
         retry_strategy: () => {
           return undefined
-        }
+        },
       }).on('connect', () => {
         this.$toasted.success('Connection successful')
         connection.quit(() => {
           connection.end(true)
         })
       }).on('error', error => this.$toasted.error('REDIS ERROR: ' + error))
-    }
+    },
   },
   computed: {
-    title() {
+    title () {
       return this.serverKey ? 'Edit server' : 'Add new server'
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -47,6 +47,7 @@ export default {
             title: 'Confirm',
             handler: () => {
               database.get('servers').unset(key).write()
+              database.get('history').unset(key).write()
               this.setServers(database.read().get('servers').value())
               this.$modal.hide('dialog')
             },

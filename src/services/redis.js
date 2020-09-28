@@ -9,6 +9,7 @@ export const redis = {
   current: 'default',
   client: {},
   promises: {},
+  beSilent: false,
   connect (server = 'default') {
     if (server !== this.current) {
       Object.entries(this.client).forEach(([key, client]) => {
@@ -36,26 +37,28 @@ export const redis = {
   disconnect (server = 'default') {
     this.client[server] && this.client[server].quit()
   },
+  silently () {
+    this.beSilent = true
+    return this
+  },
   async (command, ...args) {
+    let beSilent = this.beSilent
+    this.beSilent = false
+
     this.connect(this.current)
 
-    console.log({command, args})
     if (!Object.prototype.hasOwnProperty.call(this.promises, command)) {
-      // TODO check if redis call is valid
-      // if (!Object.prototype.hasOwnProperty.call(this.client[this.current], command)) {
-      //   return Promise.reject('Invalid redis command')
-      // }
-
-      this.promises[command] = promisify(this.client[this.current][command]).bind(this.client[this.current])
+      try {
+        this.promises[command] = promisify(this.client[this.current][command]).bind(this.client[this.current])
+      } catch (e) {
+        return Promise.reject('Invalid redis command')
+      }
     }
-
-    // console.log(command, args);
-
-    return this.promises[command](...args)
-      .catch(error => {
-        Vue.toasted.error(error)
-        throw error
-      })
+    
+    return this.promises[command](...args).catch(error => {
+      if (!beSilent) Vue.toasted.error(error)
+      throw error
+    })
   },
   keys (pattern = '*', limit = this.pageSize, cursor = 0) {
     return this.async('scan', cursor, 'match', pattern, 'count', limit).then(async result => {
