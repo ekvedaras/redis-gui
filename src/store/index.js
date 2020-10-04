@@ -3,14 +3,12 @@ import Vuex from 'vuex'
 import { redis } from '@/services/redis'
 import _ from 'lodash'
 import { clearTtlTimer, registerTtlTimer } from '@/services/ttlTimer'
-import { database } from '@/services/database'
+import servers from '@/store/servers'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    server: 'default',
-    servers: database.get('servers').value(),
     databases: [],
     totalDatabases: 0,
     currentDatabase: 0,
@@ -23,12 +21,6 @@ export default new Vuex.Store({
     currentKey: state => _.find(state.keys, { name: state.selected }),
   },
   mutations: {
-    setServer(state, server) {
-      state.server = server
-    },
-    setServers(state, servers) {
-      state.servers = servers
-    },
     setTotalDatabases (state, total) {
       state.totalDatabases = total
     },
@@ -75,7 +67,7 @@ export default new Vuex.Store({
           commit('setTotalDatabases', parseInt(list[1]))
         }),
         redis.async('info', 'keyspace').then(databases => {
-          databases.split("\n").slice(1, -1).forEach(db => {
+          databases.split('\n').slice(1, -1).forEach(db => {
             let id, meta, key, value;
 
             [id, meta] = db.split(':')
@@ -140,15 +132,17 @@ export default new Vuex.Store({
           Vue.toasted.info(`Item at ${index} position deleted`)
         }))
     },
-    deleteSetItem(store, { keyName, value }) {
+    deleteSetItem (store, { keyName, value }) {
       return redis.async('srem', keyName, value).then(() => Vue.toasted.info('Set item deleted'))
     },
-    deleteZsetItem(store, { keyName, value }) {
+    deleteZsetItem (store, { keyName, value }) {
       return redis.async('zrem', keyName, value).then(() => Vue.toasted.info('Sorted set item deleted'))
     },
-    deleteHashItem(store, { keyName, key }) {
+    deleteHashItem (store, { keyName, key }) {
       return redis.async('hdel', keyName, key).then(() => Vue.toasted.info('Hash key deleted'))
-    }
+    },
   },
-  modules: {},
+  modules: {
+    servers,
+  },
 })

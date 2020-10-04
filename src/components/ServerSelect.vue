@@ -1,6 +1,6 @@
 <template>
   <select id="server" @change="connect">
-    <option v-for="(storeServer, key) in servers" :key="key" :value="storeServer.name" :selected="storeServer.name === server">
+    <option v-for="(storeServer, key) in list" :key="key" :value="storeServer.name" :selected="storeServer.name === selected">
       {{ storeServer.name }}
     </option>
   </select>
@@ -12,14 +12,12 @@ import { redis } from '@/services/redis'
 
 export default {
   name: 'ServerSelect',
-  computed: {
-    ...mapState(['servers', 'server']),
-  },
+  computed: mapState('servers', ['list', 'selected']),
   methods: {
     ...mapActions(['loadDatabases']),
     connect ({ target }) {
       redis.connect(target.value)
-      this.$store.commit('setServer', target.value)
+      this.$store.commit('servers/select', target.value)
       this.loadDatabases()
     },
   },

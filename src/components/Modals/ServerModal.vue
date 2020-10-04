@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setServers']),
+    ...mapMutations('servers', ['setServers']),
     save () {
       database.get('servers').set(this.serverKey || this.name, { ...this.$data }).write()
       database.get('history').set(this.serverKey || this.name, []).write()

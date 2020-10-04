@@ -2,7 +2,7 @@
   <div class="bg-gray-200 p-4 flex flex-col space-y-4">
     <h2 class="text-lg">Servers</h2>
     <table>
-      <tr v-for="(server, key) in servers" :key="key" @click="edit(key)" class="rounded cursor-pointer hover:bg-gray-400">
+      <tr v-for="(server, key) in list" :key="key" @click="edit(key)" class="rounded cursor-pointer hover:bg-gray-400">
         <td class="p-2 font-semibold rounded-l">{{ server.name }}</td>
         <td class="w-full whitespace-no-wrap p-2 text-gray-600">{{ server.host }}: {{ server.port }}</td>
         <td class="p-2 rounded-r">
@@ -26,9 +26,9 @@ import DeleteIcon from '@/components/Icons/DeleteIcon'
 export default {
   name: 'ServerListModal',
   components: { DeleteIcon },
-  computed: mapState(['servers']),
+  computed: mapState('servers', ['list']),
   methods: {
-    ...mapMutations(['setServers']),
+    ...mapMutations('servers', ['setServers']),
     edit (key) {
       this.$modal.show(ServerModal, { serverKey: key })
     },

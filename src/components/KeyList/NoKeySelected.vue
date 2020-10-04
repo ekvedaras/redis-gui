@@ -20,9 +20,10 @@ import AddKeyModal from '@/components/Modals/AddKeyModal'
 export default {
   name: 'NoKeySelected',
   computed: {
-    ...mapState(['server', 'currentDatabase']),
+    ...mapState(['currentDatabase']),
+    ...mapState('servers', ['selected']),
     host() {
-      return database.get(`servers.${this.server}.host`)
+      return database.get(`servers.${this.selected}.host`)
     }
   },
   methods: {
