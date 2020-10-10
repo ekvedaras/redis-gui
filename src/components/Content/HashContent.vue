@@ -1,11 +1,7 @@
 <template>
   <div class="p-4 pb-10">
     <div class="flex justify-center space-x-2 mb-2">
-      <div class="relative flex flex-1 items-center">
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <input type="text" placeholder="Search keys..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
-        <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
-      </div>
+      <Search v-model="search" :show-spinner="isLoading"/>
       <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
         <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
       </div>
@@ -35,7 +31,6 @@
 
 <script>
 import { redis } from '@/services/redis'
-import Spinner from '@/components/Elements/Spinner'
 import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import AddIcon from '@/components/Icons/AddIcon'
@@ -43,10 +38,11 @@ import { EventBus } from '@/services/eventBus'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import EditIcon from '@/components/Icons/EditIcon'
+import Search from '@/components/Elements/Search'
 
 export default {
   name: 'HashContent',
-  components: { EditIcon, ValueRenderer, DeleteIcon, AddIcon, Spinner },
+  components: { Search, EditIcon, ValueRenderer, DeleteIcon, AddIcon },
   props: ['name'],
   data: () => ({
     value: '',

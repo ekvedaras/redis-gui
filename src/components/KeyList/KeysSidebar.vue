@@ -1,11 +1,7 @@
 <template>
   <div class="flex flex-col">
     <div class="px-2 flex items-center space-x-2">
-      <div class="relative flex items-center">
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
-        <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
-      </div>
+      <Search v-model="search" :show-spinner="isLoading"/>
       <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
         <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
       </div>
@@ -20,9 +16,9 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import _ from 'lodash'
-import Spinner from '@/components/Elements/Spinner'
 import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
+import Search from '@/components/Elements/Search'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -46,7 +42,7 @@ let nestKey = (grouped, path) => {
 
 export default {
   name: 'KeysSidebar',
-  components: { AddIcon, Spinner },
+  components: { Search, AddIcon },
   data: () => ({
     search: '',
     isLoading: false,

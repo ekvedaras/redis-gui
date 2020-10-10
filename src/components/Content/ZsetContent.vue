@@ -1,11 +1,7 @@
 <template>
   <div class="p-4 pb-10">
     <div class="flex items-center mb-2  space-x-2">
-      <div class="relative flex flex-1 justify-center">
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <input type="text" placeholder="Search..." v-model="search" class="py-2 px-3 rounded shadow w-full"/>
-        <Spinner :class="[isLoading ? 'opacity-100' : 'opacity-0']"/>
-      </div>
+      <Search v-model="search" :show-spinner="isLoading"/>
       <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
         <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
       </div>
@@ -37,16 +33,16 @@
 import _ from 'lodash'
 import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
-import Spinner from '@/components/Elements/Spinner'
 import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import EditIcon from '@/components/Icons/EditIcon'
+import Search from '@/components/Elements/Search'
 
 export default {
   name: 'ZsetContent',
-  components: { EditIcon, DeleteIcon, AddIcon, Spinner, ValueRenderer },
+  components: { Search, EditIcon, DeleteIcon, AddIcon, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
