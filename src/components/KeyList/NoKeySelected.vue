@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col items-center justify-center h-full text-center">
     <div class="text-5xl font-medium text-gray-500">
-      {{ host }}
+      {{ selectedHost }}
     </div>
     <div class="text-4xl font-medium text-gray-500">
-      db{{ currentDatabase }}
+      db{{ selectedDatabase }}
     </div>
     <div class="mt-4 text-gray-500">
       Select or <a href="#" @click="showAddKeyModal" class="text-red-500 hover:text-redis hover:underline">add</a> a new key.
@@ -13,24 +13,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { database } from '@/services/database'
+import { mapGetters, mapState } from 'vuex'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 
 export default {
   name: 'NoKeySelected',
   computed: {
-    ...mapState(['currentDatabase']),
-    ...mapState('servers', ['selected']),
-    host() {
-      return database.get(`servers.${this.selected}.host`)
-    }
+    ...mapState('databases', { selectedDatabase: 'selected' }),
+    ...mapGetters('servers', ['selectedHost']),
   },
   methods: {
-    showAddKeyModal() {
+    showAddKeyModal () {
       this.$modal.show(AddKeyModal)
-    }
-  }
+    },
+  },
 }
 </script>
 

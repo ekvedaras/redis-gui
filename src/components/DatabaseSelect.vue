@@ -1,10 +1,9 @@
 <template>
-    <select id="database" @change="selectDb($event.target.value)">
-      <option v-for="(n, index) in totalDatabases" :key="index" :value="index" :selected="index === currentDatabase">
-        db{{ index }}
-        {{ databases.hasOwnProperty(index) ? `(${databases[index].keys} keys)` : '' }}
-      </option>
-    </select>
+  <select id="database" @change="select($event.target.value)">
+    <option v-for="(n, index) in total" :key="index" :value="index" :selected="index === selected">
+      db{{ index }}
+    </option>
+  </select>
 </template>
 
 <script>
@@ -12,8 +11,10 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'DatabaseSelect',
-  methods: mapActions(['selectDb']),
-  computed: mapState(['totalDatabases', 'databases', 'currentDatabase']),
+  computed: {
+    ...mapState('databases', ['total', 'list', 'selected']),
+  },
+  methods: mapActions('databases', ['select']),
 }
 </script>
 

@@ -18,12 +18,12 @@ export default {
   components: { KeysSidebar, KeyContent, Header },
   mounted () {
     redis.connect()
-    this.loadDatabases()
+    this.load()
   },
   unmounted () {
     redis.disconnect()
   },
-  methods: mapActions(['loadDatabases']),
+  methods: mapActions('databases', ['load']),
 }
 </script>
 

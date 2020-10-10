@@ -4,14 +4,16 @@ import { redis } from '@/services/redis'
 import _ from 'lodash'
 import { clearTtlTimer, registerTtlTimer } from '@/services/ttlTimer'
 import servers from '@/store/servers'
+import databases from '@/store/databases'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  modules: {
+    servers,
+    databases,
+  },
   state: {
-    databases: [],
-    totalDatabases: 0,
-    currentDatabase: 0,
     keys: {},
     nextKeysCursor: 0,
     selected: undefined,
@@ -21,22 +23,11 @@ export default new Vuex.Store({
     currentKey: state => _.find(state.keys, { name: state.selected }),
   },
   mutations: {
-    setTotalDatabases (state, total) {
-      state.totalDatabases = total
-    },
-    setDatabase (state, database) {
-      state.databases[database.index] = database
-    },
-    setCurrentDatabase (state, index) {
-      state.currentDatabase = index
-    },
     setKeys (state, keys) {
       state.keys = _.sortKeysBy(keys)
-      state.databases[state.currentDatabase].keys = Object.keys(state.keys).length
     },
     addKey (state, key) {
       state.keys = _.sortKeysBy({ ...state.keys, [key.name]: key })
-      state.databases[state.currentDatabase].keys++
     },
     updateKey (state, key) {
       state.keys[key.name] = key
@@ -52,7 +43,6 @@ export default new Vuex.Store({
     },
     removeKey (state, key) {
       Vue.delete(state.keys, key.name)
-      state.databases[state.currentDatabase].keys--
       this.commit('refreshTTL')
     },
     refreshTTL (state) {
@@ -61,28 +51,6 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    loadDatabases ({ commit }) {
-      return Promise.all([
-        redis.async('config', 'GET', 'databases').then(list => {
-          commit('setTotalDatabases', parseInt(list[1]))
-        }),
-        redis.async('info', 'keyspace').then(databases => {
-          databases.split('\n').slice(1, -1).forEach(db => {
-            let id, meta, key, value;
-
-            [id, meta] = db.split(':')
-            let database = { id, index: parseInt(id.replace('db', '')) }
-
-            meta.split(',').forEach(param => {
-              [key, value] = param.split('=')
-              database[key] = value
-            })
-
-            commit('setDatabase', database)
-          })
-        }),
-      ])
-    },
     loadKeys ({ commit, state, dispatch }, { pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
       registerTtlTimer({ state, store: this })
 
@@ -99,14 +67,6 @@ export default new Vuex.Store({
         }
 
         return result
-      })
-    },
-    selectDb ({ commit, dispatch }, index) {
-      index = parseInt(index)
-      return redis.async('select', index).then(() => {
-        commit('setCurrentDatabase', index)
-        commit('unloadKey', index)
-        dispatch('loadKeys')
       })
     },
     loadKey ({ commit }, key) {
@@ -141,8 +101,5 @@ export default new Vuex.Store({
     deleteHashItem (store, { keyName, key }) {
       return redis.async('hdel', keyName, key).then(() => Vue.toasted.info('Hash key deleted'))
     },
-  },
-  modules: {
-    servers,
   },
 })

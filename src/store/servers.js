@@ -6,6 +6,9 @@ export default {
     selected: 'default',
     list: database.get('servers').value(),
   },
+  getters: {
+    selectedHost: state => state.list[state.selected].host,
+  },
   mutations: {
     select (state, server) {
       state.selected = server
