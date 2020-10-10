@@ -9,6 +9,7 @@
 import { isJSON } from '@/services/json'
 import JsonRenderer from '@/components/Renderer/JsonRenderer'
 import PlainRenderer from '@/components/Renderer/PlainRenderer'
+
 export default {
   name: 'ValueRenderer',
   components: { PlainRenderer, JsonRenderer },

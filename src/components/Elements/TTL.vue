@@ -39,14 +39,14 @@ export default {
       if (save && this.isEditing && this.newTtl !== this.redisKey.ttl) {
         if (this.newTtl < 1) {
           redis.async('persist', this.redisKey.name).then(() => {
-            this.$store.commit('updateKey', { ...this.redisKey, ttl: -1 })
+            this.$store.commit('keys/updateKey', { ...this.redisKey, ttl: -1 })
           }).finally(() => {
             this.isEditing = false
             this.$nextTick(() => this.$refs.ttlText.focus())
           })
         } else {
           redis.async('expire', this.redisKey.name, this.newTtl).then(() => {
-            this.$store.commit('updateKey', { ...this.redisKey, ttl: this.newTtl })
+            this.$store.commit('keys/updateKey', { ...this.redisKey, ttl: this.newTtl })
           }).finally(() => {
             this.isEditing = false
             this.$nextTick(() => this.$refs.ttlText.focus())

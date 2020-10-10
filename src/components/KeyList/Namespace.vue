@@ -14,6 +14,7 @@
 import FolderIcon from '@/components/Icons/FolderIcon'
 import LevelTab from '@/components/KeyList/LevelTab'
 import OpenFolderIcon from '@/components/Icons/OpenFolderIcon'
+
 export default {
   name: 'Namespace',
   components: { OpenFolderIcon, LevelTab, FolderIcon },
@@ -22,10 +23,10 @@ export default {
     expanded: false,
   }),
   methods: {
-    toggle() {
+    toggle () {
       this.expanded = !this.expanded
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -21,11 +21,11 @@ export default {
   name: 'Key',
   components: { TimeIcon, LevelTab, StringIcon },
   props: ['redisKey', 'name', 'level'],
-  methods: mapMutations(['select']),
+  methods: mapMutations('keys', ['select']),
   computed: {
-    ...mapGetters(['currentKey']),
+    ...mapGetters('keys', ['current']),
     isSelected () {
-      return this.currentKey && this.redisKey.name === this.currentKey.name
+      return this.current && this.redisKey.name === this.current.name
     },
     icon () {
       switch (this.redisKey.type) {

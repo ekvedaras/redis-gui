@@ -36,7 +36,7 @@ export default {
   components: { TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
   methods: {
     refresh() {
-      this.$store.dispatch('loadKeys').then(() => this.$toasted.info('Keys refreshed'))
+      this.$store.dispatch('keys/loadKeys').then(() => this.$toasted.info('Keys refreshed'))
     },
     add() {
       this.$modal.show(ServerModal)

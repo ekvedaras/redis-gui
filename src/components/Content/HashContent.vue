@@ -126,7 +126,7 @@ export default {
           {
             title: 'Confirm',
             handler: () => {
-              this.$store.dispatch('deleteHashItem', { keyName: this.name, key }).then(async () => {
+              this.$store.dispatch('keys/deleteHashItem', { keyName: this.name, key }).then(async () => {
                 this.loadKeys()
               })
               this.$modal.hide('dialog')

@@ -14,11 +14,11 @@ export default {
   name: 'ServerSelect',
   computed: mapState('servers', ['list', 'selected']),
   methods: {
-    ...mapActions(['loadDatabases']),
+    ...mapActions('databases', ['load']),
     connect ({ target }) {
       redis.connect(target.value)
       this.$store.commit('servers/select', target.value)
-      this.loadDatabases()
+      this.load()
     },
   },
 }

@@ -126,7 +126,7 @@ export default {
           {
             title: 'Confirm',
             handler: () => {
-              this.$store.dispatch('deleteListItem', { keyName: this.name, index }).then(async () => {
+              this.$store.dispatch('keys/deleteListItem', { keyName: this.name, index }).then(async () => {
                 this.size = await redis.async('llen', this.name)
                 this.start = 0
                 this.loadKeys()

@@ -79,9 +79,9 @@ export default {
       })().then(() => {
         this.$emit('close')
         this.$toasted.success(`Key ${this.name} added`)
-        this.$store.dispatch('loadKeys').then(() => {
-          this.$store.commit('select', this.name)
-          this.$store.commit('refreshTTL')
+        this.$store.dispatch('keys/loadKeys').then(() => {
+          this.$store.commit('keys/select', this.name)
+          this.$store.commit('keys/refreshTTL')
           EventBus.$emit('key-updated', this.name)
         })
       })

@@ -13,7 +13,7 @@
     <div class="overflow-y-auto h-full pb-10 rounded">
       <div v-for="(item, score) in value" :key="score" class="relative">
         <div v-if="!isEditing[score]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
-        <input type="number" v-if="isEditing[score]" v-model="editScore"  @keydown.esc="close(score)" @keydown.ctrl.enter="save(score)" class="p-1 shadow rounded"/>
+        <input type="number" v-if="isEditing[score]" v-model="editScore" @keydown.esc="close(score)" @keydown.ctrl.enter="save(score)" class="p-1 shadow rounded"/>
         <button type="button" @click="editItem(item, score)" class="absolute top-0 right-0 mr-6 z-10">
           <EditIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
         </button>
@@ -126,7 +126,7 @@ export default {
           {
             title: 'Confirm',
             handler: () => {
-              this.$store.dispatch('deleteZsetItem', { keyName: this.name, value }).then(async () => {
+              this.$store.dispatch('keys/deleteZsetItem', { keyName: this.name, value }).then(async () => {
                 this.loadKeys()
               })
               this.$modal.hide('dialog')

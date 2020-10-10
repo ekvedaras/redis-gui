@@ -122,7 +122,7 @@ export default {
           {
             title: 'Confirm',
             handler: () => {
-              this.$store.dispatch('deleteSetItem', { keyName: this.name, value }).then(async () => {
+              this.$store.dispatch('keys/deleteSetItem', { keyName: this.name, value }).then(async () => {
                 this.loadKeys()
               })
               this.$modal.hide('dialog')

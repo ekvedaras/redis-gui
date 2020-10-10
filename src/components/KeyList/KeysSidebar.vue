@@ -13,7 +13,7 @@
     <div class="overflow-y-auto mt-2 h-full px-1">
       <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
     </div>
-    <button @click="loadMore" v-if="nextKeysCursor" tabindex="2" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    <button @click="loadMore" v-if="cursor" tabindex="2" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
   </div>
 </template>
 
@@ -63,22 +63,22 @@ export default {
     this.loadKeys().finally(() => this.isLoading = false)
   },
   methods: {
-    ...mapActions(['loadKeys']),
+    ...mapActions('keys', ['loadKeys']),
     loadMore () {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
-      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.nextKeysCursor }).finally(() => this.isLoading = false)
+      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.cursor }).finally(() => this.isLoading = false)
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal)
     },
   },
   computed: {
-    ...mapState(['keys', 'nextKeysCursor']),
+    ...mapState('keys', ['list', 'cursor']),
     groupedKeys () {
       let grouped = {}
 
-      Object.entries(this.keys).forEach(([name, key]) => {
+      Object.entries(this.list).forEach(([name, key]) => {
         if (name.indexOf(':') < 0) {
           grouped[name] = key
           return true

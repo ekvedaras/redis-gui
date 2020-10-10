@@ -43,7 +43,7 @@ export default {
     historyIndex: -1,
     command: '',
   }),
-  computed: mapState(['server']),
+  computed: mapState('servers', ['selected']),
   methods: {
     history (previous) {
       if (previous) {
@@ -52,7 +52,7 @@ export default {
         this.historyIndex += 1
       }
 
-      let cmd = database.get('history').get(this.server).get(this.historyIndex).value()
+      let cmd = database.get('history').get(this.selected).get(this.historyIndex).value()
 
       if (cmd !== undefined) {
         this.command = cmd
@@ -68,10 +68,10 @@ export default {
         content: this.command,
       })
 
-      let history = database.get('history').get(this.server).value()
+      let history = database.get('history').get(this.selected).value()
       history.unshift(this.command)
       history = history.slice(0, 100)
-      database.get('history').set(this.server, history).write()
+      database.get('history').set(this.selected, history).write()
 
       redis.silently().async(...this.command.split(' '))
           .then(result => {

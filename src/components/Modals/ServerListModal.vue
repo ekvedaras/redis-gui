@@ -41,7 +41,7 @@ export default {
             title: 'Cancel',
             handler: () => {
               this.$modal.hide('dialog')
-            }
+            },
           },
           {
             title: 'Confirm',
@@ -57,7 +57,7 @@ export default {
         classes: 'z-50',
         class: 'z-10',
       })
-    }
+    },
   },
 }
 </script>

@@ -7,12 +7,12 @@ export default {
   name: 'LevelTab',
   props: ['level'],
   computed: {
-    style() {
+    style () {
       return {
-        width: `${this.level * 20}px`
+        width: `${this.level * 20}px`,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

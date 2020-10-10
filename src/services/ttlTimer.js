@@ -1,17 +1,17 @@
 import Vue from 'vue'
 
-let ttlTimer;
+let ttlTimer
 
 const timer = ({ state, getters, commit }) => Object
-  .values(getters.keysWithTTL)
+  .values(getters['keys/withTTL'])
   .forEach(key => {
-    state.keys[key.name].ttl--
-    if (state.keys[key.name].ttl <= 0) {
+    state.list[key.name].ttl--
+    if (state.list[key.name].ttl <= 0) {
       if (state.selected === key.name) {
-        commit('unloadKey', key)
+        commit('keys/unloadKey', key)
       }
 
-      commit('removeKey', key)
+      commit('keys/removeKey', key)
 
       Vue.toasted.info(`Key ${key.name} has expired`)
     }
@@ -31,5 +31,5 @@ export const clearTtlTimer = () => {
   }
 
   clearInterval(ttlTimer)
-  ttlTimer = 0;
+  ttlTimer = 0
 }
