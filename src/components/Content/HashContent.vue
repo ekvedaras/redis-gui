@@ -9,10 +9,7 @@
         <div v-if="!isEditing[key]">
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
-        <div v-if="isEditing[key]">
-          <textarea class="p-2 w-full shadow h-64" :ref="`editor_${key}`" v-model="editValue" @keydown.esc="close(key)" @keydown.ctrl.enter="save(key)"/>
-          <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
-        </div>
+        <ContentEditor v-if="isEditing[key]" v-model="editValue" @close="close(key)" @save="save(key)"/>
       </div>
       <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
@@ -27,10 +24,11 @@ import { EventBus } from '@/services/eventBus'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import SearchBar from '@/components/Elements/SearchBar'
 import KeyItemControls from '@/components/Elements/KeyItemControls'
+import ContentEditor from '@/components/Elements/ContentEditor'
 
 export default {
   name: 'HashContent',
-  components: { KeyItemControls, SearchBar, ValueRenderer },
+  components: { ContentEditor, KeyItemControls, SearchBar, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: '',
@@ -86,7 +84,6 @@ export default {
       this.editValue = value
       this.editKey = key
       this.$set(this.isEditing, key, true)
-      this.$nextTick(() => this.$refs[`editor_${key}`][0].focus())
     },
     save (key) {
       (key === this.editKey ? Promise.resolve() : redis.async('hdel', this.name, key))

@@ -7,10 +7,7 @@
           <KeyItemControls @edit="editItem(item, i)" @delete="deleteItem(item, i)"/>
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
-        <div v-if="isEditing[i]">
-          <textarea class="p-2 w-full shadow h-64" :ref="`editor_${i}`" v-model="editValue" @keydown.esc="close(i)" @keydown.ctrl.enter="save(i)"/>
-          <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
-        </div>
+        <ContentEditor v-if="isEditing[i]" v-model="editValue" @close="close(i)" @save="save(i)"/>
       </div>
       <button @click="loadMore" v-if="start" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
@@ -24,10 +21,11 @@ import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import KeyItemControls from '@/components/Elements/KeyItemControls'
+import ContentEditor from '@/components/Elements/ContentEditor'
 
 export default {
   name: 'ListContent',
-  components: { KeyItemControls, SearchBar, ValueRenderer },
+  components: { ContentEditor, KeyItemControls, SearchBar, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
@@ -87,7 +85,6 @@ export default {
     editItem (value, index) {
       this.editValue = value
       this.$set(this.isEditing, index, true)
-      this.$nextTick(() => this.$refs[`editor_${index}`][0].focus())
     },
     save (index) {
       redis.async('lset', this.name, index, this.editValue)

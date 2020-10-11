@@ -9,10 +9,7 @@
         <div v-if="!isEditing[score]">
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
-        <div v-if="isEditing[score]">
-          <textarea class="p-2 w-full shadow h-64" :ref="`editor_${score}`" v-model="editValue" @keydown.esc="close(score)" @keydown.ctrl.enter="save(score)"/>
-          <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
-        </div>
+        <ContentEditor v-if="isEditing[score]" v-model="editValue" @close="close(score)" @save="save(score)"/>
       </div>
       <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
@@ -27,10 +24,11 @@ import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import KeyItemControls from '@/components/Elements/KeyItemControls'
+import ContentEditor from '@/components/Elements/ContentEditor'
 
 export default {
   name: 'ZsetContent',
-  components: { KeyItemControls, SearchBar, ValueRenderer },
+  components: { ContentEditor, KeyItemControls, SearchBar, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
@@ -87,7 +85,6 @@ export default {
       this.editValue = value
       this.editScore = score
       this.$set(this.isEditing, score, true)
-      this.$nextTick(() => this.$refs[`editor_${score}`][0].focus())
     },
     save (score) {
       redis.async('zadd', this.name, this.editScore, this.editValue)

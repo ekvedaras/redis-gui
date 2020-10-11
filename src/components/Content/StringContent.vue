@@ -1,13 +1,10 @@
 <template>
   <div class="p-4">
     <div v-if="!isEditing" class="relative">
-      <KeyItemControls @edit="edit" without-delete/>
+      <KeyItemControls @edit="isEditing = true" without-delete/>
       <ValueRenderer :value="value"/>
     </div>
-    <div v-if="isEditing">
-      <textarea class="p-2 w-full shadow h-64" ref="editor" v-model="value" @keydown.esc="isEditing = false" @keydown.ctrl.enter="save"/>
-      <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
-    </div>
+    <ContentEditor v-if="isEditing" v-model="value" @close="isEditing = false" @save="save"/>
   </div>
 </template>
 
@@ -15,10 +12,11 @@
 import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import KeyItemControls from '@/components/Elements/KeyItemControls'
+import ContentEditor from '@/components/Elements/ContentEditor'
 
 export default {
   name: 'StringContent',
-  components: { KeyItemControls, ValueRenderer },
+  components: { ContentEditor, KeyItemControls, ValueRenderer },
   props: ['name'],
   data: () => ({
     isEditing: false,
@@ -28,10 +26,6 @@ export default {
     this.value = await redis.async('get', this.name)
   },
   methods: {
-    edit () {
-      this.isEditing = true
-      this.$nextTick(() => this.$refs.editor.focus())
-    },
     save () {
       redis.async('set', this.name, this.value)
           .then(() => this.$toasted.success('Saved'))
