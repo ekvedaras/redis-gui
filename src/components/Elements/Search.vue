@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-1 justify-center">
+  <div class="relative flex flex-1 justify-center items-center">
     <!--suppress HtmlFormInputWithoutLabel -->
     <input type="text" placeholder="Search..." :value="value" @input="$emit('input', $event.target.value)" class="py-2 px-3 rounded shadow w-full"/>
     <Spinner :class="[showSpinner ? 'opacity-100' : 'opacity-0']"/>

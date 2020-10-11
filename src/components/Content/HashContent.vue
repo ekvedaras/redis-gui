@@ -1,20 +1,15 @@
 <template>
   <div class="p-4 pb-10">
-    <div class="flex justify-center space-x-2 mb-2">
-      <Search v-model="search" :show-spinner="isLoading"/>
-      <Button @click="showKeyAddModal">
-        <AddIcon class="w-10"/>
-      </Button>
-    </div>
-    <div class="overflow-y-auto h-full pb-10 rounded">
+    <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
+    <div class="overflow-y-auto h-full pb-10 rounded mt-2">
       <div v-for="(item, key) in value" :key="key" class="relative">
         <div v-if="!isEditing[key]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ key }}</div>
         <input type="text" v-if="isEditing[key]" v-model="editKey" @keydown.esc="close(key)" @keydown.ctrl.enter="save(key)" class="p-1 shadow rounded"/>
         <Button @click="editItem(item, key)" class="absolute top-0 right-0 mr-6 z-10">
-          <EditIcon class="w-5"/>
+          <EditIcon class="w-4 m-1"/>
         </Button>
         <Button @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
-          <DeleteIcon class="w-5"/>
+          <DeleteIcon class="w-4 m-1"/>
         </Button>
         <div v-if="!isEditing[key]">
           <ValueRenderer :value="item" class="mb-4"/>
@@ -33,17 +28,16 @@
 import { redis } from '@/services/redis'
 import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
-import AddIcon from '@/components/Icons/AddIcon'
 import { EventBus } from '@/services/eventBus'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import EditIcon from '@/components/Icons/EditIcon'
-import Search from '@/components/Elements/Search'
 import Button from '@/components/Elements/Button'
+import SearchBar from '@/components/Elements/SearchBar'
 
 export default {
   name: 'HashContent',
-  components: { Button, Search, EditIcon, ValueRenderer, DeleteIcon, AddIcon },
+  components: { SearchBar, Button, EditIcon, ValueRenderer, DeleteIcon },
   props: ['name'],
   data: () => ({
     value: '',

@@ -1,12 +1,7 @@
 <template>
   <div class="p-4 pb-10">
-    <div class="flex items-center mb-2  space-x-2">
-      <Search v-model="search" :show-spinner="isLoading"/>
-      <Button @click="showKeyAddModal">
-        <AddIcon class="w-10"/>
-      </Button>
-    </div>
-    <div class="overflow-y-auto h-full pb-10 rounded">
+    <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
+    <div class="overflow-y-auto h-full pb-10 rounded mt-2">
       <div v-for="(item, score) in value" :key="score" class="relative">
         <div v-if="!isEditing[score]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
         <input type="number" v-if="isEditing[score]" v-model="editScore" @keydown.esc="close(score)" @keydown.ctrl.enter="save(score)" class="p-1 shadow rounded"/>
@@ -33,17 +28,16 @@
 import _ from 'lodash'
 import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
-import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import EditIcon from '@/components/Icons/EditIcon'
-import Search from '@/components/Elements/Search'
 import Button from '@/components/Elements/Button'
+import SearchBar from '@/components/Elements/SearchBar'
 
 export default {
   name: 'ZsetContent',
-  components: { Button, Search, EditIcon, DeleteIcon, AddIcon, ValueRenderer },
+  components: { SearchBar, Button, EditIcon, DeleteIcon, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],

@@ -1,11 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <div class="px-2 flex items-center space-x-2">
-      <Search v-model="search" :show-spinner="isLoading"/>
-      <Button @click="showKeyAddModal">
-        <AddIcon class="w-10"/>
-      </Button>
-    </div>
+    <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal" class="px-2"/>
     <div class="overflow-y-auto mt-2 h-full px-1">
       <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
     </div>
@@ -16,10 +11,8 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import _ from 'lodash'
-import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
-import Search from '@/components/Elements/Search'
-import Button from '@/components/Elements/Button'
+import SearchBar from '@/components/Elements/SearchBar'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -43,7 +36,7 @@ let nestKey = (grouped, path) => {
 
 export default {
   name: 'KeysSidebar',
-  components: { Button, Search, AddIcon },
+  components: { SearchBar },
   data: () => ({
     search: '',
     isLoading: false,
