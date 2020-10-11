@@ -4,12 +4,7 @@
     <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden mt-2">
       <div v-for="(item, i) in filtered" :key="i">
         <div class="relative" v-if="!isEditing[i]">
-          <Button @click="editItem(item, i)" class="absolute top-0 right-0 mt-2 mr-8">
-            <EditIcon class="w-4 m-1"/>
-          </Button>
-          <Button @click="deleteItem(item, i)" class="absolute top-0 right-0 mt-2 mr-2">
-            <DeleteIcon class="w-4 m-1"/>
-          </Button>
+          <KeyItemControls @edit="editItem(item, i)" @delete="deleteItem(item, i)"/>
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
         <div v-if="isEditing[i]">
@@ -26,15 +21,13 @@
 import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
-import DeleteIcon from '@/components/Icons/DeleteIcon'
 import { EventBus } from '@/services/eventBus'
-import EditIcon from '@/components/Icons/EditIcon'
-import Button from '@/components/Elements/Button'
 import SearchBar from '@/components/Elements/SearchBar'
+import KeyItemControls from '@/components/Elements/KeyItemControls'
 
 export default {
   name: 'ListContent',
-  components: { SearchBar, Button, EditIcon, DeleteIcon, ValueRenderer },
+  components: { KeyItemControls, SearchBar, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],

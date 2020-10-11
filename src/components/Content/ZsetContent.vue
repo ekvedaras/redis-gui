@@ -5,12 +5,7 @@
       <div v-for="(item, score) in value" :key="score" class="relative">
         <div v-if="!isEditing[score]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
         <input type="number" v-if="isEditing[score]" v-model="editScore" @keydown.esc="close(score)" @keydown.ctrl.enter="save(score)" class="p-1 shadow rounded"/>
-        <Button @click="editItem(item, score)" class="absolute top-0 right-0 mr-6 z-10">
-          <EditIcon class="w-4 m-1"/>
-        </Button>
-        <Button @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
-          <DeleteIcon class="w-4 m-1"/>
-        </Button>
+        <KeyItemControls v-if="!isEditing[score]" @edit="editItem(item, score)" @delete="deleteItem(item)"/>
         <div v-if="!isEditing[score]">
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
@@ -30,14 +25,12 @@ import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
-import DeleteIcon from '@/components/Icons/DeleteIcon'
-import EditIcon from '@/components/Icons/EditIcon'
-import Button from '@/components/Elements/Button'
 import SearchBar from '@/components/Elements/SearchBar'
+import KeyItemControls from '@/components/Elements/KeyItemControls'
 
 export default {
   name: 'ZsetContent',
-  components: { SearchBar, Button, EditIcon, DeleteIcon, ValueRenderer },
+  components: { KeyItemControls, SearchBar, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],

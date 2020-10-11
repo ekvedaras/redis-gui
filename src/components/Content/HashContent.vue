@@ -5,12 +5,7 @@
       <div v-for="(item, key) in value" :key="key" class="relative">
         <div v-if="!isEditing[key]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ key }}</div>
         <input type="text" v-if="isEditing[key]" v-model="editKey" @keydown.esc="close(key)" @keydown.ctrl.enter="save(key)" class="p-1 shadow rounded"/>
-        <Button @click="editItem(item, key)" class="absolute top-0 right-0 mr-6 z-10">
-          <EditIcon class="w-4 m-1"/>
-        </Button>
-        <Button @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
-          <DeleteIcon class="w-4 m-1"/>
-        </Button>
+        <KeyItemControls v-if="!isEditing[key]" @edit="editItem(item, key)" @delete="deleteItem(item)"/>
         <div v-if="!isEditing[key]">
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
@@ -29,15 +24,13 @@ import { redis } from '@/services/redis'
 import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
-import DeleteIcon from '@/components/Icons/DeleteIcon'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
-import EditIcon from '@/components/Icons/EditIcon'
-import Button from '@/components/Elements/Button'
 import SearchBar from '@/components/Elements/SearchBar'
+import KeyItemControls from '@/components/Elements/KeyItemControls'
 
 export default {
   name: 'HashContent',
-  components: { SearchBar, Button, EditIcon, ValueRenderer, DeleteIcon },
+  components: { KeyItemControls, SearchBar, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: '',
