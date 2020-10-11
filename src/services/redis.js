@@ -54,7 +54,7 @@ export const redis = {
         return Promise.reject('Invalid redis command')
       }
     }
-    
+
     return this.promises[command](...args).catch(error => {
       if (!beSilent) Vue.toasted.error(error)
       throw error

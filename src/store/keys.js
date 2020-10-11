@@ -50,12 +50,12 @@ export default {
         result.lastLoad = Object.keys(result.keys).length
 
         commit('setCursor', result.nextCursor)
-        commit('setKeys', result.keys = cursor ? { ...state.keys, ...result.keys } : result.keys)
+        commit('setKeys', cursor ? { ...state.list, ...result.keys } : result.keys)
 
         return result
       }).then(result => {
         if (result.nextCursor && lastLoad + result.lastLoad < limit) {
-          return dispatch('loadKeys', { pattern, cursor: result.nextCursor, limit, lastLoad: lastLoad + Object.keys(result.keys).length })
+          return dispatch('loadKeys', { pattern, cursor: result.nextCursor, limit, lastLoad: lastLoad + result.lastLoad })
         }
 
         return result

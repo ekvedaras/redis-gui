@@ -7,7 +7,7 @@
              :key="i" :value="item"
              @save="save(i, $event)"
              @delete="deleteItem(item, i)"/>
-      <button @click="loadMore" v-if="start" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+      <LoadMoreButton @click="loadMore" v-if="start"/>
     </div>
   </div>
 </template>
@@ -18,10 +18,11 @@ import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
+import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 
 export default {
   name: 'ListContent',
-  components: { Value, SearchBar },
+  components: { LoadMoreButton, Value, SearchBar },
   props: ['name'],
   data: () => ({
     value: [],

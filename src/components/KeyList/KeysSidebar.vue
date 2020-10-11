@@ -4,7 +4,7 @@
     <div class="overflow-y-auto mt-2 h-full px-1">
       <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
     </div>
-    <button @click="loadMore" v-if="cursor" tabindex="2" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
+    <LoadMoreButton @click="loadMore" v-if="cursor" tabindex="2"/>
   </div>
 </template>
 
@@ -13,6 +13,7 @@ import { mapActions, mapState } from 'vuex'
 import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import SearchBar from '@/components/Elements/SearchBar'
+import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -36,7 +37,7 @@ let nestKey = (grouped, path) => {
 
 export default {
   name: 'KeysSidebar',
-  components: { SearchBar },
+  components: { LoadMoreButton, SearchBar },
   data: () => ({
     search: '',
     isLoading: false,
@@ -57,7 +58,8 @@ export default {
     loadMore () {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
-      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.cursor }).finally(() => this.isLoading = false)
+      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.cursor })
+          .finally(() => this.isLoading = false)
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal)
