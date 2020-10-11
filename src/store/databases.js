@@ -41,8 +41,8 @@ export default {
       index = parseInt(index)
       return redis.async('select', index).then(() => {
         commit('select', index)
-        commit('unloadKey', undefined, { root: true })
-        dispatch('loadKeys', undefined, { root: true })
+        commit('keys/unloadKey', undefined, { root: true })
+        dispatch('keys/loadKeys', undefined, { root: true })
       })
     },
   },

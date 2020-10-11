@@ -11,9 +11,7 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'DatabaseSelect',
-  computed: {
-    ...mapState('databases', ['total', 'list', 'selected']),
-  },
+  computed: mapState('databases', ['total', 'list', 'selected']),
   methods: mapActions('databases', ['select']),
 }
 </script>
