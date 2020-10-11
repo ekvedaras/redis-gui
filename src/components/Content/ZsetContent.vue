@@ -2,15 +2,11 @@
   <div class="p-4 pb-10">
     <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
     <div class="overflow-y-auto h-full pb-10 rounded mt-2">
-      <div v-for="(item, score) in value" :key="score" class="relative">
-        <div v-if="!isEditing[score]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
-        <input type="number" v-if="isEditing[score]" v-model="editScore" @keydown.esc="close(score)" @keydown.ctrl.enter="save(score)" class="p-1 shadow rounded"/>
-        <KeyItemControls v-if="!isEditing[score]" @edit="editItem(item, score)" @delete="deleteItem(item)"/>
-        <div v-if="!isEditing[score]">
-          <ValueRenderer :value="item" class="mb-4"/>
-        </div>
-        <ContentEditor v-if="isEditing[score]" v-model="editValue" @close="close(score)" @save="save(score)"/>
-      </div>
+      <Value v-for="(item, score) in value"
+             class="relative"
+             :key="score" :value="item" :item-key="score"
+             @save="save"
+             @delete="deleteItem(item)"/>
       <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
   </div>
@@ -19,25 +15,20 @@
 <script>
 import _ from 'lodash'
 import { redis } from '@/services/redis'
-import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
-import KeyItemControls from '@/components/Elements/KeyItemControls'
-import ContentEditor from '@/components/Elements/ContentEditor'
+import Value from '@/components/Elements/Value'
 
 export default {
   name: 'ZsetContent',
-  components: { ContentEditor, KeyItemControls, SearchBar, ValueRenderer },
+  components: { Value, SearchBar },
   props: ['name'],
   data: () => ({
     value: [],
     search: '',
     isLoading: true,
-    isEditing: {},
     nextCursor: 0,
-    editValue: '',
-    editScore: 0,
   }),
   async mounted () {
     await this.loadKeys()
@@ -81,19 +72,10 @@ export default {
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'zset' } })
     },
-    editItem (value, score) {
-      this.editValue = value
-      this.editScore = score
-      this.$set(this.isEditing, score, true)
-    },
-    save (score) {
-      redis.async('zadd', this.name, this.editScore, this.editValue)
+    save ({ key, value }) {
+      redis.async('zadd', this.name, key, value)
           .then(() => this.$toasted.success('Saved'))
           .then(() => this.loadKeys())
-          .finally(() => this.close(score))
-    },
-    close (score) {
-      this.$set(this.isEditing, score, false)
     },
     deleteItem (value) {
       this.$modal.show('dialog', {

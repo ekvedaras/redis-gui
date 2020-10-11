@@ -1,35 +1,28 @@
 <template>
   <div class="p-4">
-    <div v-if="!isEditing" class="relative">
-      <KeyItemControls @edit="isEditing = true" without-delete/>
-      <ValueRenderer :value="value"/>
-    </div>
-    <ContentEditor v-if="isEditing" v-model="value" @close="isEditing = false" @save="save"/>
+    <Value class="relative" :value="value" @save="save" without-delete/>
   </div>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
-import ValueRenderer from '@/components/Renderer/ValueRenderer'
-import KeyItemControls from '@/components/Elements/KeyItemControls'
-import ContentEditor from '@/components/Elements/ContentEditor'
+import Value from '@/components/Elements/Value'
 
 export default {
   name: 'StringContent',
-  components: { ContentEditor, KeyItemControls, ValueRenderer },
+  components: { Value },
   props: ['name'],
   data: () => ({
-    isEditing: false,
     value: '',
   }),
   async mounted () {
     this.value = await redis.async('get', this.name)
   },
   methods: {
-    save () {
-      redis.async('set', this.name, this.value)
+    save ({ value }) {
+      redis.async('set', this.name, value)
+          .then(() => this.value = value)
           .then(() => this.$toasted.success('Saved'))
-          .finally(() => this.isEditing = false)
     },
   },
 }

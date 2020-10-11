@@ -10,7 +10,7 @@
 <script>
 import { redis } from '@/services/redis'
 import { mapActions } from 'vuex'
-import Header from '@/components/Header'
+import Header from '@/components/Elements/Header'
 import KeyContent from '@/components/KeyList/KeyContent'
 import KeysSidebar from '@/components/KeyList/KeysSidebar'
 

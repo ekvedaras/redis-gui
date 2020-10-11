@@ -2,15 +2,11 @@
   <div class="p-4 pb-10">
     <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
     <div class="overflow-y-auto h-full pb-10 rounded mt-2">
-      <div v-for="(item, key) in value" :key="key" class="relative">
-        <div v-if="!isEditing[key]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ key }}</div>
-        <input type="text" v-if="isEditing[key]" v-model="editKey" @keydown.esc="close(key)" @keydown.ctrl.enter="save(key)" class="p-1 shadow rounded"/>
-        <KeyItemControls v-if="!isEditing[key]" @edit="editItem(item, key)" @delete="deleteItem(item)"/>
-        <div v-if="!isEditing[key]">
-          <ValueRenderer :value="item" class="mb-4"/>
-        </div>
-        <ContentEditor v-if="isEditing[key]" v-model="editValue" @close="close(key)" @save="save(key)"/>
-      </div>
+      <Value v-for="(item, key) in value"
+             class="relative"
+             :key="key" :value="item" :item-key="key"
+             @save="save(key, $event)"
+             @delete="deleteItem(key)"/>
       <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
   </div>
@@ -21,23 +17,18 @@ import { redis } from '@/services/redis'
 import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
-import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import SearchBar from '@/components/Elements/SearchBar'
-import KeyItemControls from '@/components/Elements/KeyItemControls'
-import ContentEditor from '@/components/Elements/ContentEditor'
+import Value from '@/components/Elements/Value'
 
 export default {
   name: 'HashContent',
-  components: { ContentEditor, KeyItemControls, SearchBar, ValueRenderer },
+  components: { Value, SearchBar },
   props: ['name'],
   data: () => ({
     value: '',
     search: '',
     isLoading: true,
-    isEditing: {},
     nextCursor: 0,
-    editValue: '',
-    editKey: '',
   }),
   async mounted () {
     await this.loadKeys()
@@ -80,20 +71,11 @@ export default {
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'hash' } })
     },
-    editItem (value, key) {
-      this.editValue = value
-      this.editKey = key
-      this.$set(this.isEditing, key, true)
-    },
-    save (key) {
-      (key === this.editKey ? Promise.resolve() : redis.async('hdel', this.name, key))
-          .then(() => redis.async('hset', this.name, this.editKey, this.editValue)
+    save (key, { key: newKey, value }) {
+      (key === newKey ? Promise.resolve() : redis.async('hdel', this.name, key))
+          .then(() => redis.async('hset', this.name, newKey, value)
               .then(() => this.$toasted.success('Saved'))
               .then(() => this.loadKeys()))
-          .finally(() => this.close(key))
-    },
-    close (key) {
-      this.$set(this.isEditing, key, false)
     },
     deleteItem (key) {
       this.$modal.show('dialog', {

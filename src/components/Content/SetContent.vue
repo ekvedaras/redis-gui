@@ -2,13 +2,11 @@
   <div class="p-4">
     <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
     <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden mt-2">
-      <div v-for="(item, i) in value" :key="i">
-        <div class="relative" v-if="!isEditing[i]">
-          <KeyItemControls @edit="editItem(item, i)" @delete="deleteItem(item, i)"/>
-          <ValueRenderer :value="item" class="mb-4"/>
-        </div>
-        <ContentEditor v-if="isEditing[i]" v-model="editValue" @close="close(i)" @save="save(i)"/>
-      </div>
+      <Value v-for="(item, i) in value"
+             class="relative"
+             :key="i" :value="item"
+             @save="save(i, $event)"
+             @delete="deleteItem(item)"/>
       <button @click="loadMore" v-if="nextCursor" class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1">Load more...</button>
     </div>
   </div>
@@ -16,24 +14,20 @@
 
 <script>
 import { redis } from '@/services/redis'
-import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
-import KeyItemControls from '@/components/Elements/KeyItemControls'
-import ContentEditor from '@/components/Elements/ContentEditor'
+import Value from '@/components/Elements/Value'
 
 export default {
   name: 'SetContent',
-  components: { ContentEditor, KeyItemControls, SearchBar, ValueRenderer },
+  components: { Value, SearchBar },
   props: ['name'],
   data: () => ({
     value: [],
     search: '',
     isLoading: true,
-    isEditing: {},
     nextCursor: 0,
-    editValue: '',
   }),
   async mounted () {
     await this.loadKeys()
@@ -76,20 +70,13 @@ export default {
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'set' } })
     },
-    editItem (value, index) {
-      this.editValue = value
-      this.$set(this.isEditing, index, true)
-    },
-    save (index) {
-      redis.async('srem', this.name, this.value[index])
-          .then(() => redis.async('sadd', this.name, this.editValue)
-              .then(() => this.value[index] = this.editValue)
+    save (key, { value }) {
+      redis.async('srem', this.name, this.value[key]).then(
+          () => redis.async('sadd', this.name, value)
+              .then(() => this.$set(this.value, key, value))
               .then(() => this.$toasted.success('Saved'))
-              .then(() => this.loadKeys()))
-          .finally(() => this.close(index))
-    },
-    close (index) {
-      this.$set(this.isEditing, index, false)
+              .then(() => this.loadKeys()),
+      )
     },
     deleteItem (value) {
       this.$modal.show('dialog', {

@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import DatabaseSelect from '@/components/DatabaseSelect'
-import ServerSelect from '@/components/ServerSelect'
+import DatabaseSelect from '@/components/Elements/DatabaseSelect'
+import ServerSelect from '@/components/Elements/ServerSelect'
 import RefreshIcon from '@/components/Icons/RefreshIcon'
 import AddIcon from '@/components/Icons/AddIcon'
 import ServerModal from '@/components/Modals/ServerModal'
