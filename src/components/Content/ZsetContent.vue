@@ -1,7 +1,7 @@
 <template>
-  <div class="p-4 pb-10">
+  <div>
     <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
-    <div class="overflow-y-auto h-full pb-10 rounded mt-2">
+    <div class="overflow-y-auto h-full pb-10 rounded mt-4">
       <Value v-for="(item, score) in value"
              class="relative"
              :key="score" :value="item" :item-key="score"

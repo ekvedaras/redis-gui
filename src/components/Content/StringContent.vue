@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div>
     <Value class="relative" :value="value" @save="save" without-delete/>
   </div>
 </template>
