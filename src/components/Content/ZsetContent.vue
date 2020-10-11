@@ -2,20 +2,20 @@
   <div class="p-4 pb-10">
     <div class="flex items-center mb-2  space-x-2">
       <Search v-model="search" :show-spinner="isLoading"/>
-      <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
-        <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
-      </div>
+      <Button @click="showKeyAddModal">
+        <AddIcon class="w-10"/>
+      </Button>
     </div>
     <div class="overflow-y-auto h-full pb-10 rounded">
       <div v-for="(item, score) in value" :key="score" class="relative">
         <div v-if="!isEditing[score]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ score }}</div>
         <input type="number" v-if="isEditing[score]" v-model="editScore" @keydown.esc="close(score)" @keydown.ctrl.enter="save(score)" class="p-1 shadow rounded"/>
-        <button type="button" @click="editItem(item, score)" class="absolute top-0 right-0 mr-6 z-10">
-          <EditIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
-        </button>
-        <button type="button" @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
-          <DeleteIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
-        </button>
+        <Button @click="editItem(item, score)" class="absolute top-0 right-0 mr-6 z-10">
+          <EditIcon class="w-4 m-1"/>
+        </Button>
+        <Button @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
+          <DeleteIcon class="w-4 m-1"/>
+        </Button>
         <div v-if="!isEditing[score]">
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
@@ -39,10 +39,11 @@ import { EventBus } from '@/services/eventBus'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import EditIcon from '@/components/Icons/EditIcon'
 import Search from '@/components/Elements/Search'
+import Button from '@/components/Elements/Button'
 
 export default {
   name: 'ZsetContent',
-  components: { Search, EditIcon, DeleteIcon, AddIcon, ValueRenderer },
+  components: { Button, Search, EditIcon, DeleteIcon, AddIcon, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],

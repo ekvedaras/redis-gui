@@ -2,9 +2,9 @@
   <div class="flex flex-col">
     <div class="px-2 flex items-center space-x-2">
       <Search v-model="search" :show-spinner="isLoading"/>
-      <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
-        <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
-      </div>
+      <Button @click="showKeyAddModal">
+        <AddIcon class="w-10"/>
+      </Button>
     </div>
     <div class="overflow-y-auto mt-2 h-full px-1">
       <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
@@ -19,6 +19,7 @@ import _ from 'lodash'
 import AddIcon from '@/components/Icons/AddIcon'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import Search from '@/components/Elements/Search'
+import Button from '@/components/Elements/Button'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -42,7 +43,7 @@ let nestKey = (grouped, path) => {
 
 export default {
   name: 'KeysSidebar',
-  components: { Search, AddIcon },
+  components: { Button, Search, AddIcon },
   data: () => ({
     search: '',
     isLoading: false,

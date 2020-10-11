@@ -2,20 +2,20 @@
   <div class="p-4 pb-10">
     <div class="flex justify-center space-x-2 mb-2">
       <Search v-model="search" :show-spinner="isLoading"/>
-      <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
-        <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
-      </div>
+      <Button @click="showKeyAddModal">
+        <AddIcon class="w-10"/>
+      </Button>
     </div>
     <div class="overflow-y-auto h-full pb-10 rounded">
       <div v-for="(item, key) in value" :key="key" class="relative">
         <div v-if="!isEditing[key]" class="sticky top-0 font-bold z-10 bg-gray-100">{{ key }}</div>
         <input type="text" v-if="isEditing[key]" v-model="editKey" @keydown.esc="close(key)" @keydown.ctrl.enter="save(key)" class="p-1 shadow rounded"/>
-        <button type="button" @click="editItem(item, key)" class="absolute top-0 right-0 mr-6 z-10">
-          <EditIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
-        </button>
-        <button type="button" @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
-          <DeleteIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
-        </button>
+        <Button @click="editItem(item, key)" class="absolute top-0 right-0 mr-6 z-10">
+          <EditIcon class="w-5"/>
+        </Button>
+        <Button @click="deleteItem(item)" class="absolute top-0 right-0 z-10">
+          <DeleteIcon class="w-5"/>
+        </Button>
         <div v-if="!isEditing[key]">
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
@@ -39,10 +39,11 @@ import DeleteIcon from '@/components/Icons/DeleteIcon'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import EditIcon from '@/components/Icons/EditIcon'
 import Search from '@/components/Elements/Search'
+import Button from '@/components/Elements/Button'
 
 export default {
   name: 'HashContent',
-  components: { Search, EditIcon, ValueRenderer, DeleteIcon, AddIcon },
+  components: { Button, Search, EditIcon, ValueRenderer, DeleteIcon, AddIcon },
   props: ['name'],
   data: () => ({
     value: '',

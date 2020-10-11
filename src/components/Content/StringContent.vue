@@ -1,9 +1,9 @@
 <template>
   <div class="p-4">
     <div v-if="!isEditing" class="relative">
-      <button type="button" @click="edit" class="absolute top-0 right-0 mt-2 mr-2 z-10">
-        <EditIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
-      </button>
+      <Button @click="edit" class="absolute top-0 right-0 mt-2 mr-2 z-10">
+        <EditIcon class="w-5"/>
+      </Button>
       <ValueRenderer :value="value"/>
     </div>
     <div v-if="isEditing">
@@ -17,10 +17,11 @@
 import { redis } from '@/services/redis'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import EditIcon from '@/components/Icons/EditIcon'
+import Button from '@/components/Elements/Button'
 
 export default {
   name: 'StringContent',
-  components: { EditIcon, ValueRenderer },
+  components: { Button, EditIcon, ValueRenderer },
   props: ['name'],
   data: () => ({
     isEditing: false,

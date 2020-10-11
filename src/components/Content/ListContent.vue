@@ -2,19 +2,19 @@
   <div class="p-4 pb-10">
     <div class="flex justify-center space-x-2 mb-2">
       <Search v-model="search" :show-spinner="isLoading"/>
-      <div class="h-full hover:bg-red-200 rounded" @click="showKeyAddModal">
-        <AddIcon class="text-gray-600 w-10 h-full hover:text-redis"/>
-      </div>
+      <Button @click="showKeyAddModal">
+        <AddIcon class="w-10"/>
+      </Button>
     </div>
     <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden">
       <div v-for="(item, i) in filtered" :key="i">
         <div class="relative" v-if="!isEditing[i]">
-          <button type="button" @click="editItem(item, i)" class="absolute top-0 right-0 mt-2 mr-8">
-            <EditIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
-          </button>
-          <button type="button" @click="deleteItem(item, i)" class="absolute top-0 right-0 mt-2 mr-2">
-            <DeleteIcon class="w-5 cursor-pointer text-gray-500 hover:text-redis"/>
-          </button>
+          <Button @click="editItem(item, i)" class="absolute top-0 right-0 mt-2 mr-8">
+            <EditIcon class="w-5"/>
+          </Button>
+          <Button @click="deleteItem(item, i)" class="absolute top-0 right-0 mt-2 mr-2">
+            <DeleteIcon class="w-5"/>
+          </Button>
           <ValueRenderer :value="item" class="mb-4"/>
         </div>
         <div v-if="isEditing[i]">
@@ -36,10 +36,11 @@ import DeleteIcon from '@/components/Icons/DeleteIcon'
 import { EventBus } from '@/services/eventBus'
 import EditIcon from '@/components/Icons/EditIcon'
 import Search from '@/components/Elements/Search'
+import Button from '@/components/Elements/Button'
 
 export default {
   name: 'ListContent',
-  components: { Search, EditIcon, DeleteIcon, AddIcon, ValueRenderer },
+  components: { Button, Search, EditIcon, DeleteIcon, AddIcon, ValueRenderer },
   props: ['name'],
   data: () => ({
     value: [],
