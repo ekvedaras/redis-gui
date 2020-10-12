@@ -14,22 +14,22 @@
 
 <script>
 import { redis } from '@/services/redis'
-import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
+import ScansKey from '@/components/Mixins/ScansKey'
+import _ from 'lodash'
 
 export default {
   name: 'HashContent',
   components: { LoadMoreButton, Value, SearchBar },
+  mixins: [ScansKey],
   props: ['name'],
   data: () => ({
     value: '',
-    search: '',
-    isLoading: true,
-    nextCursor: 0,
+    scanUsing: 'hscan',
   }),
   async mounted () {
     await this.loadKeys()
@@ -41,33 +41,10 @@ export default {
       this.loadKeys()
     })
   },
-  watch: {
-    search () {
-      let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
-      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` })
-    },
-  },
   methods: {
-    loadKeys ({ pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
-      this.isLoading = true
-      return redis.async('hscan', this.name, cursor, 'MATCH', pattern, 'COUNT', limit).then(result => {
-        result.lastLoad = Object.keys(result[1]).length
-        this.nextCursor = parseInt(result[0])
-
-        let value = _.fromPairs(_.chunk(result[1], 2))
-        this.value = cursor ? { ...this.value, ...value } : value
-
-        return result
-      }).then(result => {
-        if (result.nextCursor && lastLoad + result.lastLoad < limit) {
-          return this.loadKeys({ pattern, cursor: result.nextCursor, limit, lastLoad: lastLoad + Object.keys(result[1]).length })
-        }
-
-        return result
-      }).finally(() => this.isLoading = false)
-    },
-    loadMore () {
-      this.loadKeys({ pattern: `*${this.search}*`, cursor: this.nextCursor })
+    setScannedValue (value, merge) {
+      let parsed = _.fromPairs(_.chunk(value, 2))
+      this.value = merge ? { ...this.value, ...parsed } : parsed
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'hash' } })
