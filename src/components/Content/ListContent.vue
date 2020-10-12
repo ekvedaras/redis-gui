@@ -6,7 +6,7 @@
              class="relative"
              :key="i" :value="item"
              @save="save(i, $event)"
-             @delete="deleteItem(item, i)"/>
+             @delete="deleteItem({label: item, index: i}, 'keys/deleteListItem')"/>
       <LoadMoreButton @click="loadMore" v-if="start"/>
     </div>
   </div>
@@ -19,10 +19,12 @@ import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
+import DeletesItems from '@/components/Mixins/DeletesItems'
 
 export default {
   name: 'ListContent',
   components: { LoadMoreButton, Value, SearchBar },
+  mixins: [DeletesItems],
   props: ['name'],
   data: () => ({
     value: [],
@@ -82,28 +84,9 @@ export default {
           .then(() => this.$set(this.value, key, value))
           .then(() => this.$toasted.success('Saved'))
     },
-    deleteItem (value, index) {
-      this.$modal.show('dialog', {
-        title: 'Confirm',
-        text: `Are you sure you want to delete <b>${value.substr(0, 50)}</b> item from ${this.name}?`,
-        buttons: [
-          {
-            title: 'Cancel',
-            handler: () => this.$modal.hide('dialog'),
-          },
-          {
-            title: 'Confirm',
-            handler: () => {
-              this.$store.dispatch('keys/deleteListItem', { keyName: this.name, index }).then(async () => {
-                this.size = await redis.async('llen', this.name)
-                this.start = 0
-                this.loadKeys()
-              })
-              this.$modal.hide('dialog')
-            },
-          },
-        ],
-      })
+    async afterDeleteItem () {
+      this.size = await redis.async('llen', this.name)
+      this.start = 0
     },
   },
 }

@@ -78,19 +78,19 @@ export default {
         commit('removeKey', { name })
       })
     },
-    deleteListItem (store, { keyName, index }) {
-      return redis.async('lset', keyName, index, 'REDIS-GUI--DELETED--')
+    deleteListItem (store, { keyName, item }) {
+      return redis.async('lset', keyName, item.index, 'REDIS-GUI--DELETED--')
         .then(() => redis.async('lrem', keyName, 0, 'REDIS-GUI--DELETED--').then(() => {
-          Vue.toasted.info(`${keyName} list item at ${index} position deleted`)
+          Vue.toasted.info(`${keyName} list item at ${item.index} position deleted`)
         }))
     },
-    deleteSetItem (store, { keyName, value }) {
+    deleteSetItem (store, { keyName, item: value }) {
       return redis.async('srem', keyName, value).then(() => Vue.toasted.info(`${keyName} set item deleted`))
     },
-    deleteZsetItem (store, { keyName, value }) {
+    deleteZsetItem (store, { keyName, item: value }) {
       return redis.async('zrem', keyName, value).then(() => Vue.toasted.info(`${keyName} sorted set item deleted`))
     },
-    deleteHashItem (store, { keyName, key }) {
+    deleteHashItem (store, { keyName, item: key }) {
       return redis.async('hdel', keyName, key).then(() => Vue.toasted.info(`${keyName} hash ${key} key deleted`))
     },
   },

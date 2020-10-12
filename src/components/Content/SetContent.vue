@@ -6,7 +6,7 @@
              class="relative"
              :key="i" :value="item"
              @save="save(i, $event)"
-             @delete="deleteItem(item)"/>
+             @delete="deleteItem(item, 'keys/deleteSetItem')"/>
       <LoadMoreButton @click="loadMore" v-if="nextCursor"/>
     </div>
   </div>
@@ -20,11 +20,12 @@ import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 import ScansKey from '@/components/Mixins/ScansKey'
+import DeletesItems from '@/components/Mixins/DeletesItems'
 
 export default {
   name: 'SetContent',
   components: { LoadMoreButton, Value, SearchBar },
-  mixins: [ScansKey],
+  mixins: [ScansKey, DeletesItems],
   props: ['name'],
   data: () => ({
     value: [],
@@ -54,27 +55,6 @@ export default {
               .then(() => this.$toasted.success('Saved'))
               .then(() => this.loadKeys()),
       )
-    },
-    deleteItem (value) {
-      this.$modal.show('dialog', {
-        title: 'Confirm',
-        text: `Are you sure you want to delete <b>${value.substr(0, 50)}</b> item from ${this.name}?`,
-        buttons: [
-          {
-            title: 'Cancel',
-            handler: () => this.$modal.hide('dialog'),
-          },
-          {
-            title: 'Confirm',
-            handler: () => {
-              this.$store.dispatch('keys/deleteSetItem', { keyName: this.name, value }).then(async () => {
-                this.loadKeys()
-              })
-              this.$modal.hide('dialog')
-            },
-          },
-        ],
-      })
     },
   },
 }

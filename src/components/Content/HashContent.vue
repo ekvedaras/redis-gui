@@ -6,7 +6,7 @@
              class="relative"
              :key="key" :value="item" :item-key="key"
              @save="save(key, $event)"
-             @delete="deleteItem(key)"/>
+             @delete="deleteItem(key, 'keys/deleteHashItem')"/>
       <LoadMoreButton @click="loadMore" v-if="nextCursor"/>
     </div>
   </div>
@@ -21,11 +21,12 @@ import Value from '@/components/Elements/Value'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 import ScansKey from '@/components/Mixins/ScansKey'
 import _ from 'lodash'
+import DeletesItems from '@/components/Mixins/DeletesItems'
 
 export default {
   name: 'HashContent',
   components: { LoadMoreButton, Value, SearchBar },
-  mixins: [ScansKey],
+  mixins: [ScansKey, DeletesItems],
   props: ['name'],
   data: () => ({
     value: '',
@@ -54,27 +55,6 @@ export default {
           .then(() => redis.async('hset', this.name, newKey, value)
               .then(() => this.$toasted.success('Saved'))
               .then(() => this.loadKeys()))
-    },
-    deleteItem (key) {
-      this.$modal.show('dialog', {
-        title: 'Confirm',
-        text: `Are you sure you want to delete <b>${key}</b> item from ${this.name}?`,
-        buttons: [
-          {
-            title: 'Cancel',
-            handler: () => this.$modal.hide('dialog'),
-          },
-          {
-            title: 'Confirm',
-            handler: () => {
-              this.$store.dispatch('keys/deleteHashItem', { keyName: this.name, key }).then(async () => {
-                this.loadKeys()
-              })
-              this.$modal.hide('dialog')
-            },
-          },
-        ],
-      })
     },
   },
 }
