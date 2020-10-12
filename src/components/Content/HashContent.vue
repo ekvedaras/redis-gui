@@ -1,6 +1,8 @@
 <template>
   <div>
-    <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
+    <SearchBar v-model="search"
+               :show-spinner="isLoading"
+               with-add :add-name="name" add-type="hash"/>
     <div class="overflow-y-auto h-full pb-10 rounded mt-4">
       <Value v-for="(item, key) in value"
              class="relative"
@@ -14,7 +16,6 @@
 
 <script>
 import { redis } from '@/services/redis'
-import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
@@ -46,9 +47,6 @@ export default {
     setScannedValue (value, merge) {
       let parsed = _.fromPairs(_.chunk(value, 2))
       this.value = merge ? { ...this.value, ...parsed } : parsed
-    },
-    showKeyAddModal () {
-      this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'hash' } })
     },
     save (key, { key: newKey, value }) {
       (key === newKey ? Promise.resolve() : redis.async('hdel', this.name, key))

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal"/>
+    <SearchBar v-model="search"
+               :show-spinner="isLoading"
+               with-add :add-name="name" add-type="list"/>
     <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden mt-4">
       <Value v-for="(item, i) in filtered"
              class="relative"
@@ -14,7 +16,6 @@
 
 <script>
 import { redis } from '@/services/redis'
-import AddKeyModal from '@/components/Modals/AddKeyModal'
 import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
@@ -75,9 +76,6 @@ export default {
     },
     loadMore () {
       this.loadKeys({ start: this.start })
-    },
-    showKeyAddModal () {
-      this.$modal.show(AddKeyModal, { fill: { name: this.name, type: 'list' } })
     },
     save (key, { value }) {
       redis.async('lset', this.name, key, value)
