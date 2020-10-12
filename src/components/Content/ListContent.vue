@@ -52,12 +52,15 @@ export default {
         return
       }
 
-      this.size = await redis.async('llen', this.name)
-      this.start = 0
+      await this.resetCursor()
       this.loadKeys()
     })
   },
   methods: {
+    async resetCursor () {
+      this.size = await redis.async('llen', this.name)
+      this.start = 0
+    },
     loadKeys ({ start = 0, limit = Math.min(this.size - this.start, redis.pageSize) } = {}) {
       this.isLoading = true
       return redis.async('lrange', this.name, start, start + limit - 1).then(result => {
@@ -83,8 +86,7 @@ export default {
           .then(() => this.$toasted.success('Saved'))
     },
     async afterDeleteItem () {
-      this.size = await redis.async('llen', this.name)
-      this.start = 0
+      await this.resetCursor()
     },
   },
 }
