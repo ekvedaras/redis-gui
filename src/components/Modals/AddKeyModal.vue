@@ -1,6 +1,5 @@
 <template>
-  <div class="bg-gray-200 p-4 flex flex-col space-y-4">
-    <h2 class="text-lg">Add new key</h2>
+  <Modal title="Add new key">
     <div class="flex space-x-4">
       <input type="text" placeholder="Name" v-model="name" class="p-2 rounded shadow flex-1"/>
       <input type="text" placeholder="Hash key name" v-if="type === 'hash'" v-model="hashName" class="p-2 rounded shadow flex-1"/>
@@ -20,16 +19,18 @@
       <input type="number" class="p-2 rounded shadow w-20" v-if="type === 'string'" placeholder="TTL" v-model="ttl"/>
       <button @click="save" class="transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Save</button>
     </div>
-  </div>
+  </Modal>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
 import { EventBus } from '@/services/eventBus'
 import { mapActions, mapMutations } from 'vuex'
+import Modal from '@/components/Modals/Modal'
 
 export default {
   name: 'AddKeyModal',
+  components: { Modal },
   props: {
     fill: {
       type: Object,

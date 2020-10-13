@@ -1,6 +1,5 @@
 <template>
-  <div class="bg-gray-200 p-4 flex flex-col space-y-4">
-    <h2 class="text-lg">{{ title }}</h2>
+  <Modal :title="title">
     <input type="text" placeholder="Name" v-model="name" class="p-2 rounded shadow"/>
     <div class="flex space-x-4">
       <input type="text" placeholder="Host / IP" v-model="host" class="p-2 rounded shadow flex-1"/>
@@ -11,15 +10,17 @@
       <button @click="test" class="flex relative transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Test</button>
       <button @click="save" class="transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Save</button>
     </div>
-  </div>
+  </Modal>
 </template>
 
 <script>
 import { database } from '@/services/database'
 import { mapMutations } from 'vuex'
+import Modal from '@/components/Modals/Modal'
 
 export default {
   name: 'ServerModal',
+  components: { Modal },
   props: ['server-key'],
   data: () => ({
     name: '',

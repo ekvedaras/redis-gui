@@ -1,6 +1,5 @@
 <template>
-  <div class="bg-gray-200 p-4 flex flex-col space-y-4 text-sm">
-    <h2 class="text-lg">Console</h2>
+  <Modal title="Console">
     <div class="rounded bg-white w-full font-mono shadow">
       <div class="overflow-y-auto p-4 " :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
         <div v-for="(line, i) in log" :key="i" :class="{'text-redis': line.isError, 'font-bold': line.isCommand}">
@@ -28,16 +27,18 @@
           @keydown.enter="send"
           class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono "/>
     </div>
-  </div>
+  </Modal>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
 import { database } from '@/services/database'
 import { mapState } from 'vuex'
+import Modal from '@/components/Modals/Modal'
 
 export default {
   name: 'ConsoleModal',
+  components: { Modal },
   data: () => ({
     log: [],
     historyIndex: -1,

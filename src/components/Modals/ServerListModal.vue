@@ -1,6 +1,5 @@
 <template>
-  <div class="bg-gray-200 p-4 flex flex-col space-y-4">
-    <h2 class="text-lg">Servers</h2>
+  <Modal title="Servers">
     <table>
       <tr v-for="(server, key) in list" :key="key" @click="edit(key)" class="rounded cursor-pointer hover:bg-gray-400">
         <td class="p-2 font-semibold rounded-l">{{ server.name }}</td>
@@ -14,7 +13,7 @@
         </td>
       </tr>
     </table>
-  </div>
+  </Modal>
 </template>
 
 <script>
@@ -22,10 +21,11 @@ import { mapMutations, mapState } from 'vuex'
 import ServerModal from '@/components/Modals/ServerModal'
 import { database } from '@/services/database'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
+import Modal from '@/components/Modals/Modal'
 
 export default {
   name: 'ServerListModal',
-  components: { DeleteIcon },
+  components: { Modal, DeleteIcon },
   computed: mapState('servers', ['list']),
   methods: {
     ...mapMutations('servers', ['setServers']),
