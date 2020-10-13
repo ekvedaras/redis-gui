@@ -16,16 +16,16 @@
 
 <script>
 import { redis } from '@/services/redis'
-import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 import DeletesItems from '@/components/Mixins/DeletesItems'
+import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate'
 
 export default {
   name: 'ListContent',
   components: { LoadMoreButton, Value, SearchBar },
-  mixins: [DeletesItems],
+  mixins: [DeletesItems, ReloadsOnKeyUpdate],
   props: ['name'],
   data: () => ({
     value: [],
@@ -45,16 +45,8 @@ export default {
     },
   },
   async mounted () {
-    this.size = await redis.async('llen', this.name)
+    await this.resetCursor()
     this.loadKeys()
-    EventBus.$on('key-updated', async name => {
-      if (name !== this.name) {
-        return
-      }
-
-      await this.resetCursor()
-      this.loadKeys()
-    })
   },
   methods: {
     async resetCursor () {

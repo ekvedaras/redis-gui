@@ -13,6 +13,9 @@ export default {
       this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` })
     },
   },
+  async mounted () {
+    await this.loadKeys()
+  },
   methods: {
     loadKeys ({ pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
       this.isLoading = true

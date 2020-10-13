@@ -17,32 +17,22 @@
 <script>
 import _ from 'lodash'
 import { redis } from '@/services/redis'
-import { EventBus } from '@/services/eventBus'
 import SearchBar from '@/components/Elements/SearchBar'
 import Value from '@/components/Elements/Value'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 import ScansKey from '@/components/Mixins/ScansKey'
 import DeletesItems from '@/components/Mixins/DeletesItems'
+import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate'
 
 export default {
   name: 'ZsetContent',
   components: { LoadMoreButton, Value, SearchBar },
-  mixins: [ScansKey, DeletesItems],
+  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate],
   props: ['name'],
   data: () => ({
     value: [],
     scanUsing: 'zscan',
   }),
-  async mounted () {
-    await this.loadKeys()
-    EventBus.$on('key-updated', async name => {
-      if (name !== this.name) {
-        return
-      }
-
-      this.loadKeys()
-    })
-  },
   methods: {
     setScannedValue (value, merge) {
       let parsed = _.fromPairs(_.chunk(value, 2).map(chunk => _.reverse(chunk)))
