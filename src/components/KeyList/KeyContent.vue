@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { redis } from '@/services/redis'
 import StringContent from '@/components/Content/StringContent'
 import ListContent from '@/components/Content/ListContent'
@@ -58,6 +58,8 @@ export default {
     newName: '',
   }),
   methods: {
+    ...mapMutations('keys', ['addKey', 'select', 'removeKey']),
+    ...mapActions('keys', ['deleteKey']),
     startRename () {
       this.isRenaming = true
       this.newName = this.current.name
@@ -68,9 +70,9 @@ export default {
         redis.async('rename', this.current.name, this.newName).then(() => {
           let oldName = this.current.name
           let newName = this.newName
-          this.$store.commit('keys/addKey', { ...this.current, name: newName })
-          this.$store.commit('keys/select', newName)
-          this.$store.commit('keys/removeKey', { name: oldName })
+          this.addKey({ ...this.current, name: newName })
+          this.select(newName)
+          this.removeKey({ name: oldName })
         }).finally(() => {
           this.isRenaming = false
           this.$nextTick(() => this.$refs.keyName.focus())
@@ -92,7 +94,7 @@ export default {
           {
             title: 'Confirm',
             handler: () => {
-              this.$store.dispatch('deleteKey', this.selected)
+              this.deleteKey(this.selected)
               this.$modal.hide('dialog')
             },
           },

@@ -31,23 +31,25 @@ import EditIcon from '@/components/Icons/EditIcon'
 import ServerListModal from '@/components/Modals/ServerListModal'
 import TerminalIcon from '@/components/Icons/TerminalIcon'
 import ConsoleModal from '@/components/Modals/ConsoleModal'
+import { mapActions } from 'vuex'
 
 export default {
   components: { TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
   methods: {
-    refresh() {
-      this.$store.dispatch('keys/loadKeys').then(() => this.$toasted.info('Keys refreshed'))
+    ...mapActions('keys', ['loadKeys']),
+    refresh () {
+      this.loadKeys().then(() => this.$toasted.info('Keys refreshed'))
     },
-    add() {
+    add () {
       this.$modal.show(ServerModal)
     },
-    edit() {
+    edit () {
       this.$modal.show(ServerListModal)
     },
-    openTerminal() {
+    openTerminal () {
       this.$modal.show(ConsoleModal)
-    }
-  }
+    },
+  },
 }
 </script>
 

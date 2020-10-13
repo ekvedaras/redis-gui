@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { redis } from '@/services/redis'
 
 export default {
@@ -15,9 +15,10 @@ export default {
   computed: mapState('servers', ['list', 'selected']),
   methods: {
     ...mapActions('databases', ['load']),
+    ...mapMutations('servers', ['select']),
     connect ({ target }) {
       redis.connect(target.value)
-      this.$store.commit('servers/select', target.value)
+      this.select(target.value)
       this.load()
     },
   },

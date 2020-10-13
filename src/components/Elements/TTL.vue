@@ -20,6 +20,7 @@
 <script>
 import TimeIcon from '@/components/Icons/TimeIcon'
 import { redis } from '@/services/redis'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'TTL',
@@ -35,6 +36,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('keys', ['updateKey']),
     startEditing () {
       this.isEditing = true
       this.newTtl = this.seconds
@@ -44,14 +46,14 @@ export default {
       if (save && this.isEditing && this.newTtl !== this.redisKey.ttl) {
         if (this.newTtl < 1) {
           redis.async('persist', this.redisKey.name).then(() => {
-            this.$store.commit('keys/updateKey', { ...this.redisKey, ttl: -1 })
+            this.updateKey({ ...this.redisKey, ttl: -1 })
           }).finally(() => {
             this.isEditing = false
             this.$nextTick(() => this.$refs.ttlText.focus())
           })
         } else {
           redis.async('expire', this.redisKey.name, this.newTtl).then(() => {
-            this.$store.commit('keys/updateKey', { ...this.redisKey, ttl: this.newTtl })
+            this.updateKey({ ...this.redisKey, ttl: this.newTtl })
           }).finally(() => {
             this.isEditing = false
             this.$nextTick(() => this.$refs.ttlText.focus())

@@ -26,6 +26,7 @@
 <script>
 import { redis } from '@/services/redis'
 import { EventBus } from '@/services/eventBus'
+import { mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'AddKeyModal',
@@ -50,6 +51,8 @@ export default {
     })
   },
   methods: {
+    ...mapMutations('keys', ['select', 'refreshTTL']),
+    ...mapActions('keys', ['loadKeys']),
     save () {
       (() => {
         let params = [this.name]
@@ -79,9 +82,9 @@ export default {
       })().then(() => {
         this.$emit('close')
         this.$toasted.success(`Key ${this.name} added`)
-        this.$store.dispatch('keys/loadKeys').then(() => {
-          this.$store.commit('keys/select', this.name)
-          this.$store.commit('keys/refreshTTL')
+        this.loadKeys().then(() => {
+          this.select(this.name)
+          this.refreshTTL()
           EventBus.$emit('key-updated', this.name)
         })
       })
