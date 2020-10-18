@@ -25,7 +25,7 @@
           @keydown.up.prevent="history(false)"
           @keydown.down="history(true)"
           @keydown.enter="send"
-          class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono "/>
+          class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none"/>
     </div>
   </Modal>
 </template>

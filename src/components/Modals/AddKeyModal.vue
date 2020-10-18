@@ -1,11 +1,11 @@
 <template>
   <Modal title="Add new key">
     <div class="flex space-x-4">
-      <input type="text" placeholder="Name" v-model="name" class="p-2 rounded shadow flex-1"/>
-      <input type="text" placeholder="Hash key name" v-if="type === 'hash'" v-model="hashName" class="p-2 rounded shadow flex-1"/>
-      <input type="number" placeholder="Index" v-if="type === 'list'" v-model="index" class="p-2 rounded shadow flex-1"/>
-      <input type="number" placeholder="Score" v-if="type === 'zset'" v-model="score" class="p-2 rounded shadow flex-1"/>
-      <select class="p-2 rounded shadow" v-model="type">
+      <input type="text" placeholder="Name" v-model="name" class="flex-1"/>
+      <input type="text" placeholder="Hash key name" v-if="type === 'hash'" v-model="hashName" class="flex-1"/>
+      <input type="number" placeholder="Index" v-if="type === 'list'" v-model="index" class="flex-1"/>
+      <input type="number" placeholder="Score" v-if="type === 'zset'" v-model="score" class="flex-1"/>
+      <select v-model="type">
         <option value="string">string</option>
         <option value="hash">hash</option>
         <option value="list">list</option>
@@ -13,10 +13,10 @@
         <option value="zset">zset</option>
       </select>
     </div>
-    <textarea v-for="(value, index) in values" :key="index" class="p-2 rounded shadow flex-1" placeholder="Value" v-model="values[index]"/>
+    <textarea v-for="(value, index) in values" :key="index" class="flex-1" placeholder="Value" v-model="values[index]"/>
     <div class="flex justify-end space-x-4">
       <Button v-if="['list', 'set'].indexOf(type) > -1" @click="values.push('')">Add</Button>
-      <input type="number" class="p-2 rounded shadow w-20" v-if="type === 'string'" placeholder="TTL" v-model="ttl"/>
+      <input type="number" class="w-20" v-if="type === 'string'" placeholder="TTL" v-model="ttl"/>
       <PrimaryButton @click="save">Save</PrimaryButton>
     </div>
   </Modal>

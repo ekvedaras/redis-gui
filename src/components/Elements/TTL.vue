@@ -13,7 +13,7 @@
       </div>
     </div>
     <!--suppress HtmlFormInputWithoutLabel -->
-    <input ref="ttlField" v-show="isEditing" v-model="newTtl" @keydown.esc="edit(false)" @keydown.enter="edit(true)" @blur="edit(true)" type="text" placeholder="TTL seconds" class="rounded shadow-md text-sm py-0 px-2"/>
+    <input ref="ttlField" v-show="isEditing" v-model="newTtl" @keydown.esc="edit(false)" @keydown.enter="edit(true)" @blur="edit(true)" type="text" placeholder="TTL seconds" class="text-sm py-0 px-2"/>
   </div>
 </template>
 

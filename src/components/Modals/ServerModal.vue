@@ -1,11 +1,11 @@
 <template>
   <Modal :title="title">
-    <input type="text" placeholder="Name" v-model="name" class="p-2 rounded shadow"/>
+    <input type="text" placeholder="Name" v-model="name"/>
     <div class="flex space-x-4">
-      <input type="text" placeholder="Host / IP" v-model="host" class="p-2 rounded shadow flex-1"/>
-      <input type="number" placeholder="Port" v-model="port" class="p-2 rounded shadow"/>
+      <input type="text" placeholder="Host / IP" v-model="host" class="flex-1"/>
+      <input type="number" placeholder="Port" v-model="port"/>
     </div>
-    <input type="password" placeholder="Password (optional)" v-model="password" class="p-2 rounded shadow"/>
+    <input type="password" placeholder="Password (optional)" v-model="password"/>
     <div class="flex justify-end space-x-4">
       <Button @click="test">Test</Button>
       <PrimaryButton @click="save">Save</PrimaryButton>

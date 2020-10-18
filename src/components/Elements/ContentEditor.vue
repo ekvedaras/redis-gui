@@ -6,7 +6,7 @@
               @input="$emit('input', $event.target.value)"
               @keydown.esc="$emit('close')"
               @keydown.ctrl.enter="$emit('save')"
-              class="p-2 w-full shadow h-64"/>
+              class="w-full h-64"/>
     <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
   </div>
 </template>

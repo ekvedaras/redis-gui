@@ -7,7 +7,7 @@
         <h2 class="text-xl flex-1">
           <span ref="keyName" tabindex="0" v-show="!isRenaming" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
-          <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="rounded shadow-md text-sm py-0 px-2"/>
+          <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm"/>
           <span class="text-sm ml-2">{{ current.type }} ({{ current.encoding }})</span>
         </h2>
         <IconButton @click="deleteKey" tabindex="0">
