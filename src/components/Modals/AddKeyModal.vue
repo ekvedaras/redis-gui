@@ -15,9 +15,9 @@
     </div>
     <textarea v-for="(value, index) in values" :key="index" class="p-2 rounded shadow flex-1" placeholder="Value" v-model="values[index]"/>
     <div class="flex justify-end space-x-4">
-      <button v-if="['list', 'set'].indexOf(type) > -1" @click="values.push('')" class="transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Add</button>
+      <Button v-if="['list', 'set'].indexOf(type) > -1" @click="values.push('')">Add</Button>
       <input type="number" class="p-2 rounded shadow w-20" v-if="type === 'string'" placeholder="TTL" v-model="ttl"/>
-      <button @click="save" class="transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Save</button>
+      <PrimaryButton @click="save">Save</PrimaryButton>
     </div>
   </Modal>
 </template>
@@ -27,10 +27,12 @@ import { redis } from '@/services/redis'
 import { EventBus } from '@/services/eventBus'
 import { mapActions, mapMutations } from 'vuex'
 import Modal from '@/components/Modals/Modal'
+import Button from '@/components/Elements/Button'
+import PrimaryButton from '@/components/Elements/PrimaryButton'
 
 export default {
   name: 'AddKeyModal',
-  components: { Modal },
+  components: { PrimaryButton, Button, Modal },
   props: {
     fill: {
       type: Object,

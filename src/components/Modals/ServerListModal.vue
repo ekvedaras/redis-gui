@@ -27,6 +27,7 @@ import DeleteIcon from '@/components/Icons/DeleteIcon'
 import Modal from '@/components/Modals/Modal'
 import IconButton from '@/components/Elements/IconButton'
 import EditIcon from '@/components/Icons/EditIcon'
+import Dialog from '@/components/Modals/Dialog'
 
 export default {
   name: 'ServerListModal',
@@ -38,30 +39,15 @@ export default {
       this.$modal.show(ServerModal, { serverKey: key })
     },
     deleteServer (server, key) {
-      this.$modal.show('dialog', {
-        title: 'Confirm',
+      this.$modal.show(Dialog, {
         text: `Are you sure you want to delete <b>${server.name}</b>?`,
-        buttons: [
-          {
-            title: 'Cancel',
-            handler: () => {
-              this.$modal.hide('dialog')
-            },
-          },
-          {
-            title: 'Confirm',
-            handler: () => {
-              database.get('servers').unset(key).write()
-              database.get('history').unset(key).write()
-              this.setServers(database.read().get('servers').value())
-              this.$modal.hide('dialog')
-            },
-          },
-        ],
-      }, {
-        classes: 'z-50',
-        class: 'z-10',
-      })
+        handler: () => {
+          database.get('servers').unset(key).write()
+          database.get('history').unset(key).write()
+          this.setServers(database.read().get('servers').value())
+          this.$modal.hide('dialog')
+        },
+      }, { name: 'dialog' })
     },
   },
 }

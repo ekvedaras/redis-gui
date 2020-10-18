@@ -15,7 +15,7 @@ Vue.use(Toasted, {
 
 Vue.use(require('vue-moment'))
 Vue.use(VModal, {
-  dialog: true,
+  dialog: false,
   dynamicDefaults: {
     focusTrap: true,
     resizable: true,

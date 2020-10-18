@@ -1,7 +1,7 @@
 <template>
   <button @click="$emit('click')"
           :type="type"
-          class="btn transition transition-colors duration-100 ease-in-out p-2 rounded shadow-none hover:shadow-md">
+          class="btn transition transition-colors duration-100 ease-in-out p-2 rounded shadow-none hover:underline focus:underline">
     <slot/>
   </button>
 </template>
@@ -23,7 +23,7 @@ export default {
     @apply text-gray-500
   }
 
-  button:hover {
+  button:hover, button:focus {
     @apply text-gray-900
   }
 </style>

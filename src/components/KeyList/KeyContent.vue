@@ -41,6 +41,7 @@ import TTL from '@/components/Elements/TTL'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import NoKeySelected from '@/components/KeyList/NoKeySelected'
 import IconButton from '@/components/Elements/IconButton'
+import Dialog from '@/components/Modals/Dialog'
 
 export default {
   name: 'KeyContent',
@@ -83,23 +84,13 @@ export default {
       }
     },
     deleteKey () {
-      this.$modal.show('dialog', {
-        title: 'Confirm',
+      this.$modal.show(Dialog, {
         text: `Are you sure you want to delete <b>${this.selected}</b> key?`,
-        buttons: [
-          {
-            title: 'Cancel',
-            handler: () => this.$modal.hide('dialog'),
-          },
-          {
-            title: 'Confirm',
-            handler: () => {
-              this.deleteKey(this.selected)
-              this.$modal.hide('dialog')
-            },
-          },
-        ],
-      })
+        handler: () => {
+          this.deleteKey(this.selected)
+          this.$modal.hide('dialog')
+        },
+      }, { name: 'dialog' })
     },
   },
   computed: {
