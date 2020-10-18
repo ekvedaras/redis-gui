@@ -1,4 +1,5 @@
 import { redis } from '@/services/redis'
+import { mapActions } from 'vuex'
 
 export default {
   data: () => ({
@@ -17,8 +18,10 @@ export default {
     await this.loadKeys()
   },
   methods: {
-    loadKeys ({ pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
+    ...mapActions('keys', ['loadKeyInfo']),
+    async loadKeys ({ pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
       this.isLoading = true
+      await this.loadKeyInfo({name: this.name})
       return redis.async(this.scanUsing, this.name, cursor, 'MATCH', pattern, 'COUNT', limit).then(result => {
         result.lastLoad = Object.keys(result[1]).length
         this.nextCursor = parseInt(result[0])

@@ -60,7 +60,7 @@ export default {
   }),
   methods: {
     ...mapMutations('keys', ['addKey', 'select', 'removeKey']),
-    ...mapActions('keys', ['deleteKey']),
+    ...mapActions('keys', ['deleteKey', 'loadKeyInfo']),
     startRename () {
       this.isRenaming = true
       this.newName = this.current.name
@@ -74,6 +74,7 @@ export default {
           this.addKey({ ...this.current, name: newName })
           this.select(newName)
           this.removeKey({ name: oldName })
+          this.loadKeyInfo({ name: newName })
         }).finally(() => {
           this.isRenaming = false
           this.$nextTick(() => this.$refs.keyName.focus())

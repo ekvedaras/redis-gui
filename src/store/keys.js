@@ -61,13 +61,21 @@ export default {
         return result
       })
     },
-    loadKey ({ commit }, key) {
-      switch (key.type) {
-        case 'string':
-          return redis.async('get', key.name).then(() => commit('select', key))
-        default:
-          Vue.toasted.error(`${key.type} type is not supported`)
-      }
+    loadKeyInfo ({ commit, dispatch }, { name, cursor = 0 }) {
+      return redis.keys(name, redis.pageSize, cursor).then(result => {
+        if (Object.prototype.hasOwnProperty.call(result.keys, name)) {
+          commit('updateKey', result.keys[name])
+          result.nextCursor = 0
+        }
+
+        return result
+      }).then(result => {
+        if (result.nextCursor) {
+          return dispatch('loadKeyInfo', { name, cursor: result.nextCursor })
+        }
+
+        return result
+      })
     },
     deleteKey ({ state, commit }, name) {
       return redis.async('del', name).then(() => {
