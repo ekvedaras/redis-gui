@@ -1,5 +1,7 @@
 <template>
-  <button @click="$emit('click')" type="button" class="hover:bg-red-200 focus:bg-red-200 text-gray-500 hover:text-redis focus:text-redis rounded">
+  <button @click="$emit('click')"
+          :type="type"
+          class="btn transition transition-colors duration-100 ease-in-out p-2 rounded shadow-none hover:shadow-md">
     <slot/>
   </button>
 </template>
@@ -7,9 +9,21 @@
 <script>
 export default {
   name: 'Button',
+  props: {
+    type: {
+      type: String,
+      default: 'button',
+    },
+  },
 }
 </script>
 
-<style scoped>
+<style>
+  button {
+    @apply text-gray-500
+  }
 
+  button:hover {
+    @apply text-gray-900
+  }
 </style>

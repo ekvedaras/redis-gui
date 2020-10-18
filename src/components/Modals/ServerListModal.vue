@@ -1,14 +1,17 @@
 <template>
   <Modal title="Servers">
     <table>
-      <tr v-for="(server, key) in list" :key="key" @click="edit(key)" class="rounded cursor-pointer hover:bg-gray-400">
+      <tr v-for="(server, key) in list" :key="key" class="rounded hover:bg-gray-300">
         <td class="p-2 font-semibold rounded-l">{{ server.name }}</td>
         <td class="w-full whitespace-no-wrap p-2 text-gray-600">{{ server.host }}: {{ server.port }}</td>
         <td class="p-2 rounded-r">
           <div class="flex space-x-1 justify-start">
-            <button type="button" @click.stop="deleteServer(server, key)">
-              <DeleteIcon class="w-6 text-gray-500 hover:text-redis"/>
-            </button>
+            <IconButton @click="edit(key)">
+              <EditIcon class="w-5 m-1"/>
+            </IconButton>
+            <IconButton @click="deleteServer(server, key)">
+              <DeleteIcon class="w-5 m-1 "/>
+            </IconButton>
           </div>
         </td>
       </tr>
@@ -22,10 +25,12 @@ import ServerModal from '@/components/Modals/ServerModal'
 import { database } from '@/services/database'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import Modal from '@/components/Modals/Modal'
+import IconButton from '@/components/Elements/IconButton'
+import EditIcon from '@/components/Icons/EditIcon'
 
 export default {
   name: 'ServerListModal',
-  components: { Modal, DeleteIcon },
+  components: { EditIcon, IconButton, Modal, DeleteIcon },
   computed: mapState('servers', ['list']),
   methods: {
     ...mapMutations('servers', ['setServers']),

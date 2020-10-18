@@ -10,9 +10,9 @@
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="rounded shadow-md text-sm py-0 px-2"/>
           <span class="text-sm ml-2">{{ current.type }} ({{ current.encoding }})</span>
         </h2>
-        <Button @click="deleteKey" tabindex="0">
+        <IconButton @click="deleteKey" tabindex="0">
           <DeleteIcon class="w-4 m-1"/>
-        </Button>
+        </IconButton>
         <TTL :redis-key="current"/>
       </div>
       <component class="h-full p-4 pb-10" v-if="currentContent" :is="currentContent" :name="current.name" :key="current.name"/>
@@ -40,12 +40,12 @@ import TimeIcon from '@/components/Icons/TimeIcon'
 import TTL from '@/components/Elements/TTL'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import NoKeySelected from '@/components/KeyList/NoKeySelected'
-import Button from '@/components/Elements/Button'
+import IconButton from '@/components/Elements/IconButton'
 
 export default {
   name: 'KeyContent',
   components: {
-    Button,
+    IconButton,
     NoKeySelected,
     DeleteIcon,
     TTL,

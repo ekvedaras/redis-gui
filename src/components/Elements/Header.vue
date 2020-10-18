@@ -2,20 +2,20 @@
   <div class="w-full h-full flex justify-between items-center space-x-2 px-2">
     <img src="@/assets/redis.svg" alt="Redis logo" class="h-full"/>
     <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
-    <div class="flex-1 flex text-center justify-center items-center">
-      <div @click="edit" class="mr-1">
-        <EditIcon class="w-6 cursor-pointer"/>
-      </div>
+    <div class="flex-1 space-x-2 flex text-center justify-center items-center">
       <ServerSelect class="bg-gray-300 rounded p-1"/>
-      <div @click="add">
-        <AddIcon class="w-8 cursor-pointer"/>
-      </div>
-      <div @click="refresh">
-        <RefreshIcon class="w-8 cursor-pointer"/>
-      </div>
-      <div @click="openTerminal">
-        <TerminalIcon class="w-6 cursor-pointer"/>
-      </div>
+      <IconButton @click="add" class="text-gray-900">
+        <AddIcon class="w-6 m-1 cursor-pointer"/>
+      </IconButton>
+      <IconButton @click="edit" class="text-gray-900">
+        <EditIcon class="w-6 m-1 cursor-pointer"/>
+      </IconButton>
+      <IconButton @click="refresh" class="text-gray-900">
+        <RefreshIcon class="w-6 m-1 cursor-pointer"/>
+      </IconButton>
+      <IconButton @click="openTerminal" class="text-gray-900">
+        <TerminalIcon class="w-6 m-1 cursor-pointer"/>
+      </IconButton>
     </div>
     <DatabaseSelect class="bg-gray-300 rounded p-1"/>
   </div>
@@ -32,9 +32,10 @@ import ServerListModal from '@/components/Modals/ServerListModal'
 import TerminalIcon from '@/components/Icons/TerminalIcon'
 import ConsoleModal from '@/components/Modals/ConsoleModal'
 import { mapActions } from 'vuex'
+import IconButton from '@/components/Elements/IconButton'
 
 export default {
-  components: { TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
+  components: { IconButton, TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
   methods: {
     ...mapActions('keys', ['loadKeys']),
     refresh () {

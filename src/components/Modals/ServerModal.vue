@@ -5,10 +5,10 @@
       <input type="text" placeholder="Host / IP" v-model="host" class="p-2 rounded shadow flex-1"/>
       <input type="number" placeholder="Port" v-model="port" class="p-2 rounded shadow"/>
     </div>
-    <input type="password" placeholder="Password" v-model="password" class="p-2 rounded shadow"/>
+    <input type="password" placeholder="Password (optional)" v-model="password" class="p-2 rounded shadow"/>
     <div class="flex justify-end space-x-4">
-      <button @click="test" class="flex relative transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Test</button>
-      <button @click="save" class="transition transition-colors duration-100 ease-in-out p-2 bg-red-700 text-white rounded shadow hover:shadow-md hover:bg-redis">Save</button>
+      <Button @click="test">Test</Button>
+      <PrimaryButton @click="save">Save</PrimaryButton>
     </div>
   </Modal>
 </template>
@@ -17,11 +17,13 @@
 import { database } from '@/services/database'
 import { mapMutations } from 'vuex'
 import Modal from '@/components/Modals/Modal'
+import Button from '@/components/Elements/Button'
+import PrimaryButton from '@/components/Elements/PrimaryButton'
 
 export default {
   name: 'ServerModal',
-  components: { Modal },
-  props: ['server-key'],
+  components: { PrimaryButton, Button, Modal },
+  props: ['serverKey'],
   data: () => ({
     name: '',
     host: '',
