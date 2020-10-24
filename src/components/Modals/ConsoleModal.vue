@@ -2,19 +2,7 @@
   <Modal title="Console">
     <div class="rounded bg-white w-full font-mono shadow">
       <div class="overflow-y-auto p-4 " :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
-        <div v-for="(line, i) in log" :key="i" :class="{'text-redis': line.isError, 'font-bold': line.isCommand}">
-          <div v-if="typeof line.content === 'object'">
-            <p v-for="(entry, j) in line.content" :key="j">
-              {{ j }}) {{ entry }}
-            </p>
-          </div>
-          <p v-else-if="line.isCommand">
-            > {{ line.content }}
-          </p>
-          <p v-else>
-            {{ line.content }}
-          </p>
-        </div>
+        <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line"/>
         <span ref="bottom"></span>
       </div>
       <input
@@ -35,10 +23,14 @@ import { redis } from '@/services/redis'
 import { database } from '@/services/database'
 import { mapState } from 'vuex'
 import Modal from '@/components/Modals/Modal'
+import { SentCommand } from '@/models/SentCommand'
+import { ConsoleLog } from '@/models/ConsoleLog'
+import { ErrorResponse } from '@/models/ErrorResponse'
+import ConsoleLogLine from '@/components/Elements/ConsoleLogLine'
 
 export default {
   name: 'ConsoleModal',
-  components: { Modal },
+  components: { ConsoleLogLine, Modal },
   data: () => ({
     log: [],
     historyIndex: -1,
@@ -63,11 +55,7 @@ export default {
     },
     send () {
       this.historyIndex = -1
-      this.log.push({
-        isError: false,
-        isCommand: true,
-        content: this.command,
-      })
+      this.log.push(new SentCommand(this.command))
 
       let history = database.get('history').get(this.selected).value()
       history.unshift(this.command)
@@ -76,38 +64,14 @@ export default {
 
       redis.silently().async(...this.command.split(' '))
           .then(result => {
-            switch (typeof result) {
-              case 'object':
-                if (result === null) {
-                  this.log.push({
-                    isError: false,
-                    isCommand: false,
-                    content: `(nil)`,
-                  })
-                  return
-                }
-
-                this.log.push({
-                  isError: false,
-                  isCommand: false,
-                  content: result,
-                })
-                return
-              default:
-                this.log.push({
-                  isError: false,
-                  isCommand: false,
-                  content: result,
-                })
+            if (result === null) {
+              return this.log.push(new ConsoleLog('(nil)'))
             }
+
+            this.log.push(new ConsoleLog(result))
           })
           .then(() => this.command = '')
-          .catch(e => {
-            this.log.push({
-              isError: true,
-              content: e.toString(),
-            })
-          })
+          .catch(e => this.log.push(new ErrorResponse(e)))
           .finally(() => this.$nextTick(() => this.$refs['log'].scrollTop = this.$refs['log'].scrollHeight))
     },
   },
