@@ -4,9 +4,9 @@
                :show-spinner="isLoading"
                with-add :add-name="name" add-type="zset"/>
     <div class="overflow-y-auto h-full pb-10 rounded mt-4">
-      <Value v-for="(item, score) in value"
+      <Value v-for="(score, item) in value"
              class="relative"
-             :key="score" :value="item" :item-key="score"
+             :key="item" :value="item" :item-key="score"
              @save="save"
              @delete="deleteItem(item, 'keys/deleteZsetItem')"/>
       <LoadMoreButton @click="loadMore" v-if="nextCursor"/>
@@ -35,7 +35,7 @@ export default {
   }),
   methods: {
     setScannedValue (value, merge) {
-      let parsed = _.fromPairs(_.chunk(value, 2).map(chunk => _.reverse(chunk)))
+      let parsed = _.fromPairs(_.chunk(value, 2))
       this.value = merge ? { ...this.value, ...parsed } : parsed
     },
     save ({ key, value }) {
