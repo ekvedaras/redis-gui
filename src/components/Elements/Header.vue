@@ -16,6 +16,9 @@
       <IconButton @click="openTerminal" class="text-gray-900">
         <TerminalIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
+      <IconButton @click="openSettings" class="text-gray-900">
+        <CogIcon class="w-6 m-1 cursor-pointer"/>
+      </IconButton>
     </div>
     <DatabaseSelect class="bg-gray-300 rounded p-1"/>
   </div>
@@ -33,9 +36,11 @@ import TerminalIcon from '@/components/Icons/TerminalIcon'
 import ConsoleModal from '@/components/Modals/ConsoleModal'
 import { mapActions } from 'vuex'
 import IconButton from '@/components/Elements/IconButton'
+import CogIcon from '@/components/Icons/CogIcon'
+import SettingsModal from '@/components/Modals/SettingsModal'
 
 export default {
-  components: { IconButton, TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
+  components: { CogIcon, IconButton, TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
   methods: {
     ...mapActions('keys', ['loadKeys']),
     refresh () {
@@ -50,6 +55,9 @@ export default {
     openTerminal () {
       this.$modal.show(ConsoleModal)
     },
+    openSettings() {
+      this.$modal.show(SettingsModal)
+    }
   },
 }
 </script>

@@ -12,6 +12,10 @@ const defaultDatabase = {
   history: {
     default: [],
   },
+  settings: {
+    itemsPerPage: 100,
+    namespaceSeparator: ':',
+  },
 }
 
 export const database = low(new LocalStorage('redis-gui'))

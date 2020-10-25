@@ -5,7 +5,8 @@ import { database } from '@/services/database'
 const { promisify } = require('util')
 
 export const redis = {
-  pageSize: 100,
+  pageSize: database.get('settings.itemsPerPage').value(),
+  namespaceSeparator: database.get('settings.namespaceSeparator').value(),
   current: 'default',
   client: {},
   promises: {},

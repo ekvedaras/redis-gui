@@ -14,6 +14,7 @@ import _ from 'lodash'
 import AddKeyModal from '@/components/Modals/AddKeyModal'
 import SearchBar from '@/components/Elements/SearchBar'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
+import { redis } from '@/services/redis'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -71,12 +72,12 @@ export default {
       let grouped = {}
 
       Object.entries(this.list).forEach(([name, key]) => {
-        if (name.indexOf(':') < 0) {
+        if (name.indexOf(redis.namespaceSeparator) < 0) {
           grouped[name] = key
           return true
         }
 
-        let path = name.replace(/:/g, '.')
+        let path = name.replace(new RegExp(`${redis.namespaceSeparator}`, 'g'), '.')
 
         let nestedKey, folderPath
         [nestedKey, folderPath] = nestKey(grouped, path)
