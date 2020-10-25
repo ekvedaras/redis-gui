@@ -10,32 +10,35 @@ export const redis = {
   client: {},
   promises: {},
   beSilent: false,
-  connect (server = 'default') {
+  connect (server = 'default', { onReady } = {}) {
     if (server !== this.current) {
       Object.entries(this.client).forEach(([key, client]) => {
-        if (!client.connected) {
-          this.client[key].quit(() => {
-            this.client[key].end(true)
-            delete this.client[key]
-          })
+        if (!client.ready) {
+          this.disconnect(key)
         }
       })
     }
 
-    if (this.client[server]) {
-      return
-    }
-
     this.current = server
 
-    this.client[server] = window.redis.createClient(database.get(`servers.${server}`).value())
-      .on('connect', () => Vue.toasted.info('Connected'))
+    if (this.client[server]) {
+      return this.client[server]
+    }
+
+    return this.client[server] = window.redis.createClient(database.get(`servers.${server}`).value())
+      .on('ready', () => {
+        Vue.toasted.info('Connected')
+        onReady && onReady()
+      })
       .on('error', error => {
         Vue.toasted.error('REDIS ERROR: ' + error)
       })
   },
   disconnect (server = 'default') {
-    this.client[server] && this.client[server].quit()
+    this.client[server] && this.client[server].quit(() => {
+      this.client[server].end(true)
+      delete this.client[server]
+    })
   },
   silently () {
     this.beSilent = true

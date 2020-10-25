@@ -17,9 +17,12 @@ export default {
     ...mapActions('databases', ['load']),
     ...mapMutations('servers', ['select']),
     connect ({ target }) {
-      redis.connect(target.value)
-      this.select(target.value)
-      this.load()
+      redis.connect(target.value, {
+        onReady: () => {
+          this.select(target.value)
+          this.load()
+        }
+      })
     },
   },
 }
