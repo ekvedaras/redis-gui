@@ -4,6 +4,9 @@
     <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center">
       <ServerSelect class="bg-gray-300 rounded p-1"/>
+      <IconButton @click="openInfo" class="text-gray-900">
+        <InfoIcon class="w-6 m-1 cursor-pointer"/>
+      </IconButton>
       <IconButton @click="add" class="text-gray-900">
         <AddIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
@@ -38,13 +41,20 @@ import { mapActions } from 'vuex'
 import IconButton from '@/components/Elements/IconButton'
 import CogIcon from '@/components/Icons/CogIcon'
 import SettingsModal from '@/components/Modals/SettingsModal'
+import InfoIcon from '@/components/Icons/InfoIcon'
+import InfoModal from '@/components/Modals/InfoModal'
 
 export default {
-  components: { CogIcon, IconButton, TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
+  components: { InfoIcon, CogIcon, IconButton, TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
   methods: {
     ...mapActions('keys', ['loadKeys']),
-    refresh () {
-      this.loadKeys().then(() => this.$toasted.info('Keys refreshed'))
+    ...mapActions('databases', ['load']),
+    openInfo () {
+      this.$modal.show(InfoModal)
+    },
+    async refresh () {
+      await Promise.all([this.load(), this.loadKeys()])
+      this.$toasted.info('Keys refreshed')
     },
     add () {
       this.$modal.show(ServerModal)
@@ -55,9 +65,9 @@ export default {
     openTerminal () {
       this.$modal.show(ConsoleModal)
     },
-    openSettings() {
+    openSettings () {
       this.$modal.show(SettingsModal)
-    }
+    },
   },
 }
 </script>

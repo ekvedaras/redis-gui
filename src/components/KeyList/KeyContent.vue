@@ -10,7 +10,7 @@
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm"/>
           <span class="text-sm ml-2">{{ current.type }} ({{ current.encoding }})</span>
         </h2>
-        <IconButton @click="deleteKey" tabindex="0">
+        <IconButton @click="confirmDelete" tabindex="0">
           <DeleteIcon class="w-4 m-1"/>
         </IconButton>
         <TTL :redis-key="current"/>
@@ -61,6 +61,7 @@ export default {
   methods: {
     ...mapMutations('keys', ['addKey', 'select', 'removeKey']),
     ...mapActions('keys', ['deleteKey', 'loadKeyInfo']),
+    ...mapActions('databases', ['load']),
     startRename () {
       this.isRenaming = true
       this.newName = this.current.name
@@ -84,11 +85,12 @@ export default {
         this.$nextTick(() => this.$refs.keyName.focus())
       }
     },
-    deleteKey () {
+    confirmDelete () {
       this.$modal.show(Dialog, {
         text: `Are you sure you want to delete <b>${this.selected}</b> key?`,
         handler: () => {
           this.deleteKey(this.selected)
+          this.load()
           this.$modal.hide('dialog')
         },
       }, { name: 'dialog' })

@@ -1,4 +1,5 @@
 import { redis } from '@/services/redis'
+import Vue from 'vue'
 
 export default {
   namespaced: true,
@@ -9,7 +10,7 @@ export default {
   },
   mutations: {
     setDatabase (state, database) {
-      state.list[database.index] = database
+      Vue.set(state.list, database.index, database)
     },
     setTotal (state, total) {
       state.total = total
