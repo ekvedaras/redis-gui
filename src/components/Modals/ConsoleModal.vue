@@ -3,7 +3,6 @@
     <div class="rounded bg-white w-full font-mono shadow">
       <div class="overflow-y-auto p-4 " :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
         <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line"/>
-        <span ref="bottom"></span>
       </div>
       <input
           type="text"
