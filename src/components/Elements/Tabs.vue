@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul class="flex w-full border-b border-gray-400 overflow-x-auto">
+    <ul class="flex w-full border-b border-gray-400 dark:border-gray-700 overflow-x-auto">
       <li v-for="tab in list"
           :key="tab.key"
           @click="select(tab)"

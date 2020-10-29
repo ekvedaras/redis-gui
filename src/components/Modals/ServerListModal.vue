@@ -1,7 +1,7 @@
 <template>
   <Modal title="Servers">
     <table>
-      <tr v-for="(server, key) in list" :key="key" class="rounded hover:bg-gray-300">
+      <tr v-for="(server, key) in list" :key="key" class="rounded hover:bg-gray-300 dark:hover:bg-gray-700">
         <td class="p-2 font-semibold rounded-l">{{ server.name }}</td>
         <td class="w-full whitespace-no-wrap p-2 text-gray-600">{{ server.host }}: {{ server.port }}</td>
         <td class="p-2 rounded-r">

@@ -8711,10 +8711,10 @@ table@^5.2.3:
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
-tailwindcss@^1.6.2:
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-1.7.3.tgz#4aa53a482c8060e12a4a477caad562a4af0bfb16"
-  integrity sha512-e6o/qhn80hcJ+cB1jIK3C1xlDPkFHU98c2m4ONMfeIOf8jvKQ+bowD39QKsWN+JMOvfATtMjgScpjSaqO1hffQ==
+tailwindcss@^1.8.9:
+  version "1.9.6"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-1.9.6.tgz#0c5089911d24e1e98e592a31bfdb3d8f34ecf1a0"
+  integrity sha512-nY8WYM/RLPqGsPEGEV2z63riyQPcHYZUJpAwdyBzVpxQHOHqHE+F/fvbCeXhdF1+TA5l72vSkZrtYCB9hRcwkQ==
   dependencies:
     "@fullhuman/postcss-purgecss" "^2.1.2"
     autoprefixer "^9.4.5"
@@ -8724,7 +8724,8 @@ tailwindcss@^1.6.2:
     color "^3.1.2"
     detective "^5.2.0"
     fs-extra "^8.0.0"
-    lodash "^4.17.15"
+    html-tags "^3.1.0"
+    lodash "^4.17.20"
     node-emoji "^1.8.1"
     normalize.css "^8.0.1"
     object-hash "^2.0.3"
@@ -9374,13 +9375,13 @@ vue-cli-plugin-electron-builder@^2.0.0-rc.4:
     webpack-merge "^4.2.2"
     yargs "^15.3.1"
 
-vue-cli-plugin-tailwind@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-tailwind/-/vue-cli-plugin-tailwind-1.4.2.tgz#29994ab9c2e41dc75d7dcc9aa19a20e4902a7a82"
-  integrity sha512-OtCNMrckoC6KaJ7lgVK4ZNrHEqondRpCJTQ5Lr1cTvafiSQJmal3Om5s9MTjxadX1TniHg/GR1OLJa1vDcqtog==
+vue-cli-plugin-tailwind@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-tailwind/-/vue-cli-plugin-tailwind-1.5.0.tgz#d32eced1eb77ce9946ee861f1883d5c9ba3bef88"
+  integrity sha512-uLzAhudKcioOerL/n/17YDonH9kHNJy1xrSYWIdIQUwq7804Rj/oIufWTDcbdtib0kQ7TIPAwEM0xo+XqnPwIg==
   dependencies:
     "@fullhuman/postcss-purgecss" "^2.3.0"
-    tailwindcss "^1.6.2"
+    tailwindcss "^1.8.9"
 
 vue-eslint-parser@^7.0.0:
   version "7.1.0"

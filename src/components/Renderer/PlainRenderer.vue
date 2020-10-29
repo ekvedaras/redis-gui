@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white font-mono overflow-x-auto rounded shadow p-3">
+  <div class="bg-white dark:bg-gray-800 font-mono overflow-x-auto rounded shadow p-3">
     <slot/>
   </div>
 </template>

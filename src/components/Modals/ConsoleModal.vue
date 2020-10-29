@@ -1,6 +1,6 @@
 <template>
   <Modal title="Console">
-    <div class="rounded bg-white w-full font-mono shadow">
+    <div class="rounded bg-white dark:bg-black w-full font-mono shadow">
       <div class="overflow-y-auto p-4 " :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
         <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line"/>
       </div>

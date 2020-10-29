@@ -56,6 +56,9 @@ module.exports = {
           '900': '#072F50',
         },
       },
+      screens: {
+        'dark': { raw: '(prefers-color-scheme: dark)' },
+      },
     },
   },
   variants: {},

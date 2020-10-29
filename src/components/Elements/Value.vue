@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isEditing && itemKey" class="sticky top-0 font-bold z-10 bg-gray-100">{{ itemKey }}</div>
+    <div v-if="!isEditing && itemKey" class="sticky top-0 font-bold z-10 bg-gray-100 dark:bg-gray-900">{{ itemKey }}</div>
     <!--suppress HtmlFormInputWithoutLabel -->
     <input type="text" v-if="isEditing && itemKey" v-model="editKey" @keydown.esc="isEditing = false" @keydown.ctrl.enter="save" class="my-1 mx-1 text-sm"/>
     <div v-if="!isEditing">

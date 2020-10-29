@@ -26,4 +26,10 @@ export default {
   button:hover, button:focus {
     @apply text-gray-900
   }
+
+  @screen dark {
+    button:hover, button:focus {
+      @apply text-gray-300
+    }
+  }
 </style>

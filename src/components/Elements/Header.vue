@@ -3,27 +3,27 @@
     <img src="@/assets/redis.svg" alt="Redis logo" class="h-full"/>
     <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center">
-      <ServerSelect class="bg-gray-300 rounded p-1"/>
-      <IconButton @click="openInfo" class="text-gray-900">
+      <ServerSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1"/>
+      <IconButton @click="openInfo">
         <InfoIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="add" class="text-gray-900">
+      <IconButton @click="add">
         <AddIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="edit" class="text-gray-900">
+      <IconButton @click="edit">
         <EditIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="refresh" class="text-gray-900">
+      <IconButton @click="refresh">
         <RefreshIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="openTerminal" class="text-gray-900">
+      <IconButton @click="openTerminal">
         <TerminalIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="openSettings" class="text-gray-900">
+      <IconButton @click="openSettings">
         <CogIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
     </div>
-    <DatabaseSelect class="bg-gray-300 rounded p-1"/>
+    <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1"/>
   </div>
 </template>
 
