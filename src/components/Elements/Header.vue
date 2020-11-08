@@ -3,27 +3,27 @@
     <img src="@/assets/redis.svg" alt="Redis logo" class="h-full"/>
     <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center">
-      <ServerSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1"/>
-      <IconButton @click="openInfo">
+      <ServerSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" v-tooltip="'Choose redis server'"/>
+      <IconButton @click="openInfo" v-tooltip="'Show server info and statistics'">
         <InfoIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="add">
+      <IconButton @click="add" v-tooltip="'Add new redis server'">
         <AddIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="edit">
+      <IconButton @click="edit" v-tooltip="'Edit saved redis servers'">
         <EditIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="refresh">
+      <IconButton @click="refresh" v-tooltip="'Refresh key list and database information'">
         <RefreshIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="openTerminal">
+      <IconButton @click="openTerminal" v-tooltip="'Redis console'">
         <TerminalIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="openSettings">
+      <IconButton @click="openSettings" v-tooltip="'Settings'">
         <CogIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
     </div>
-    <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1"/>
+    <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" v-tooltip="'Choose redis database'"/>
   </div>
 </template>
 

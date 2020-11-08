@@ -5,7 +5,8 @@
          :class="{'text-gray-500': redisKey.ttl < 1}"
          ref="ttlText"
          @keydown.enter="startEditing"
-         @click="startEditing">
+         @click="startEditing"
+         v-tooltip="'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.'">
       <TimeIcon class="w-4 m-1"/>
       <div v-show="!isEditing" v-if="redisKey.ttl > -1">
         <span class="ml-2" v-if="seconds < 60">Expires in {{ [seconds, 'seconds'] | duration('as', 'seconds') }} seconds</span>

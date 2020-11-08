@@ -6,6 +6,7 @@ import './assets/tailwind.css'
 import App from './App.vue'
 import Keys from '@/components/KeyList/Keys'
 import '@/services/lodash'
+import VTooltip from 'v-tooltip'
 
 Vue.config.productionTip = false
 
@@ -14,6 +15,7 @@ Vue.use(Toasted, {
 })
 
 Vue.use(require('vue-moment'))
+Vue.use(VTooltip)
 Vue.use(VModal, {
   dialog: false,
   dynamicDefaults: {

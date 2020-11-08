@@ -1,9 +1,9 @@
 <template>
   <div class="flex cursor-pointer px-2 hover:bg-white-10p" :class="{'font-bold text-redis': isSelected}" tabindex="1" @keypress.enter="select(redisKey.name)" @click="select(redisKey.name)">
     <LevelTab :level="level"></LevelTab>
-    <component :is="icon" class="w-5"/>
+    <component :is="icon" class="w-5" v-tooltip="redisKey.type"/>
     <div class="ml-2 flex-1">{{ name }}</div>
-    <TimeIcon class="w-3 text-gray-600" v-if="redisKey.ttl > -1"/>
+    <TimeIcon class="w-3 text-gray-600" v-if="redisKey.ttl > -1" v-tooltip="expiresIn"/>
   </div>
 </template>
 
@@ -26,6 +26,9 @@ export default {
     ...mapGetters('keys', ['current']),
     isSelected () {
       return this.current && this.redisKey.name === this.current.name
+    },
+    expiresIn() {
+      return `Expires in ${this.$options.filters.duration([this.redisKey.ttl, 'seconds'], 'humanize')}`
     },
     icon () {
       switch (this.redisKey.type) {
