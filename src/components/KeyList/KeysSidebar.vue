@@ -1,6 +1,12 @@
 <template>
   <div class="flex flex-col">
-    <SearchBar v-model="search" :show-spinner="isLoading" with-add @add="showKeyAddModal" class="px-2"/>
+    <SearchBar v-model="search"
+               :show-spinner="isLoading"
+               with-add
+               @add="showKeyAddModal"
+               :focus-keys="{main: ['/'], forced: ['ctrl', '/']}"
+               :add-keys="{main: ['a'], forced: ['ctrl', 'a']}"
+               class="px-2"/>
     <div class="overflow-y-auto mt-2 h-full px-1">
       <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
     </div>

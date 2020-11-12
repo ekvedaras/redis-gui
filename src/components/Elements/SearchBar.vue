@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center items-center space-x-2">
-    <Search :value="value" @input="$emit('input', $event)" :show-spinner="showSpinner"/>
-    <IconButton v-if="withAdd" @click="showKeyAddModal">
+    <Search :value="value" @input="$emit('input', $event)" :focus-keys="focusKeys" :show-spinner="showSpinner"/>
+    <IconButton v-if="withAdd" @click="showKeyAddModal" v-shortkey.once="addKeys" @shortkey.native="showKeyAddModal">
       <AddIcon class="w-10"/>
     </IconButton>
   </div>
@@ -36,6 +36,12 @@ export default {
       type: String,
       required: false,
     },
+    focusKeys: {
+      default: () => ['/'],
+    },
+    addKeys: {
+      default: () => ['a'],
+    }
   },
   methods: {
     showKeyAddModal () {

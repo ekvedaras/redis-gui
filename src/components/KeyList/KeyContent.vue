@@ -5,17 +5,24 @@
       <div class="flex pt-2 items-center">
         <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
         <h2 class="text-xl flex-1">
-          <span ref="keyName" tabindex="0" v-show="!isRenaming" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
+          <span ref="keyName" tabindex="0" v-show="!isRenaming" v-shortkey="['e']" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm"/>
           <span class="text-sm ml-2">{{ current.type }} ({{ current.encoding }})</span>
         </h2>
-        <IconButton @click="confirmDelete" tabindex="0">
+        <IconButton @click="confirmDelete" tabindex="0" v-shortkey="['d']" @shortkey.native="confirmDelete">
           <DeleteIcon class="w-4 m-1"/>
         </IconButton>
         <TTL :redis-key="current"/>
       </div>
-      <component class="h-full p-4 pb-10" v-if="currentContent" :is="currentContent" :name="current.name" :key="current.name"/>
+      <component v-if="currentContent"
+                 :is="currentContent"
+                 :name="current.name"
+                 :key="current.name"
+                 v-shortkey.once="['r']"
+                 @shortkey.native="emitUpdate"
+                 class="h-full p-4 pb-10"
+      />
       <template v-else>
         Key type {{ current.type }} is not supported
       </template>
@@ -42,6 +49,7 @@ import DeleteIcon from '@/components/Icons/DeleteIcon'
 import NoKeySelected from '@/components/KeyList/NoKeySelected'
 import IconButton from '@/components/Elements/IconButton'
 import Dialog from '@/components/Modals/Dialog'
+import { EventBus } from '@/services/eventBus'
 
 export default {
   name: 'KeyContent',
@@ -95,6 +103,9 @@ export default {
         },
       }, { name: 'dialog' })
     },
+    emitUpdate () {
+      EventBus.$emit('key-updated', this.selected)
+    }
   },
   computed: {
     ...mapGetters('keys', ['current']),
