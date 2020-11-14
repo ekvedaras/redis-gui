@@ -5,6 +5,8 @@
       <input type="text" placeholder="Host / IP" v-model="host" class="flex-1"/>
       <input type="number" placeholder="Port" v-model="port"/>
     </div>
+    <input type="text" placeholder="or UNIX socket path" v-model="path" class="flex-1"/>
+    <input type="text" placeholder="or URL (redis://, rediss://)" v-model="url" class="flex-1"/>
     <input type="password" placeholder="Password (optional)" v-model="password"/>
     <div class="flex justify-end space-x-4">
       <Button @click="test">Test</Button>
@@ -28,6 +30,8 @@ export default {
     name: '',
     host: '',
     port: 6379,
+    path: undefined,
+    url: undefined,
     password: undefined,
   }),
   created () {
@@ -36,6 +40,8 @@ export default {
       this.name = server.name
       this.host = server.host
       this.port = server.port
+      this.path = server.path
+      this.url = server.url
       this.password = server.password
     }
   },
