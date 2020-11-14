@@ -3,7 +3,7 @@
     <img src="@/assets/redis.svg" alt="Redis logo" class="h-full"/>
     <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center" v-shortkey="['shift', '?']" @shortkey="openShortKeys">
-      <ServerSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" v-tooltip="'Choose redis server'"/>
+      <ServerSelect/>
       <IconButton @click="openInfo" v-shortkey="['i']" @shortkey.native="openInfo" v-tooltip="'Show server info and statistics'">
         <InfoIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
