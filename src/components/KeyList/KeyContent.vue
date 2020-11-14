@@ -5,7 +5,7 @@
       <div class="flex pt-2 items-center">
         <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
         <h2 class="text-xl flex-1">
-          <span ref="keyName" tabindex="0" v-show="!isRenaming" v-shortkey="['e']" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
+          <span ref="keyName" tabindex="0" v-show="!isRenaming" v-tooltip="'Click to edit'" v-shortkey="['e']" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm"/>
           <span class="text-sm ml-2">{{ current.type }} ({{ current.encoding }})</span>
