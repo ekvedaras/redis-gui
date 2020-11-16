@@ -55,6 +55,11 @@ export default {
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
       this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` }).finally(() => this.isLoading = false)
     },
+    selected () {
+      this.isLoading = true
+      let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
+      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` }).finally(() => this.isLoading = false)
+    }
   },
   mounted () {
     this.isLoading = true
@@ -73,6 +78,7 @@ export default {
     },
   },
   computed: {
+    ...mapState('servers', ['selected']),
     ...mapState('keys', ['list', 'cursor']),
     groupedKeys () {
       let grouped = {}

@@ -11,7 +11,7 @@ export const redis = {
   client: {},
   promises: {},
   beSilent: false,
-  connect (server = 'default', { onReady } = {}) {
+  async connect (server = 'default', { onReady } = {}) {
     if (server !== this.current) {
       Object.entries(this.client).forEach(([key, client]) => {
         if (!client.ready) {
@@ -26,7 +26,9 @@ export const redis = {
       return this.client[server]
     }
 
-    return this.client[server] = window.redis.createClient(database.get(`servers.${server}`).value())
+    let config = database.get(`servers.${server}`).value()
+
+    return this.client[server] = (await this.createClient(config))
       .on('ready', () => {
         Vue.toasted.info('Connected')
         onReady && onReady()
@@ -35,31 +37,48 @@ export const redis = {
         Vue.toasted.error('REDIS ERROR: ' + error)
       })
   },
+  async createClient (config) {
+    if (config.ssh.tunnel) {
+      let tunnel = await window.redisSsh.connect({
+        ...config.ssh,
+        privateKey: window.fs.readFileSync(`${window.homedir}/.ssh/id_rsa`),
+      }, config)
+
+      return tunnel.client.on('end', tunnel.close)
+    }
+
+    return window.redis.createClient(config)
+  },
   disconnect (server = 'default') {
     this.client[server] && this.client[server].quit(() => {
       this.client[server].end(true)
       delete this.client[server]
+      delete this.promises[server]
     })
   },
   silently () {
     this.beSilent = true
     return this
   },
-  async (command, ...args) {
+  async async (command, ...args) {
     let beSilent = this.beSilent
     this.beSilent = false
 
-    this.connect(this.current)
+    await this.connect(this.current)
 
-    if (!Object.prototype.hasOwnProperty.call(this.promises, command)) {
+    if (!Object.prototype.hasOwnProperty.call(this.promises, this.current)) {
+      this.promises[this.current] = {}
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(this.promises[this.current], command)) {
       try {
-        this.promises[command] = promisify(this.client[this.current][command]).bind(this.client[this.current])
+        this.promises[this.current][command] = promisify(this.client[this.current][command]).bind(this.client[this.current])
       } catch (e) {
         return Promise.reject('Invalid redis command')
       }
     }
 
-    return this.promises[command](...args).catch(error => {
+    return this.promises[this.current][command](...args).catch(error => {
       if (!beSilent) Vue.toasted.error(error)
       throw error
     })

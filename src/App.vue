@@ -15,10 +15,6 @@ import KeysSidebar from '@/components/KeyList/KeysSidebar'
 
 export default {
   components: { KeysSidebar, KeyContent, Header },
-  mounted () {
-    redis.connect()
-    this.load()
-  },
   unmounted () {
     redis.disconnect()
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center">
-    <StateIndicator :state="connectionState" v-tooltip="connectionMessage"/>
+    <StateIndicator :key="connectingTo" :state="connectionState" v-tooltip="connectionMessage"/>
     <select id="server" @change="connect" class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1" v-tooltip="'Choose redis server'">
       <option v-for="(storeServer, key) in list" :key="key" :value="storeServer.name" :selected="storeServer.name === selected">
         {{ storeServer.name }}
@@ -21,39 +21,35 @@ export default {
     connectingTo: '',
   }),
   mounted () {
-    setTimeout(() => {
-      this.connectingTo = this.selected
-    }, 500)
+    setTimeout(() => this.connectingTo = this.selected, 1000)
   },
   computed: {
     ...mapState('servers', ['list', 'selected']),
-    connectionState() {
-      let connection = this.connectingTo || this.selected
-
-      if (!redis.client[connection]) {
-        return 'pending';
+    connectionState () {
+      if (!this.connectingTo || !redis.client[this.selected]) {
+        return 'pending'
       }
 
-      if (redis.client[connection].ready) {
+      if (redis.client[this.selected].ready) {
         return 'ok'
       }
 
-      if (redis.client[connection].connected) {
-        return 'pending';
+      if (redis.client[this.selected].connected) {
+        return 'pending'
       }
 
-      return 'fail';
+      return 'fail'
     },
-    connectionMessage() {
+    connectionMessage () {
       switch (this.connectionState) {
         case 'ok':
-          return 'Connected';
+          return 'Connected'
         case 'pending':
-          return 'Connecting...';
+          return 'Connecting...'
         default:
-          return 'Connection failed';
+          return 'Connection failed'
       }
-    }
+    },
   },
   methods: {
     ...mapActions('databases', ['load']),
@@ -62,11 +58,14 @@ export default {
       this.connectingTo = target.value
       redis.connect(target.value, {
         onReady: () => {
-          this.select(target.value)
-          this.load()
-          this.connectingTo = this.selected
-        }
+          this.selectAndReload(target.value)
+        },
       })
+    },
+    selectAndReload (server) {
+      redis.disconnect(this.selected)
+      this.select(server)
+      this.load().then(() => this.$nextTick(() => this.connectingTo = Math.random()))
     },
   },
 }

@@ -7,6 +7,11 @@ const defaultDatabase = {
       name: 'default',
       host: 'localhost',
       port: 6379,
+      ssh: {
+        tunnel: false,
+        host: '',
+        port: 22,
+      },
     },
   },
   history: {
