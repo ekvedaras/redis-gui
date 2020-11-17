@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <div tabindex="0"
-         class="flex cursor-pointer hover:bg-red-200 focus:bg-red-200 rounded hover:text-redis focus:text-redis"
+         class="flex cursor-pointer rounded text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
          :class="{'text-gray-500': redisKey.ttl < 1}"
          ref="ttlText"
          @keydown.enter="startEditing"
