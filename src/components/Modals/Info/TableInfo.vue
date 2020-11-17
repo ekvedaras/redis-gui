@@ -1,9 +1,9 @@
 <template>
-  <table>
+  <table class="w-full">
     <tbody>
     <tr v-for="(value, key) in info" :key="key">
-      <th class="text-right">{{ key | readable }}</th>
-      <td class="text-left break-all">{{ value }}</td>
+      <th class="text-right whitespace-no-wrap">{{ key | readable }}</th>
+      <td class="text-left break-all w-full">{{ value }}</td>
     </tr>
     </tbody>
   </table>

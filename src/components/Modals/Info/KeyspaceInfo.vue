@@ -9,7 +9,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(database, id) in databases" :key="database.id" :database="database" class="bg-white">
+    <tr v-for="(database, id) in databases" :key="database.id" :database="database">
       <th>{{ id }}</th>
       <td>{{ database.keys }}</td>
       <td>{{ database.expires }}</td>

@@ -19,6 +19,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+@screen dark {
+  .vjs-tree.is-mouseover {
+    background-color: theme('colors.gray.900');
+  }
+}
 </style>
