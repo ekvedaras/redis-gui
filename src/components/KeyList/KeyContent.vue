@@ -3,7 +3,7 @@
     <NoKeySelected v-if="!current"/>
     <template v-else>
       <div class="flex pt-2 items-center">
-        <component class="mr-2 w-6" v-if="currentIcon" :is="currentIcon"/>
+        <KeyIcon :redis-key="current" class="mr-2"/>
         <h2 class="text-xl flex-1">
           <span ref="keyName" tabindex="0" v-show="!isRenaming" v-tooltip="'Click to edit'" v-shortkey="['e']" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
@@ -50,10 +50,12 @@ import NoKeySelected from '@/components/KeyList/NoKeySelected'
 import IconButton from '@/components/Elements/IconButton'
 import Dialog from '@/components/Modals/Dialog'
 import { EventBus } from '@/services/eventBus'
+import KeyIcon from '@/components/KeyList/KeyIcon'
 
 export default {
   name: 'KeyContent',
   components: {
+    KeyIcon,
     IconButton,
     NoKeySelected,
     DeleteIcon,
@@ -117,20 +119,6 @@ export default {
 
       const type = this.current.type
       const component = `${type.charAt(0).toUpperCase()}${type.slice(1)}Content`
-
-      if (!Object.prototype.hasOwnProperty.call(this.$options.components, component)) {
-        return undefined
-      }
-
-      return component
-    },
-    currentIcon () {
-      if (!this.current) {
-        return undefined
-      }
-
-      const type = this.current.type
-      const component = `${type.charAt(0).toUpperCase()}${type.slice(1)}Icon`
 
       if (!Object.prototype.hasOwnProperty.call(this.$options.components, component)) {
         return undefined
