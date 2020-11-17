@@ -8,7 +8,7 @@
           <span ref="keyName" tabindex="0" v-show="!isRenaming" v-tooltip="'Click to edit'" v-shortkey="['e']" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm"/>
-          <span class="text-sm ml-2">{{ current.type }} ({{ current.encoding }})</span>
+          <a :href="typeDocs" target="_blank" class="text-sm ml-2" style="cursor: help">{{ current.type }} ({{ current.encoding }})</a>
         </h2>
         <IconButton @click="confirmDelete" tabindex="0" v-shortkey="['d']" @shortkey.native="confirmDelete">
           <DeleteIcon class="w-4 m-1"/>
@@ -126,6 +126,22 @@ export default {
 
       return component
     },
+    typeDocs () {
+      switch (this.current.type) {
+        case 'hash':
+          return 'https://redis.io/topics/data-types#hashes'
+        case 'list':
+          return 'https://redis.io/topics/data-types#lists'
+        case 'set':
+          return 'https://redis.io/topics/data-types#sets'
+        case 'zset':
+          return 'https://redis.io/topics/data-types#sorted-sets'
+        case 'string':
+          return 'https://redis.io/topics/data-types#strings'
+        default:
+          return 'https://redis.io/topics/data-types'
+      }
+    }
   },
 }
 </script>
