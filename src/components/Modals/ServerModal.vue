@@ -17,9 +17,12 @@
         <input type="text" placeholder="SSH host / IP" v-model="ssh.host" class="flex-1"/>
         <input type="number" placeholder="SSH port" v-model="ssh.port"/>
       </div>
-      <div class="flex space-x-4">
+      <div class="flex space-x-4 mb-4">
         <input type="text" placeholder="SSH user (optional)" v-model="ssh.user" class="flex-1"/>
         <input type="password" placeholder="SSH password (optional)" v-model="ssh.password" class="flex-1"/>
+      </div>
+      <div class="flex space-x-4">
+        <input type="text" :placeholder="privateKeyPlaceholder" v-model="ssh.privateKey" class="flex-1"/>
       </div>
     </div>
     <div class="flex justify-end space-x-4">
@@ -27,8 +30,8 @@
         <Spinner/>
       </div>
       <Button @click="test" class="relative">
-          Test
-        </Button>
+        Test
+      </Button>
       <PrimaryButton @click="save">Save</PrimaryButton>
     </div>
   </Modal>
@@ -61,7 +64,8 @@ export default {
       port: 22,
       user: undefined,
       password: undefined,
-    }
+      privateKey: undefined,
+    },
   }),
   created () {
     if (this.serverKey) {
@@ -90,6 +94,9 @@ export default {
         retry_strategy: () => {
           return undefined
         },
+      }).catch(error => {
+        this.isTesting = false
+        throw error
       })).on('ready', () => {
         this.$toasted.success('Connection successful')
         this.isTesting = false
@@ -105,6 +112,9 @@ export default {
   computed: {
     title () {
       return this.serverKey ? 'Edit server' : 'Add new server'
+    },
+    privateKeyPlaceholder () {
+      return `Private key. Default: ${window.homedir}/.ssh/id_rsa`
     },
   },
 }
