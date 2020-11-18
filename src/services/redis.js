@@ -83,6 +83,11 @@ export const redis = {
       throw error
     })
   },
+  async multi(args) {
+    await this.connect(this.current)
+
+    return this.client[this.current].multi(args)
+  },
   keys (pattern = '*', limit = this.pageSize, cursor = 0) {
     return this.async('scan', cursor, 'match', pattern, 'count', limit).then(async result => {
       let keys = {

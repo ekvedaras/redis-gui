@@ -87,10 +87,16 @@ export default {
       })
     },
     deleteListItem (store, { keyName, item }) {
-      return redis.async('lset', keyName, item.index, 'REDIS-GUI--DELETED--')
-        .then(() => redis.async('lrem', keyName, 0, 'REDIS-GUI--DELETED--').then(() => {
-          Vue.toasted.info(`${keyName} list item at ${item.index} position deleted`)
-        }))
+      return redis.multi([
+        ['lset', keyName, item.index, 'REDIS-GUI--DELETED--'],
+        ['lrem', keyName, 0, 'REDIS-GUI--DELETED--'],
+      ]).then(multi => multi.exec((error, replies) => {
+        if (error) {
+          throw error
+        }
+
+        return replies
+      })).then(() => Vue.toasted.info(`${keyName} list item at ${item.index} position deleted`))
     },
     deleteSetItem (store, { keyName, item: value }) {
       return redis.async('srem', keyName, value).then(() => Vue.toasted.info(`${keyName} set item deleted`))

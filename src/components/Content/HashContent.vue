@@ -38,11 +38,22 @@ export default {
       let parsed = _.fromPairs(_.chunk(value, 2))
       this.value = merge ? { ...this.value, ...parsed } : parsed
     },
-    save (key, { key: newKey, value }) {
-      (key === newKey ? Promise.resolve() : redis.async('hdel', this.name, key))
-          .then(() => redis.async('hset', this.name, newKey, value)
-              .then(() => this.$toasted.success('Saved'))
-              .then(() => this.loadKeys()))
+    async save (key, { key: newKey, value }) {
+      let commands = []
+      if (key !== newKey) {
+        commands.push(['hdel', this.name, key])
+      }
+
+      commands.push(['hset', this.name, newKey, value]);
+
+      (await redis.multi(commands)).exec(error => {
+        if (!error) {
+          this.$toasted.success('Saved')
+          this.loadKeys()
+        } else {
+          this.$toasted.error(error)
+        }
+      })
     },
   },
 }

@@ -36,13 +36,19 @@ export default {
     setScannedValue (value, merge) {
       this.value = merge ? { ...this.value, ...value } : value
     },
-    save (key, { value }) {
-      redis.async('srem', this.name, this.value[key]).then(
-          () => redis.async('sadd', this.name, value)
-              .then(() => this.$set(this.value, key, value))
-              .then(() => this.$toasted.success('Saved'))
-              .then(() => this.loadKeys()),
-      )
+    async save (key, { value }) {
+      (await redis.multi([
+        ['srem', this.name, this.value[key]],
+        ['sadd', this.name, value],
+      ])).exec(error => {
+        if (!error) {
+          this.$set(this.value, key, value)
+          this.$toasted.success('Saved')
+          this.loadKeys()
+        } else {
+          this.$toasted.error(error)
+        }
+      })
     },
   },
 }
