@@ -4,7 +4,7 @@
     <!--suppress HtmlFormInputWithoutLabel -->
     <input type="text" v-if="isEditing && itemKey" v-model="editKey" @keydown.esc="isEditing = false" @keydown.ctrl.enter="save" class="my-1 mx-1 text-sm"/>
     <div v-if="!isEditing">
-      <KeyItemControls @edit="isEditing = true" @delete="$emit('delete')" :without-delete="withoutDelete"/>
+      <KeyItemControls @edit="isEditing = true" @delete="$emit('delete')" @copy="copy" :without-delete="withoutDelete"/>
       <ValueRenderer :value="value" class="mb-4"/>
     </div>
     <ContentEditor v-else v-model="editValue" @close="isEditing = false" @save="save" class="mx-1"/>
@@ -48,6 +48,10 @@ export default {
       this.isEditing = false
       this.$emit('save', { key: this.editKey, value: this.editValue })
     },
+    copy () {
+      this.$copyText(this.value)
+      this.$toasted.info('Copied')
+    }
   },
 }
 </script>

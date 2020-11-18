@@ -19,6 +19,7 @@
     "redis-ssh": "^1.0.0",
     "v-tooltip": "^2.0.3",
     "vue": "^2.6.12",
+    "vue-clipboard2": "^0.3.1",
     "vue-js-modal": "^2.0.0-rc.6",
     "vue-json-pretty": "^1.7.1",
     "vue-moment": "^4.1.0",
@@ -26,6 +27,9 @@
     "vue-toasted": "^1.1.28",
     "vuex": "^3.5.1"
   },
+    "resolutions": {
+        "redis-ssh/redis": "^3.0.2"
+    },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.4",
     "@vue/cli-plugin-eslint": "~4.5.4",

@@ -42,7 +42,7 @@ export const redis = {
       let tunnel = await window.redisSsh.connect({
         ...config.ssh,
         privateKey: window.fs.readFileSync(`${window.homedir}/.ssh/id_rsa`),
-      }, config)
+      }, config).catch(error => Vue.toasted.error(error))
 
       return tunnel.client.on('end', tunnel.close)
     }
