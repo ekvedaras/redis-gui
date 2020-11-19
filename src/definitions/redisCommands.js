@@ -1,4 +1,8 @@
 export const commands = {
+  'clear': {
+    args: '',
+    summary: 'Clear console log',
+  },
   'acl load': {
     args: '',
     summary: 'Reload the ACLs from the configured ACL file',
