@@ -10,7 +10,7 @@
       <input
           type="text"
           ref="command"
-          placeholder="Type redis command"
+          :placeholder="placeholder"
           v-model="command"
           @keydown.up.prevent="history(false)"
           @keydown.down="history(true)"
@@ -39,7 +39,26 @@ export default {
     historyIndex: -1,
     command: '',
   }),
-  computed: mapState('servers', ['selected']),
+  computed: {
+    ...mapState('servers', ['selected']),
+    placeholder () {
+      let server = database.get('servers').get(this.selected).value()
+
+      if (server.host) {
+        return `${server.host}:${server.port}>`
+      }
+
+      if (server.path) {
+        return `${server.path}>`
+      }
+
+      if (server.url) {
+        return `${server.url}>`
+      }
+
+      return 'Type Redis command'
+    },
+  },
   methods: {
     history (previous) {
       if (previous) {

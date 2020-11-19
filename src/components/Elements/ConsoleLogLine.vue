@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" :class="{'text-redis': log.isError, 'sent-command border-b z-10 border-gray-200 dark:border-gray-800 mb-2 -mx-4 font-bold sticky py-2 px-4 top-0 shadow-sm bg-white dark:bg-black': log.wasSent}">
+  <div class="relative overflow-x-auto" :class="{'text-redis': log.isError, 'sent-command border-b z-10 border-gray-200 dark:border-gray-800 mb-2 -mx-4 font-bold sticky py-2 px-4 top-0 shadow-sm bg-white dark:bg-black': log.wasSent}">
     <IconButton v-if="!log.wasSent" class="absolute top-0 right-0" @click="collapsed = !collapsed">
       <DownIcon v-if="collapsed" class="w-5" v-tooltip="'Expand'"/>
       <UpIcon v-else class="w-5" v-tooltip="'Collapse'"/>
