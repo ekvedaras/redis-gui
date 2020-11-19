@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'text-redis': log.isError, 'font-bold': log.wasSent}">
+  <div :class="{'text-redis': log.isError, 'sent-command border-b border-gray-200 dark:border-gray-800 mb-2 -mx-4 font-bold sticky py-2 px-4 top-0 shadow-sm bg-white dark:bg-black': log.wasSent}">
     <div v-if="typeof log.content === 'object'">
       <p v-for="(entry, index) in log.content" :key="index">
         {{ index }}) {{ entry }}
