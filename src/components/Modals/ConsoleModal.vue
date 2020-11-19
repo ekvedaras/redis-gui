@@ -2,10 +2,10 @@
   <Modal title="Console" id="console-modal">
     <div class="rounded bg-white dark:bg-black w-full font-mono shadow flex-1 flex flex-col">
       <div class="relative flex-1">
+        <CommandInfo v-if="!hideInfo" :command="command" class="z-20"/>
         <div class="overflow-y-auto pb-4 px-4 relative" :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
-          <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line"/>
+          <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line" @rerun="send"/>
         </div>
-        <CommandInfo :command="command"/>
       </div>
       <input
           type="text"
@@ -14,7 +14,7 @@
           v-model="command"
           @keydown.up.prevent="history(false)"
           @keydown.down="history(true)"
-          @keydown.enter="send"
+          @keydown.enter="send()"
           class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none"/>
     </div>
   </Modal>
@@ -38,7 +38,13 @@ export default {
     log: [],
     historyIndex: -1,
     command: '',
+    hideInfo: false,
   }),
+  watch: {
+    command () {
+      this.hideInfo = false
+    },
+  },
   computed: {
     ...mapState('servers', ['selected']),
     placeholder () {
@@ -75,7 +81,11 @@ export default {
         this.historyIndex--
       }
     },
-    send () {
+    send (command) {
+      if (command) {
+        this.command = command
+      }
+
       if (this.command.toLowerCase().trim() === 'clear') {
         this.historyIndex = -1
         this.$set(this, 'log', [])
@@ -100,7 +110,10 @@ export default {
             this.log.push(new ConsoleLog(result))
           })
           .then(() => this.command = '')
-          .catch(e => this.log.push(new ErrorResponse(e)))
+          .catch(e => {
+            this.log.push(new ErrorResponse(e))
+            this.hideInfo = true
+          })
           .finally(() => this.$nextTick(() => this.$refs['log'].scrollTop = this.$refs['log'].scrollHeight))
     },
   },
