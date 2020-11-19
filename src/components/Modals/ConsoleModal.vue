@@ -1,8 +1,11 @@
 <template>
   <Modal title="Console">
     <div class="rounded bg-white dark:bg-black w-full font-mono shadow">
-      <div class="overflow-y-auto p-4 " :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
-        <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line"/>
+      <div class="relative">
+        <div class="overflow-y-auto p-4 relative" :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
+          <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line"/>
+        </div>
+        <div v-if="structure" class="absolute z-50 rounded-t shadow w-full py-4 px-4 bottom-0 text-gray-700 dark:text-gray-500" id="structure" v-html="structure"/>
       </div>
       <input
           type="text"
@@ -26,6 +29,7 @@ import { SentCommand } from '@/models/SentCommand'
 import { ConsoleLog } from '@/models/ConsoleLog'
 import { ErrorResponse } from '@/models/ErrorResponse'
 import ConsoleLogLine from '@/components/Elements/ConsoleLogLine'
+import { commands } from '@/definitions/redisCommands'
 
 export default {
   name: 'ConsoleModal',
@@ -35,7 +39,21 @@ export default {
     historyIndex: -1,
     command: '',
   }),
-  computed: mapState('servers', ['selected']),
+  computed: {
+    ...mapState('servers', ['selected']),
+    structure () {
+      let command = this.command.split(' ')[0].toLowerCase().trim()
+
+      if (!Object.prototype.hasOwnProperty.call(commands, command)) {
+        return false
+      }
+
+      return `<a href="https://redis.io/commands/${command.toLowerCase().trim().replace(/\w/g, '-')}" target="_blank">
+    <b>${command.toUpperCase()}</b></a>
+    <span>${commands[command].args}</span>
+    <div>${commands[command].summary}</div>`
+    },
+  },
   methods: {
     history (previous) {
       if (previous) {
@@ -78,5 +96,14 @@ export default {
 </script>
 
 <style scoped>
+#structure {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, .5)
+}
 
+@screen dark {
+  #structure {
+    background: rgba(0, 0, 0, .2)
+  }
+}
 </style>
