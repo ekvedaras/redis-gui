@@ -2,7 +2,7 @@
   <Modal title="Console" id="console-modal">
     <div class="rounded bg-white dark:bg-black w-full font-mono shadow flex-1 flex flex-col">
       <div class="relative flex-1">
-        <CommandInfo v-if="!hideInfo" :command="command" class="z-20"/>
+        <CommandInfo v-if="!hideInfo" :command="command" class="z-40"/>
         <div class="overflow-y-auto pb-4 px-4 relative" :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="log">
           <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line" @rerun="send"/>
         </div>
