@@ -14,9 +14,14 @@
     </div>
     <div :class="{'h-6 overflow-hidden': collapsed}">
       <div v-if="typeof log.content === 'object'">
-        <p v-for="(entry, index) in log.content" :key="index">
-          {{ index }}) {{ entry }}
-        </p>
+        <table class="compact">
+          <tbody>
+          <tr v-for="(entry, index) in log.content" :key="index">
+            <th class="text-right">{{ index }})</th>
+            <td class="text-left">{{ entry }}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
       <div v-else-if="log.wasSent">
         > {{ log.content }}

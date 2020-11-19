@@ -33,6 +33,10 @@ table td, table th {
     @apply py-2 px-4 text-center;
 }
 
+table.compact td, table.compact th {
+    @apply py-1 px-2;
+}
+
 table > thead > tr, table > tbody > tr:not(:last-child) {
     @apply border-b border-gray-200;
 }
