@@ -7,6 +7,11 @@ module.exports = {
       },
       colors: {
         'white-10p': 'rgba(255, 255, 255, 0.1)',
+        'white-50p': 'rgba(255, 255, 255, 0.5)',
+        'white-80p': 'rgba(255, 255, 255, 0.8)',
+        'black-10p': 'rgba(0, 0, 0, 0.1)',
+        'black-50p': 'rgba(0, 0, 0, 0.5)',
+        'black-80p': 'rgba(0, 0, 0, 0.8)',
         'redis': {
           default: '#D92D20',
           '100': '#F8D1CE',

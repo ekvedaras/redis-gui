@@ -1,12 +1,15 @@
 <template>
   <div class="overflow-x-auto relative" :class="{'text-redis': log.isError, 'sent-command rounded-t border-b z-10 border-gray-200 dark:border-gray-800 mb-2 -mx-4 font-bold sticky py-2 px-4 top-0 shadow-sm bg-white dark:bg-black': log.wasSent}">
-    <div class="absolute top-0 right-0" :class="{'mt-2 mr-2': log.wasSent}">
+    <div class="absolute top-0 right-0 bg-white-80p dark:bg-black-50p rounded flex items-center" :class="{'mt-2 mr-2': log.wasSent}">
       <IconButton v-if="!log.wasSent" @click="collapsed = !collapsed">
         <DownIcon v-if="collapsed" class="w-5" v-tooltip.left="'Expand'"/>
         <UpIcon v-else class="w-5" v-tooltip.left="'Collapse'"/>
       </IconButton>
       <IconButton v-if="log.wasSent" @click="$emit('rerun', log.content)">
         <RefreshIcon class="w-5" v-tooltip.left="'Run again'"/>
+      </IconButton>
+      <IconButton @click="copy">
+        <DocumentIcon class="w-5" v-tooltip.left="'Copy'"/>
       </IconButton>
     </div>
     <div :class="{'h-6 overflow-hidden': collapsed}">
@@ -34,10 +37,11 @@ import IconButton from '@/components/Elements/IconButton'
 import DownIcon from '@/components/Icons/DownIcon'
 import UpIcon from '@/components/Icons/UpIcon'
 import RefreshIcon from '@/components/Icons/RefreshIcon'
+import DocumentIcon from '@/components/Icons/DocumentIcon'
 
 export default {
   name: 'ConsoleLogLine',
-  components: { RefreshIcon, UpIcon, DownIcon, IconButton },
+  components: { DocumentIcon, RefreshIcon, UpIcon, DownIcon, IconButton },
   props: {
     log: {
       type: ConsoleLog,
@@ -46,6 +50,12 @@ export default {
   data: () => ({
     collapsed: false,
   }),
+  methods: {
+    copy() {
+      this.$copyText(this.log.content)
+      this.$toasted.info('Copied');
+    }
+  }
 }
 </script>
 
