@@ -21,7 +21,10 @@ export default {
     connectingTo: '',
   }),
   mounted () {
-    setTimeout(() => this.connectingTo = this.selected, 1000)
+    setTimeout(() => {
+      this.connectingTo = this.selected
+      this.load()
+    }, 1000)
   },
   computed: {
     ...mapState('servers', ['list', 'selected']),
@@ -55,11 +58,18 @@ export default {
     ...mapActions('databases', ['load']),
     ...mapMutations('servers', ['select']),
     connect ({ target }) {
+      if (target.value === this.selected) {
+        return
+      }
+
       this.connectingTo = target.value
       redis.connect(target.value, {
         onReady: () => {
           this.selectAndReload(target.value)
         },
+      }).catch((e) => {
+        target.value = this.selected
+        throw e
       })
     },
     selectAndReload (server) {
