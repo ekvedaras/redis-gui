@@ -6,12 +6,6 @@
     <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center" v-shortkey="['shift', '?']" @shortkey="openShortKeys">
       <ServerSelect/>
-      <IconButton @click="openInfo" v-shortkey="['i']" @shortkey.native="openInfo" v-tooltip="'Show server info and statistics'">
-        <InfoIcon class="w-6 m-1 cursor-pointer"/>
-      </IconButton>
-      <IconButton @click="add" v-tooltip="'Add new redis server'">
-        <AddIcon class="w-6 m-1 cursor-pointer"/>
-      </IconButton>
       <IconButton @click="edit" v-tooltip="'Edit saved redis servers'">
         <EditIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
@@ -20,6 +14,9 @@
       </IconButton>
       <IconButton @click="openTerminal" v-shortkey="['c']" @shortkey.native="openTerminal" v-tooltip="'Redis console'">
         <TerminalIcon class="w-6 m-1 cursor-pointer"/>
+      </IconButton>
+      <IconButton @click="openInfo" v-shortkey="['i']" @shortkey.native="openInfo" v-tooltip="'Show server info and statistics'">
+        <InfoIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
       <IconButton @click="openSettings" v-shortkey="['s']" @shortkey.native="openSettings" v-tooltip="'Settings'">
         <CogIcon class="w-6 m-1 cursor-pointer"/>
@@ -33,8 +30,6 @@
 import DatabaseSelect from '@/components/Elements/DatabaseSelect'
 import ServerSelect from '@/components/Elements/ServerSelect'
 import RefreshIcon from '@/components/Icons/RefreshIcon'
-import AddIcon from '@/components/Icons/AddIcon'
-import ServerModal from '@/components/Modals/ServerModal'
 import EditIcon from '@/components/Icons/EditIcon'
 import ServerListModal from '@/components/Modals/ServerListModal'
 import TerminalIcon from '@/components/Icons/TerminalIcon'
@@ -48,7 +43,7 @@ import InfoModal from '@/components/Modals/InfoModal'
 import ShortKeyModal from '@/components/Modals/ShortKeyModal'
 
 export default {
-  components: { InfoIcon, CogIcon, IconButton, TerminalIcon, EditIcon, AddIcon, RefreshIcon, ServerSelect, DatabaseSelect },
+  components: { InfoIcon, CogIcon, IconButton, TerminalIcon, EditIcon, RefreshIcon, ServerSelect, DatabaseSelect },
   methods: {
     ...mapActions('keys', ['loadKeys']),
     ...mapActions('databases', ['load']),
@@ -58,9 +53,6 @@ export default {
     async refresh () {
       await Promise.all([this.load(), this.loadKeys()])
       this.$toasted.info('Keys refreshed')
-    },
-    add () {
-      this.$modal.show(ServerModal)
     },
     edit () {
       this.$modal.show(ServerListModal)
@@ -73,7 +65,7 @@ export default {
     },
     openShortKeys () {
       this.$modal.show(ShortKeyModal)
-    }
+    },
   },
 }
 </script>
