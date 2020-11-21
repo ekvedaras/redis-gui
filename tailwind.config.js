@@ -1,5 +1,9 @@
 module.exports = {
-  purge: [],
+  purge: [
+    './public/index.html',
+    './src/App.vue',
+    './src/components/**/*.vue',
+  ],
   theme: {
     extend: {
       gridTemplateRows: {

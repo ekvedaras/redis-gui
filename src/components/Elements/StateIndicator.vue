@@ -31,7 +31,7 @@ export default {
   }
 
   div.orange {
-    @apply bg-orange-500
+    @apply bg-yellow-500
   }
 
   div.red {

@@ -2,7 +2,12 @@
   "name": "redis-gui",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "description": "Graphical UI for managing Redis databases",
+  "author": {
+    "email": "contact@ernestas.app",
+    "name": "Ernestas Kvedaras",
+    "url": "https://ernestas.app"
+  },
   "scripts": {
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
@@ -27,21 +32,18 @@
     "vue-toasted": "^1.1.28",
     "vuex": "^3.5.1"
   },
-    "resolutions": {
-        "redis-ssh/redis": "^3.0.2"
-    },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.4",
-    "@vue/cli-plugin-eslint": "~4.5.4",
-    "@vue/cli-plugin-vuex": "~4.5.4",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-babel": "^4.5.9",
+    "@vue/cli-plugin-eslint": "^4.5.9",
+    "@vue/cli-plugin-vuex": "^4.5.9",
+    "@vue/cli-service": "^4.5.9",
     "babel-eslint": "^10.1.0",
-    "electron": "^10.1.5",
+    "electron": "^11.0.2",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "vue-cli-plugin-electron-builder": "^2.0.0-rc.4",
-    "vue-cli-plugin-tailwind": "^1.5.0",
+    "vue-cli-plugin-electron-builder": "^2.0.0-rc.5",
+    "vue-cli-plugin-tailwind": "^2.0.1",
     "vue-template-compiler": "^2.6.12"
   },
   "eslintConfig": {
@@ -62,5 +64,9 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "license": "MIT",
+  "resolutions": {
+    "redis-ssh/redis": "^3.0.2"
+  }
 }
