@@ -1,27 +1,27 @@
 <template>
   <Modal :title="title">
-    <input type="text" placeholder="Name" v-model="name" class="mb-4"/>
-    <div class="flex space-x-4 mb-4">
+    <input type="text" placeholder="Name" v-model="name"/>
+    <div class="flex space-x-4">
       <input type="text" placeholder="Host / IP" v-model="host" class="flex-1"/>
       <input type="number" placeholder="Port" v-model="port"/>
     </div>
-    <input type="text" placeholder="or UNIX socket path" v-model="path" class="flex-1 mb-4"/>
-    <input type="text" placeholder="or URL (redis://, rediss://)" v-model="url" class="flex-1 mb-4"/>
-    <input type="password" placeholder="Password (optional)" v-model="password" class="mb-4"/>
-    <div class="flex space-x-4 items-baseline mb-4">
+    <input type="text" placeholder="or UNIX socket path" v-model="path" class="flex-1"/>
+    <input type="text" placeholder="or URL (redis://, rediss://)" v-model="url" class="flex-1"/>
+    <input type="password" placeholder="Password (optional)" v-model="password"/>
+    <div class="flex space-x-4 items-baseline">
       <input type="checkbox" v-model="ssh.tunnel" id="ssh"/>
       <label for="ssh">SSH tunnel</label>
     </div>
-    <div v-if="ssh.tunnel">
-      <div class="flex space-x-4 mb-4">
+    <div v-if="ssh.tunnel" class="flex flex-col space-y-4">
+      <div class="flex space-x-4">
         <input type="text" placeholder="SSH host / IP" v-model="ssh.host" class="flex-1"/>
         <input type="number" placeholder="SSH port" v-model="ssh.port"/>
       </div>
-      <div class="flex space-x-4 mb-4">
+      <div class="flex space-x-4">
         <input type="text" placeholder="SSH user (optional)" v-model="ssh.user" class="flex-1"/>
         <input type="password" placeholder="SSH password (optional)" v-model="ssh.password" class="flex-1"/>
       </div>
-      <div class="flex space-x-4 mb-4">
+      <div class="flex space-x-4">
         <input type="text" :placeholder="privateKeyPlaceholder" v-model="ssh.privateKey" class="flex-1"/>
       </div>
     </div>

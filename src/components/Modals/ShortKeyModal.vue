@@ -3,55 +3,56 @@
     <table>
       <tr>
         <th>Focus search</th>
-        <td>/</td>
+        <td><KeyboardKey>/</KeyboardKey></td>
       </tr>
       <tr>
-        <th>Focus key list search</th>
-        <td>CTRL + / (or /)</td>
+        <th>Focus key list<br/>or key items search</th>
+        <td>
+          <KeyboardKey>/</KeyboardKey> for key items or key list.<br/>
+          <KeyboardKey>CTRL</KeyboardKey> + <KeyboardKey>/</KeyboardKey> for always key list.
+        </td>
       </tr>
       <tr>
-        <th>Add new key item</th>
-        <td>A</td>
+        <th>Add new key or key item</th>
+        <td>
+          <KeyboardKey>A</KeyboardKey> for key item or whole key.<br/>
+          <KeyboardKey>CTRL</KeyboardKey> + <KeyboardKey>A</KeyboardKey> for always whole key.
+        </td>
       </tr>
       <tr>
-        <th>Add new key</th>
-        <td>CTRL + A (or A)</td>
-      </tr>
-      <tr>
-        <th>Refresh key</th>
-        <td>R</td>
-      </tr>
-      <tr>
-        <th>Refresh key list</th>
-        <td>CTRL + R</td>
+        <th>Refresh key or key list</th>
+        <td>
+          <KeyboardKey>R</KeyboardKey> for key content or key list.<br/>
+          <KeyboardKey>CTRL</KeyboardKey> + <KeyboardKey>R</KeyboardKey> for always key list.
+        </td>
       </tr>
       <tr>
         <th>Edit key name</th>
-        <td>E</td>
+        <td><KeyboardKey>E</KeyboardKey></td>
       </tr>
       <tr>
         <th>Delete key</th>
-        <td>D</td>
+        <td><KeyboardKey>D</KeyboardKey></td>
       </tr>
       <tr>
         <th>Set TTL</th>
-        <td>T</td>
+        <td><KeyboardKey>T</KeyboardKey></td>
       </tr>
       <tr>
         <th>Open server info</th>
-        <td>I</td>
+        <td><KeyboardKey>I</KeyboardKey></td>
       </tr>
       <tr>
         <th>Open console</th>
-        <td>C</td>
+        <td><KeyboardKey>C</KeyboardKey></td>
       </tr>
       <tr>
         <th>Open settings</th>
-        <td>S</td>
+        <td><KeyboardKey>S</KeyboardKey></td>
       </tr>
       <tr>
         <th>Open keymap</th>
-        <td>?</td>
+        <td><KeyboardKey>?</KeyboardKey></td>
       </tr>
     </table>
   </Modal>
@@ -59,13 +60,22 @@
 
 <script>
 import Modal from '@/components/Modals/Modal'
+import KeyboardKey from '@/components/Elements/KeyboardKey'
 
 export default {
   name: 'ShortKeyModal',
-  components: { Modal },
+  components: { KeyboardKey, Modal },
 }
 </script>
 
 <style scoped>
+  table th {
+    text-align: right;
+    white-space: nowrap;
+  }
 
+  table td {
+    text-align: left;
+    width: 100%;
+  }
 </style>

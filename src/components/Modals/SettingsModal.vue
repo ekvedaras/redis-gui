@@ -54,7 +54,12 @@ export default {
 <style scoped>
 table th {
   width: 33.3%;
-  @apply text-right;
+  text-align: right;
+  white-space: nowrap;
+}
+
+table td {
+  text-align: left;
 }
 
 table th, table td {
