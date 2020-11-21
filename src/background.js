@@ -3,6 +3,7 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require('path')
 
@@ -18,7 +19,7 @@ protocol.registerSchemesAsPrivileged([
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1324,
+    width: 1200,
     height: 800,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -27,6 +28,11 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+
+  win.setTitle('Redis GUI')
+  win.on('page-title-updated', function(e) {
+    e.preventDefault()
+  });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
