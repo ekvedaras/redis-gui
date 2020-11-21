@@ -22,8 +22,7 @@ export default {
   }),
   mounted () {
     setTimeout(() => {
-      this.connectingTo = this.selected
-      this.load()
+      this.load().then(() => this.connectingTo = Math.random())
     }, 1000)
   },
   computed: {
@@ -56,6 +55,7 @@ export default {
   },
   methods: {
     ...mapActions('databases', ['load']),
+    ...mapActions('keys', ['loadKeys']),
     ...mapMutations('servers', ['select']),
     connect ({ target }) {
       if (target.value === this.selected) {

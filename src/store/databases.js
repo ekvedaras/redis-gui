@@ -9,6 +9,9 @@ export default {
     selected: 0,
   },
   mutations: {
+    resetList(state) {
+      Vue.set(state, 'list', [])
+    },
     setDatabase (state, database) {
       Vue.set(state.list, database.index, database)
     },
@@ -23,19 +26,22 @@ export default {
     load ({ commit }) {
       return Promise.all([
         redis.async('config', 'GET', 'databases').then(list => commit('setTotal', parseInt(list[1]))),
-        redis.async('info', 'keyspace').then(databases => databases.split('\n').slice(1, -1).forEach(db => {
-          let id, meta, key, value;
+        redis.async('info', 'keyspace').then(databases => {
+          commit('resetList')
+          databases.split('\n').slice(1, -1).forEach(db => {
+            let id, meta, key, value;
 
-          [id, meta] = db.split(':')
-          let database = { id, index: parseInt(id.replace('db', '')) }
+            [id, meta] = db.split(':')
+            let database = { id, index: parseInt(id.replace('db', '')) }
 
-          meta.split(',').forEach(param => {
-            [key, value] = param.split('=')
-            database[key] = value
+            meta.split(',').forEach(param => {
+              [key, value] = param.split('=')
+              database[key] = value
+            })
+
+            commit('setDatabase', database)
           })
-
-          commit('setDatabase', database)
-        })),
+        }),
       ])
     },
     select ({ commit, dispatch }, index) {
