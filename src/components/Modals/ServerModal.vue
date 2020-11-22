@@ -5,8 +5,8 @@
       <input type="text" placeholder="Host / IP" v-model="host" class="flex-1"/>
       <input type="number" placeholder="Port" v-model="port"/>
     </div>
-    <input type="text" placeholder="or UNIX socket path" v-model="path" class="flex-1"/>
-    <input type="text" placeholder="or URL (redis://, rediss://)" v-model="url" class="flex-1"/>
+    <input v-if="!ssh.tunnel" type="text" placeholder="or UNIX socket path" v-model="path" class="flex-1"/>
+    <input v-if="!ssh.tunnel" type="text" placeholder="or URL (redis://, rediss://)" v-model="url" class="flex-1"/>
     <input type="password" placeholder="Password (optional)" v-model="password"/>
     <div class="flex space-x-4 items-baseline">
       <input type="checkbox" v-model="ssh.tunnel" id="ssh"/>
