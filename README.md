@@ -3,3 +3,8 @@
 ![Redis GUI logo](./public/android-chrome-192x192.png)
 
 A graphical UI for managing Redis databases.
+
+
+![JSON key](./artifacts/previews/json-key.png)
+
+![Console](./artifacts/previews/console.png)
