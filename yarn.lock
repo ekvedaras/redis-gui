@@ -9550,6 +9550,11 @@ vue-eslint-parser@^7.0.0:
     esquery "^1.0.1"
     lodash "^4.17.15"
 
+vue-filter-pretty-bytes@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/vue-filter-pretty-bytes/-/vue-filter-pretty-bytes-0.1.6.tgz#33f763700f2ed52c9d641477357220ecd02768f7"
+  integrity sha512-RcREeq5y4/So104i/A7F0xi3e5p6cxRsow+wxPClNHp07RH+k/y4g98Gzg5FZz+bavk5i+2YHmCZh2V0buN60Q==
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div>
     <IconButton @click="$emit('copy')" class="absolute top-0 right-0 z-10" :class="[withoutDelete ? 'mr-6' : 'mr-12']">
       <DocumentIcon class="w-4 m-1"/>
     </IconButton>

@@ -68,6 +68,9 @@ module.exports = {
       screens: {
         'dark': { raw: '(prefers-color-scheme: dark)' },
       },
+      minHeight: {
+        '16': '4rem',
+      }
     },
   },
   variants: {},

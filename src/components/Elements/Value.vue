@@ -4,21 +4,19 @@
     <!--suppress HtmlFormInputWithoutLabel -->
     <input type="text" v-if="isEditing && itemKey" v-model="editKey" @keydown.esc="isEditing = false" @keydown.ctrl.enter="save" class="my-1 mx-1 text-sm"/>
     <div v-if="!isEditing">
-      <KeyItemControls @edit="isEditing = true" @delete="$emit('delete')" @copy="copy" :without-delete="withoutDelete"/>
-      <ValueRenderer :value="value" class="mb-4"/>
+      <ValueRenderer :value="value" class="mb-4" @edit="isEditing = true" @delete="$emit('delete')" @copy="copy" :without-delete="withoutDelete" :with-keys="!!itemKey"/>
     </div>
     <ContentEditor v-else v-model="editValue" @close="isEditing = false" @save="save" class="mx-1"/>
   </div>
 </template>
 
 <script>
-import KeyItemControls from '@/components/Elements/KeyItemControls'
 import ValueRenderer from '@/components/Renderer/ValueRenderer'
 import ContentEditor from '@/components/Elements/ContentEditor'
 
 export default {
   name: 'Value',
-  components: { ContentEditor, ValueRenderer, KeyItemControls },
+  components: { ContentEditor, ValueRenderer },
   props: {
     value: {
       required: true,
@@ -51,7 +49,7 @@ export default {
     copy () {
       this.$copyText(this.value)
       this.$toasted.info('Copied')
-    }
+    },
   },
 }
 </script>

@@ -1,21 +1,31 @@
 <template>
-  <vue-json-pretty
-      class="bg-white dark:bg-gray-800 font-mono overflow-x-auto rounded shadow p-3"
-      :data="data"
-      :deep="4"
-      highlight-mouseover-node
-      show-length
-  />
+  <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col justify-center min-h-16">
+    <div class="sticky right-0 text-right flex justify-end" :class="[withKeys ? 'controls' : 'top-0']">
+      <KeyItemControls @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" :without-delete="withoutDelete"/>
+    </div>
+    <vue-json-pretty
+        :data="JSON.parse(data)"
+        :deep="4"
+        highlight-mouseover-node
+        show-length
+    />
+    <div class="sticky bottom-0 right-0 text-right h-0 pb-5">
+      <ValueSize :length="data.length"/>
+    </div>
+  </div>
+
 </template>
 
 <script>
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
+import ValueSize from '@/components/Elements/ValueSize'
+import KeyItemControls from '@/components/Elements/KeyItemControls'
 
 export default {
   name: 'JsonRenderer',
-  components: { VueJsonPretty },
-  props: ['data'],
+  components: { KeyItemControls, ValueSize, VueJsonPretty },
+  props: ['data', 'withoutDelete', 'withKeys'],
 }
 </script>
 
@@ -23,6 +33,10 @@ export default {
 @screen dark {
   .vjs-tree.is-mouseover {
     background-color: theme('colors.gray.900');
+  }
+
+  .controls {
+    top: 30px;
   }
 }
 </style>

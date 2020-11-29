@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <JsonRenderer v-if="isJSON(value)" :data="JSON.parse(value)"/>
-    <PlainRenderer class="whitespace-pre" v-else>{{ value }}</PlainRenderer>
+  <div class="relative group">
+    <JsonRenderer v-if="shouldAttemptJson && isJSON(value)" :data="value"  @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" :without-delete="withoutDelete" :with-keys="withKeys"/>
+    <PlainRenderer class="whitespace-pre" v-else :data="value"  @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" :without-delete="withoutDelete" :with-keys="withKeys"/>
   </div>
 </template>
 
@@ -13,8 +13,13 @@ import PlainRenderer from '@/components/Renderer/PlainRenderer'
 export default {
   name: 'ValueRenderer',
   components: { PlainRenderer, JsonRenderer },
-  props: ['value'],
+  props: ['value', 'withoutDelete', 'withKeys'],
   methods: { isJSON },
+  computed: {
+    shouldAttemptJson() {
+      return this.value.length < 1024 * 10
+    }
+  }
 }
 </script>
 
