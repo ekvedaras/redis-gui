@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-y-auto">
     <Value class="relative" :value="value" @save="save" without-delete/>
   </div>
 </template>
