@@ -11,6 +11,22 @@ import ShortKey from 'vue-shortkey'
 import VueClipboard from 'vue-clipboard2'
 import VueFilterPrettyBytes from 'vue-filter-pretty-bytes'
 
+const titleBarColors = {
+  dark: '#111827',
+  light: '#F3F4F6',
+}
+const customTitleBar = require('custom-electron-titlebar')
+let titleBar = new customTitleBar.Titlebar({
+  backgroundColor: customTitleBar.Color.fromHex(
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? titleBarColors.dark : titleBarColors.light,
+  ),
+})
+titleBar.updateTitle('Redis GUI')
+window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+  titleBar.updateBackground(customTitleBar.Color.fromHex(e.matches ? titleBarColors.dark : titleBarColors.light))
+})
+
 Vue.config.productionTip = false
 
 Vue.use(Toasted, {

@@ -18,6 +18,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.7.0",
+    "custom-electron-titlebar": "^3.2.5",
     "lodash": "^4.17.20",
     "lowdb": "^1.0.0",
     "redis": "^3.0.2",

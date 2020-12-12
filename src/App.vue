@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="h-screen grid grid-rows-layout grid-cols-12">
+  <div id="app" class="h-full grid grid-rows-layout grid-cols-12">
     <Header class="col-span-12 row-span-1 z-20"/>
     <KeysSidebar class="col-span-3 pt-2 px-1 overflow-auto max-h-screen"/>
     <KeyContent class="col-span-9 pb-2 px-4 overflow-hidden rounded-b"/>

@@ -3273,6 +3273,11 @@ csso@^4.0.2:
   dependencies:
     css-tree "1.0.0-alpha.39"
 
+custom-electron-titlebar@^3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/custom-electron-titlebar/-/custom-electron-titlebar-3.2.5.tgz#0cc98fccc02c7fd67aeaec2abb6c5e88433d7121"
+  integrity sha512-9tzTtvrsBec9lFi9Mg8nfwARn82mVgrYiiCYmBwJFYC0YhsyUYZfPyw4fd6hq+XHQbD+f72i9uqhukl5brhZZw==
+
 custom-event-polyfill@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz#9bc993ddda937c1a30ccd335614c6c58c4f87aee"

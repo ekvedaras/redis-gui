@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, BrowserWindow, protocol } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 
@@ -13,26 +13,28 @@ let win
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: 'app', privileges: { secure: true, standard: true } }
+  { scheme: 'app', privileges: { secure: true, standard: true } },
 ])
 
-function createWindow() {
+function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
     width: 1200,
     height: 800,
+    titleBarStyle: 'hidden',
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      preload: path.join(__dirname, 'preload.js')
-    }
+      preload: path.join(__dirname, 'preload.js'),
+      enableRemoteModule: true,
+    },
   })
 
   win.setTitle('Redis GUI')
-  win.on('page-title-updated', function(e) {
+  win.on('page-title-updated', function (e) {
     e.preventDefault()
-  });
+  })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
