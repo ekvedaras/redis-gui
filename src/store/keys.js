@@ -9,12 +9,16 @@ export default {
     list: {},
     cursor: 0,
     selected: undefined,
+    pattern: '*',
   },
   getters: {
     withTTL: state => _.filter(state.list, key => key.ttl > -1),
     current: state => _.find(state.list, { name: state.selected }),
   },
   mutations: {
+    setPattern(state, pattern) {
+      state.pattern = pattern
+    },
     setKeys (state, keys) {
       state.list = _.sortKeysBy(keys)
     },
@@ -46,17 +50,25 @@ export default {
     loadKeys ({ commit, state, dispatch }, { pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
       registerTtlTimer({ state, store: this })
 
+      if (!cursor) {
+        commit('setPattern', pattern)
+      }
+
       return redis.keys(pattern, limit, cursor).then(result => {
         result.lastLoad = Object.keys(result.keys).length
 
-        commit('setCursor', result.nextCursor)
-        commit('setKeys', cursor ? { ...state.list, ...result.keys } : result.keys)
+        if (pattern === state.pattern) {
+          commit('setCursor', result.nextCursor)
+          commit('setKeys', cursor ? { ...state.list, ...result.keys } : result.keys)
+        }
 
         return result
       }).then(result => {
-        if (result.nextCursor && lastLoad + result.lastLoad < limit) {
+        if (result.nextCursor && lastLoad + result.lastLoad < limit && pattern === state.pattern) {
           return dispatch('loadKeys', { pattern, cursor: result.nextCursor, limit, lastLoad: lastLoad + result.lastLoad })
         }
+
+        result.pattern = pattern
 
         return result
       })
