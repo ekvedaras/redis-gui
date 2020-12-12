@@ -9,7 +9,7 @@ export default {
   computed: {
     style () {
       return {
-        width: `${this.level * 20}px`,
+        minWidth: `${this.level * 20}px`,
       }
     },
   },
