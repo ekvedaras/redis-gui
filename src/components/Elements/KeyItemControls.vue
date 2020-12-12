@@ -20,7 +20,7 @@ import IconButton from '@/components/Elements/IconButton'
 import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import DocumentIcon from '@/components/Icons/DocumentIcon'
-import WordBreakIcon from '@/components/Icons/WorBreakIcon'
+import WordBreakIcon from '@/components/Icons/WordBreakIcon'
 
 export default {
   name: 'KeyItemControls',
