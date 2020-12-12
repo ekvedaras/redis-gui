@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col justify-center min-h-16">
-    <div class="sticky right-0 text-right flex justify-end" :class="[withKeys ? 'controls' : 'top-0']">
-      <KeyItemControls @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" :without-delete="withoutDelete"/>
+    <div class="sticky right-0 text-right flex justify-end z-10" :class="[withKeys ? 'controls' : 'top-0']">
+      <KeyItemControls @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" without-word-break :without-delete="withoutDelete"/>
     </div>
     <vue-json-pretty
         :data="JSON.parse(data)"

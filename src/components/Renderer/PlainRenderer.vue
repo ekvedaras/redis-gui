@@ -1,9 +1,9 @@
 <template>
   <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col justify-center min-h-16">
     <div class="sticky right-0 text-right justify-end" :class="[withKeys ? 'controls' : 'top-0']">
-      <KeyItemControls @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" :without-delete="withoutDelete"/>
+      <KeyItemControls @toggleWordBreak="toggleWordBreak" @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" :without-delete="withoutDelete"/>
     </div>
-    <div class="overflow-x-auto">
+    <div :class="['overflow-x-auto', breakWords ? 'break-all' : 'whitespace-pre']">
       {{ data }}
     </div>
     <div class="sticky bottom-0 right-0 text-right h-0 pb-5">
@@ -15,6 +15,7 @@
 <script>
 import ValueSize from '@/components/Elements/ValueSize'
 import KeyItemControls from '@/components/Elements/KeyItemControls'
+
 export default {
   name: 'PlainRenderer',
   components: { KeyItemControls, ValueSize },
@@ -23,11 +24,19 @@ export default {
     withoutDelete: Boolean,
     withKeys: Boolean,
   },
+  data: () => ({
+    breakWords: false,
+  }),
+  methods: {
+    toggleWordBreak () {
+      this.breakWords = !this.breakWords
+    },
+  },
 }
 </script>
 
 <style scoped>
-  .controls {
-    top: 30px;
-  }
+.controls {
+  top: 30px;
+}
 </style>

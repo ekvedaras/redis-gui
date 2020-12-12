@@ -70,6 +70,9 @@ module.exports = {
       },
       minHeight: {
         '16': '4rem',
+      },
+      margin: {
+        '18': '4.5rem',
       }
     },
   },
