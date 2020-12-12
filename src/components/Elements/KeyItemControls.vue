@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <IconButton v-if="!withoutWordBreak" v-tooltip="'Toggle word break'" @click="$emit('toggleWordBreak')" class="absolute top-0 right-0 z-10" :class="[withoutDelete ? 'mr-12' : 'mr-18']">
+  <div class="absolute h-6 p-0 top-0 right-0 rounded bg-white-80p dark:bg-black-10p dark:group-hover:bg-black-50p text-gray-400 group-hover:text-gray-900 dark:text-gray-700 dark:group-hover:text-gray-500 ">
+    <IconButton v-if="!withoutWordBreak" v-tooltip="'Toggle word break'" @click="$emit('toggleWordBreak')" class="z-10">
       <WordBreakIcon class="w-4 m-1"/>
     </IconButton>
-    <IconButton v-tooltip="'Copy'" @click="$emit('copy')" class="absolute top-0 right-0 z-10" :class="[withoutDelete ? 'mr-6' : 'mr-12']">
+    <IconButton v-tooltip="'Copy'" @click="$emit('copy')" class="z-10">
       <DocumentIcon class="w-4 m-1"/>
     </IconButton>
-    <IconButton v-tooltip="'Edit'" @click="$emit('edit')" class="absolute top-0 right-0 z-10" :class="{'mr-6': !withoutDelete}">
+    <IconButton v-tooltip="'Edit'" @click="$emit('edit')" class="z-10">
       <EditIcon class="w-4 m-1"/>
     </IconButton>
-    <IconButton v-tooltip="'Delete'" v-if="!withoutDelete" @click="$emit('delete')" class="absolute top-0 right-0 z-10">
+    <IconButton v-tooltip="'Delete'" v-if="!withoutDelete" @click="$emit('delete')" class="z-10">
       <DeleteIcon class="w-4 m-1"/>
     </IconButton>
   </div>
