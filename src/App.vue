@@ -32,10 +32,10 @@ export default {
   methods: {
     ...mapActions('databases', ['load']),
     openTwitter () {
-      window.open('https://twitter.com/ekvedaras', '_blank')
+      require('electron').shell.openExternal('https://twitter.com/ekvedaras');
     },
     openGitHub () {
-      window.open('https://github.com/ekvedaras/redis-gui', '_blank')
+      require('electron').shell.openExternal('https://github.com/ekvedaras/redis-gui');
     }
   },
 }
