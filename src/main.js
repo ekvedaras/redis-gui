@@ -37,7 +37,7 @@ Vue.use(require('vue-moment'))
 Vue.use(VTooltip)
 Vue.use(VueClipboard)
 Vue.use(VueFilterPrettyBytes)
-Vue.use(ShortKey, { prevent: ['input', 'textarea'] })
+Vue.use(ShortKey, { prevent: ['input', 'textarea', 'select'] })
 Vue.use(VModal, {
   dialog: false,
   dynamicDefaults: {
