@@ -71,7 +71,10 @@ export default {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
       this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.cursor })
-          .finally(() => this.isLoading = false)
+          .finally(() => {
+            this.isLoading = false
+            this.$toasted.info('Loaded')
+          })
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal)

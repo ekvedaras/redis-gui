@@ -50,6 +50,10 @@ export default {
     loadKeys ({ commit, state, dispatch }, { pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0 } = {}) {
       registerTtlTimer({ state, store: this })
 
+      if (pattern === '**') {
+        pattern = '*'
+      }
+
       if (!cursor) {
         commit('setPattern', pattern)
       }
