@@ -9,7 +9,7 @@
         {{ tab.key }}
       </li>
     </ul>
-    <div class="py-4 px-2">
+    <div class="py-4 px-2 overflow-y-auto" :style="{maxHeight: '75vh'}">
       <component v-for="tab in list" :key="tab.key" v-show="tab.selected" :is="tab.component" v-bind="tab.props"/>
     </div>
   </div>

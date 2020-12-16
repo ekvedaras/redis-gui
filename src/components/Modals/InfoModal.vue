@@ -1,6 +1,6 @@
 <template>
-  <Modal title="Server info" class="h-screen">
-    <IconButton @click="fetch" class="absolute right-0 mr-2 top-0">
+  <Modal title="Server info" class="overflow-y-hidden">
+    <IconButton @click="fetch" class="absolute right-0 mr-3 mt-3 top-0">
       <RefreshIcon class="w-8"/>
     </IconButton>
     <Tabs :tabs="tabs"/>
