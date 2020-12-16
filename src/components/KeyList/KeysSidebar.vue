@@ -53,17 +53,23 @@ export default {
     search () {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
-      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` }).finally(() => this.isLoading = false)
+      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` })
+          .then(result => this.isLoading = result.wasCancelled)
+          .catch(() => this.isLoading = false)
     },
     selected () {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
-      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` }).finally(() => this.isLoading = false)
+      this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` })
+          .then(result => result.wasCancelled)
+          .catch(() => this.isLoading = false)
     },
   },
   mounted () {
     this.isLoading = true
-    this.loadKeys().finally(() => this.isLoading = false)
+    this.loadKeys()
+        .then(result => this.isLoading = result.wasCancelled)
+        .catch(() => this.isLoading = false)
   },
   methods: {
     ...mapActions('keys', ['loadKeys']),
@@ -71,10 +77,11 @@ export default {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
       this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.cursor })
-          .finally(() => {
-            this.isLoading = false
+          .then(result => {
+            this.isLoading = result.wasCancelled
             this.$toasted.info('Loaded')
           })
+        .catch(() => this.isLoading = false)
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal)

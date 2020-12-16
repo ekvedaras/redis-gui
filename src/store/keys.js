@@ -72,7 +72,7 @@ export default {
           return dispatch('loadKeys', { pattern, cursor: result.nextCursor, limit, lastLoad: lastLoad + result.lastLoad })
         }
 
-        result.pattern = pattern
+        result.wasCancelled = pattern !== state.pattern
 
         return result
       })
