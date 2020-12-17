@@ -11,6 +11,14 @@
       <Keys :keys="groupedKeys" :level="0" class="mt-2"/>
     </div>
     <LoadMoreButton @click="loadMore" v-if="cursor" tabindex="2"/>
+    <div class="flex space-x-2 p-2 justify-start">
+      <IconButton @click="openTwitter">
+        <TwitterIcon v-tooltip="'Follow <b>@ekvedaras</b> on twitter'"/>
+      </IconButton>
+      <IconButton @click="openGitHub">
+        <GitHubIcon v-tooltip="'Star <b>redis-gui</b> on GitHub'"/>
+      </IconButton>
+    </div>
   </div>
 </template>
 
@@ -21,6 +29,9 @@ import AddKeyModal from '@/components/Modals/AddKeyModal'
 import SearchBar from '@/components/Elements/SearchBar'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 import { redis } from '@/services/redis'
+import IconButton from '@/components/Elements/IconButton'
+import TwitterIcon from '@/components/Icons/TwitterIcon'
+import GitHubIcon from '@/components/Icons/GitHubIcon'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -44,7 +55,7 @@ let nestKey = (grouped, path) => {
 
 export default {
   name: 'KeysSidebar',
-  components: { LoadMoreButton, SearchBar },
+  components: { GitHubIcon, TwitterIcon, IconButton, LoadMoreButton, SearchBar },
   data: () => ({
     search: '',
     isLoading: false,
@@ -86,6 +97,12 @@ export default {
     showKeyAddModal () {
       this.$modal.show(AddKeyModal)
     },
+    openTwitter () {
+      require('electron').shell.openExternal('https://twitter.com/ekvedaras');
+    },
+    openGitHub () {
+      require('electron').shell.openExternal('https://github.com/ekvedaras/redis-gui');
+    }
   },
   computed: {
     ...mapState('servers', ['selected']),
