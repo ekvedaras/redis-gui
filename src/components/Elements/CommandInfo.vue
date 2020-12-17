@@ -1,8 +1,8 @@
 <template>
   <div v-if="matchedCommand" class="command-info absolute rounded-t w-full py-4 px-4 bottom-0 text-gray-900 dark:text-gray-400">
-    <a :href="documentation" target="_blank" v-tooltip="`${upperName} documentation`">
+    <span @click="openDocs" v-tooltip="`${upperName} documentation`" :style="{cursor: 'help'}">
       <b>{{ upperName }}</b>
-    </a>
+    </span>
     <span class="ml-2">{{ commandInfo.args }}</span>
     <div class="text-sm mt-2">{{ commandInfo.summary }}</div>
   </div>
@@ -10,6 +10,7 @@
 
 <script>
 import { commands } from '@/definitions/redisCommands'
+import IFrameModal from '@/components/Modals/IFrameModal'
 
 export default {
   name: 'CommandInfo',
@@ -40,7 +41,15 @@ export default {
       }
 
       return false
-    }
+    },
+  },
+  methods: {
+    openDocs () {
+      this.$modal.show(IFrameModal, {
+        title: `${this.upperName} documentation`,
+        url: this.documentation,
+      })
+    },
   },
 }
 </script>

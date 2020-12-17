@@ -8,7 +8,7 @@
           <span ref="keyName" tabindex="0" v-show="!isRenaming" v-tooltip="'Click to edit'" v-shortkey="['e']" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm"/>
-          <a :href="typeDocs" target="_blank" class="text-sm ml-2" style="cursor: help">{{ current.type }} ({{ current.encoding }})</a>
+          <span @click="openDocs" class="text-sm ml-2" style="cursor: help">{{ current.type }} ({{ current.encoding }})</span>
         </h2>
         <IconButton @click="confirmDelete" tabindex="0" v-shortkey="['d']" @shortkey.native="confirmDelete">
           <DeleteIcon class="w-4 m-1"/>
@@ -51,6 +51,7 @@ import IconButton from '@/components/Elements/IconButton'
 import Dialog from '@/components/Modals/Dialog'
 import { EventBus } from '@/services/eventBus'
 import KeyIcon from '@/components/KeyList/KeyIcon'
+import IFrameModal from '@/components/Modals/IFrameModal'
 
 export default {
   name: 'KeyContent',
@@ -107,7 +108,13 @@ export default {
     },
     emitUpdate () {
       EventBus.$emit('key-updated', this.selected)
-    }
+    },
+    openDocs () {
+      this.$modal.show(IFrameModal, {
+        title: `${this.current.type.substr(0, 1).toUpperCase()}${this.current.type.substr(1)} documentation`,
+        url: this.typeDocs,
+      })
+    },
   },
   computed: {
     ...mapGetters('keys', ['current']),
@@ -141,7 +148,7 @@ export default {
         default:
           return 'https://redis.io/topics/data-types'
       }
-    }
+    },
   },
 }
 </script>
