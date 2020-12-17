@@ -3,7 +3,7 @@
     <SearchBar v-model="search"
                :show-spinner="isLoading"
                with-add :add-name="name" add-type="set"/>
-    <div class="overflow-y-auto h-full pb-10 rounded overflow-x-hidden mt-4">
+    <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
       <Value v-for="(item, i) in value"
              class="relative"
              :key="i" :value="item"

@@ -21,7 +21,7 @@
                  :key="current.name"
                  v-shortkey.once="['r']"
                  @shortkey.native="emitUpdate"
-                 class="h-full p-4 pb-10"
+                 class="h-full p-4 pb-24"
       />
       <template v-else>
         Key type {{ current.type }} is not supported

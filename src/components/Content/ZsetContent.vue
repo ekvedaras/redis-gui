@@ -3,7 +3,7 @@
     <SearchBar v-model="search"
                :show-spinner="isLoading"
                with-add :add-name="name" add-type="zset"/>
-    <div class="overflow-y-auto h-full pb-10 rounded mt-4">
+    <div class="overflow-y-auto h-full rounded mt-4">
       <Value v-for="(score, item) in value"
              class="relative"
              :key="item" :value="item" :item-key="score"
