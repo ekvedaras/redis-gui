@@ -1,20 +1,18 @@
 <template>
   <div class="overflow-y-auto">
     <Value class="relative" v-if="!isLoading" :value="value" @save="save" without-delete/>
-    <div v-if="isLoading" class="flex w-full h-full justify-center items-center">
-      Loading <Spinner class="relative ml-2"/>
-    </div>
+    <CenteredLoader v-if="isLoading"/>
   </div>
 </template>
 
 <script>
 import { redis } from '@/services/redis'
 import Value from '@/components/Elements/Value'
-import Spinner from '@/components/Elements/Spinner'
+import CenteredLoader from '@/components/Elements/CenteredLoader'
 
 export default {
   name: 'StringContent',
-  components: { Spinner, Value },
+  components: { CenteredLoader, Value },
   props: ['name'],
   data: () => ({
     value: '',

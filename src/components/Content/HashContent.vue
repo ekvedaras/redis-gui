@@ -10,6 +10,7 @@
              @save="save(key, $event)"
              @delete="deleteItem(key, 'keys/deleteHashItem')"/>
       <LoadMoreButton @click="loadMore" v-if="nextCursor"/>
+      <CenteredLoader v-if="isLoading && !hasItems"/>
     </div>
   </div>
 </template>
@@ -23,11 +24,13 @@ import ScansKey from '@/components/Mixins/ScansKey'
 import _ from 'lodash'
 import DeletesItems from '@/components/Mixins/DeletesItems'
 import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate'
+import CountsItems from '@/components/Mixins/CountsItems'
+import CenteredLoader from '@/components/Elements/CenteredLoader'
 
 export default {
   name: 'HashContent',
-  components: { LoadMoreButton, Value, SearchBar },
-  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate],
+  components: { CenteredLoader, LoadMoreButton, Value, SearchBar },
+  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate, CountsItems],
   props: ['name'],
   data: () => ({
     value: '',
@@ -55,7 +58,7 @@ export default {
         }
       })
     },
-  },
+  }
 }
 </script>
 

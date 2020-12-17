@@ -10,6 +10,7 @@
              @save="save(i, $event)"
              @delete="deleteItem({label: item, index: i}, 'keys/deleteListItem')"/>
       <LoadMoreButton @click="loadMore" v-if="start"/>
+      <CenteredLoader v-if="isLoading && !hasItems"/>
     </div>
   </div>
 </template>
@@ -21,11 +22,13 @@ import Value from '@/components/Elements/Value'
 import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 import DeletesItems from '@/components/Mixins/DeletesItems'
 import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate'
+import CountsItems from '@/components/Mixins/CountsItems'
+import CenteredLoader from '@/components/Elements/CenteredLoader'
 
 export default {
   name: 'ListContent',
-  components: { LoadMoreButton, Value, SearchBar },
-  mixins: [DeletesItems, ReloadsOnKeyUpdate],
+  components: { CenteredLoader, LoadMoreButton, Value, SearchBar },
+  mixins: [DeletesItems, ReloadsOnKeyUpdate, CountsItems],
   props: ['name'],
   data: () => ({
     value: [],

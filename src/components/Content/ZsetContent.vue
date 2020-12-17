@@ -10,6 +10,7 @@
              @save="save"
              @delete="deleteItem(item, 'keys/deleteZsetItem')"/>
       <LoadMoreButton @click="loadMore" v-if="nextCursor"/>
+      <CenteredLoader v-if="isLoading && !hasItems"/>
     </div>
   </div>
 </template>
@@ -23,11 +24,13 @@ import LoadMoreButton from '@/components/Elements/LoadMoreButton'
 import ScansKey from '@/components/Mixins/ScansKey'
 import DeletesItems from '@/components/Mixins/DeletesItems'
 import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate'
+import CountsItems from '@/components/Mixins/CountsItems'
+import CenteredLoader from '@/components/Elements/CenteredLoader'
 
 export default {
   name: 'ZsetContent',
-  components: { LoadMoreButton, Value, SearchBar },
-  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate],
+  components: { CenteredLoader, LoadMoreButton, Value, SearchBar },
+  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate, CountsItems],
   props: ['name'],
   data: () => ({
     value: [],
