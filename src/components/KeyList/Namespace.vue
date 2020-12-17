@@ -2,7 +2,7 @@
   <div>
     <div class="flex cursor-pointer hover:bg-white-10p px-2" tabindex="1" @keypress.enter="toggle" @click="toggle">
       <LevelTab :level="level"></LevelTab>
-      <div class="flex items-center">
+      <div class="flex items-start">
         <OpenFolderIcon v-if="expanded" class="w-5"/>
         <FolderIcon v-else class="w-5"/>
         <component v-if="overlayIcon" :is="overlayIcon" class="w-4 h-4 rounded bg-white dark:bg-gray-800 shadow mr-1 -ml-2 -mb-2"/>

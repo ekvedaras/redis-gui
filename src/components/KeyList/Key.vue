@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center cursor-pointer px-2 hover:bg-gray-200 dark:hover:bg-white-10p" :class="{'font-bold text-redis': isSelected}" tabindex="1" @keypress.enter="select(redisKey.name)" @click="select(redisKey.name)">
+  <div class="flex items-start cursor-pointer px-2 hover:bg-gray-200 dark:hover:bg-white-10p" :class="{'font-bold text-redis': isSelected}" tabindex="1" @keypress.enter="select(redisKey.name)" @click="select(redisKey.name)">
     <LevelTab :level="level"></LevelTab>
     <KeyIcon :redis-key="redisKey" v-tooltip="redisKey.type"/>
     <div class="ml-2 flex-1">{{ name }}</div>
