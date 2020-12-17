@@ -79,7 +79,7 @@ export default {
       this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}`, cursor: this.cursor })
           .then(result => {
             this.isLoading = result.wasCancelled
-            this.$toasted.info('Loaded')
+            this.$toasted.info(`${result.loaded} keys loaded`)
           })
         .catch(() => this.isLoading = false)
     },

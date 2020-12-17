@@ -73,6 +73,7 @@ export default {
         }
 
         result.wasCancelled = pattern !== state.pattern
+        result.loaded = result.lastLoad + lastLoad
 
         return result
       })
