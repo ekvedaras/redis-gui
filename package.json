@@ -1,6 +1,6 @@
 {
   "name": "redis-gui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Graphical UI for managing Redis databases",
   "author": {
