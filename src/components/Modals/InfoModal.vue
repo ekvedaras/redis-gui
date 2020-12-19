@@ -1,5 +1,5 @@
 <template>
-  <Modal title="Server info" class="overflow-y-hidden">
+  <Modal title="Server info" class="overflow-y-hidden h-screen">
     <IconButton @click="fetch" class="absolute right-0 mr-3 mt-3 top-0">
       <RefreshIcon class="w-8"/>
     </IconButton>
