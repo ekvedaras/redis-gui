@@ -3,6 +3,9 @@
     <IconButton v-if="!withoutWordBreak" v-tooltip="'Toggle word break'" @click="$emit('toggleWordBreak')" class="z-10">
       <WordBreakIcon class="w-4 m-1"/>
     </IconButton>
+    <IconButton v-if="withJson" @click="$emit('toggleJson')">
+      <CodeIcon class="w-5" v-tooltip.left="'Toggle JSON view'"/>
+    </IconButton>
     <IconButton v-tooltip="'Copy'" @click="$emit('copy')" class="z-10">
       <DocumentIcon class="w-4 m-1"/>
     </IconButton>
@@ -21,16 +24,21 @@ import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import DocumentIcon from '@/components/Icons/DocumentIcon'
 import WordBreakIcon from '@/components/Icons/WordBreakIcon'
+import CodeIcon from '@/components/Icons/CodeIcon'
 
 export default {
   name: 'KeyItemControls',
-  components: { WordBreakIcon, DocumentIcon, DeleteIcon, EditIcon, IconButton },
+  components: { CodeIcon, WordBreakIcon, DocumentIcon, DeleteIcon, EditIcon, IconButton },
   props: {
     withoutDelete: {
       type: Boolean,
       default: false,
     },
     withoutWordBreak: {
+      type: Boolean,
+      default: false,
+    },
+    withJson: {
       type: Boolean,
       default: false,
     },

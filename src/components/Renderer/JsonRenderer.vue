@@ -1,7 +1,14 @@
 <template>
   <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col justify-center min-h-16">
-    <div class="sticky right-0 text-right flex justify-end z-10 h-5" :class="[withKeys ? 'controls' : 'top-0']">
-      <KeyItemControls @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" without-word-break :without-delete="withoutDelete"/>
+    <div v-if="!withoutControls" class="sticky right-0 text-right flex justify-end z-10 h-5" :class="[withKeys ? 'controls' : 'top-0']">
+      <KeyItemControls
+          @edit="$emit('edit')"
+          @delete="$emit('delete')"
+          @copy="$emit('copy')"
+          @toggleJson="$emit('toggleJson')"
+          without-word-break
+          with-json
+          :without-delete="withoutDelete"/>
     </div>
     <vue-json-pretty
         :data="JSON.parse(data)"
@@ -26,7 +33,21 @@ import KeyItemControls from '@/components/Elements/KeyItemControls'
 export default {
   name: 'JsonRenderer',
   components: { KeyItemControls, ValueSize, VueJsonPretty },
-  props: ['data', 'withoutDelete', 'withKeys'],
+  props: {
+    data: String,
+    withoutDelete: {
+      type: Boolean,
+      default: false,
+    },
+    withKeys: {
+      type: Boolean,
+      default: false,
+    },
+    withoutControls: {
+      type: Boolean,
+      default: false,
+    },
+  },
 }
 </script>
 

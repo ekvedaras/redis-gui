@@ -1,7 +1,14 @@
 <template>
   <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col justify-center min-h-16">
     <div class="sticky right-0 text-right justify-end h-5" :class="[withKeys ? 'controls' : 'top-0']">
-      <KeyItemControls @toggleWordBreak="toggleWordBreak" @edit="$emit('edit')" @delete="$emit('delete')" @copy="$emit('copy')" :without-delete="withoutDelete"/>
+      <KeyItemControls
+          @toggleWordBreak="toggleWordBreak"
+          @toggleJson="$emit('toggleJson')"
+          @edit="$emit('edit')"
+          @delete="$emit('delete')"
+          @copy="$emit('copy')"
+          :without-delete="withoutDelete"
+          :with-json="withJson"/>
     </div>
     <div :class="['overflow-x-auto -my-2', breakWords ? 'break-all' : 'whitespace-pre']">
       {{ data }}
@@ -23,6 +30,7 @@ export default {
     data: String,
     withoutDelete: Boolean,
     withKeys: Boolean,
+    withJson: Boolean,
   },
   data: () => ({
     breakWords: false,

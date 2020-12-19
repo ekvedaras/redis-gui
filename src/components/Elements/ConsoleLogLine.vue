@@ -14,6 +14,9 @@
       <IconButton v-if="!log.wasSent && typeof log.content !== 'object' && isJSON" @click="asJson = !asJson">
         <CodeIcon class="w-5" v-tooltip.left="'Toggle JSON view'"/>
       </IconButton>
+      <IconButton v-if="!log.wasSent && !asJson" v-tooltip.left="'Toggle word break'" @click="breakWords = !breakWords" class="z-10">
+        <WordBreakIcon class="w-4 m-1"/>
+      </IconButton>
     </div>
     <div :class="{'h-6 overflow-hidden': collapsed}">
       <div v-if="typeof log.content === 'object'">
@@ -30,8 +33,8 @@
         > {{ log.content }}
       </div>
       <div v-else>
-        <JsonRenderer v-if="asJson" :data="JSON.parse(log.content)"/>
-        <div v-else class="whitespace-pre">
+        <JsonRenderer v-if="asJson" :data="log.content" without-controls/>
+        <div v-else :class="breakWords ? 'break-all' : 'whitespace-pre'">
           {{ log.content }}
         </div>
       </div>
@@ -52,10 +55,11 @@ import DocumentIcon from '@/components/Icons/DocumentIcon'
 import CodeIcon from '@/components/Icons/CodeIcon'
 import { isJSON } from '@/services/json'
 import JsonRenderer from '@/components/Renderer/JsonRenderer'
+import WordBreakIcon from '@/components/Icons/WordBreakIcon'
 
 export default {
   name: 'ConsoleLogLine',
-  components: { JsonRenderer, CodeIcon, DocumentIcon, RefreshIcon, UpIcon, DownIcon, IconButton },
+  components: { WordBreakIcon, JsonRenderer, CodeIcon, DocumentIcon, RefreshIcon, UpIcon, DownIcon, IconButton },
   props: {
     log: {
       type: ConsoleLog,
@@ -64,10 +68,14 @@ export default {
   data() {
     return {
       collapsed: false,
-      asJson: isJSON(this.log.content)
+      breakWords: false,
+      asJson: this.shouldAttemptJson && this.isJSON
     }
   },
   computed: {
+    shouldAttemptJson () {
+      return this.log.content.length < 1024 * 10 && (this.log.content.startsWith('[') || this.log.content.startsWith('{'))
+    },
     isJSON() {
       return isJSON(this.log.content)
     }
