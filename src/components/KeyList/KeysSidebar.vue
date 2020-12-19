@@ -32,6 +32,7 @@ import { redis } from '@/services/redis'
 import IconButton from '@/components/Elements/IconButton'
 import TwitterIcon from '@/components/Icons/TwitterIcon'
 import GitHubIcon from '@/components/Icons/GitHubIcon'
+import { shell } from 'electron'
 
 let nestKey = (grouped, path) => {
   let parts = path.split('.')
@@ -98,10 +99,10 @@ export default {
       this.$modal.show(AddKeyModal)
     },
     openTwitter () {
-      require('electron').shell.openExternal('https://twitter.com/ekvedaras');
+      shell.openExternal('https://twitter.com/ekvedaras');
     },
     openGitHub () {
-      require('electron').shell.openExternal('https://github.com/ekvedaras/redis-gui');
+      shell.openExternal('https://github.com/ekvedaras/redis-gui');
     }
   },
   computed: {
