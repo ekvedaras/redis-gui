@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex cursor-pointer hover:bg-white-10p px-2" tabindex="1" @keypress.enter="toggle" @click="toggle">
+    <div class="flex cursor-pointer rounded hover:bg-gray-200 dark:hover:bg-white-10p px-2" tabindex="1" @keypress.enter="toggle" @click="toggle">
       <LevelTab :level="level"></LevelTab>
       <div class="flex items-start">
         <OpenFolderIcon v-if="expanded" class="w-5"/>
