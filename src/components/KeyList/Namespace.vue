@@ -5,7 +5,7 @@
       <div class="flex items-start">
         <OpenFolderIcon v-if="expanded" class="w-5"/>
         <FolderIcon v-else class="w-5"/>
-        <component v-if="overlayIcon" :is="overlayIcon" class="w-4 h-4 rounded bg-white dark:bg-gray-800 shadow mr-1 -ml-2 -mb-2"/>
+        <component v-if="overlayIcon" :is="overlayIcon" class="w-4 h-4 rounded bg-white dark:bg-gray-800 shadow mr-1 -ml-2 mt-2"/>
       </div>
       <div class="ml-2">{{ namespace }} <span class="text-xs text-gray-500" v-tooltip.top-end="`${totalKeys} keys loaded`">({{ totalKeys }})</span></div>
     </div>

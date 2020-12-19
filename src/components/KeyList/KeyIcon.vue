@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center">
     <component :is="icon" class="w-5"/>
-    <component v-if="overlayIcon" :is="overlayIcon" class="w-4 h-4 rounded bg-white dark:bg-gray-800 shadow mr-1 -ml-1 -mb-1"/>
+    <component v-if="overlayIcon" :is="overlayIcon" class="w-4 h-4 rounded bg-white dark:bg-gray-800 shadow mr-1 -ml-1 -mb-2"/>
   </div>
 </template>
 
