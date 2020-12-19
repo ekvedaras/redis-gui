@@ -72,6 +72,7 @@ module.exports = {
         '16': '4rem',
       },
       margin: {
+        '1-5': '0.35rem',
         '18': '4.5rem',
       }
     },
