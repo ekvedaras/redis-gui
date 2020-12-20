@@ -112,6 +112,10 @@ export default {
       let grouped = {}
 
       Object.entries(this.list).forEach(([name, key]) => {
+        if (Object.prototype.hasOwnProperty.call(key, 'name')) {
+          key.name = key.name.replaceAll('◦', '.')
+        }
+
         if (name.indexOf(redis.namespaceSeparator) < 0) {
           grouped[name] = key
           return true

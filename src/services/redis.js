@@ -106,7 +106,7 @@ export const redis = {
 
       await Promise.all(result[1].map(key => this.async('type', key))).then(types => {
         types.forEach((type, index) => {
-          let name = result[1][index]
+          let name = result[1][index].replaceAll('.', '◦')
           _.set(keys.keys, `${name}.name`, name)
           _.set(keys.keys, `${name}.type`, type)
         })
@@ -114,7 +114,7 @@ export const redis = {
 
       await Promise.all(result[1].map(key => this.async('ttl', key))).then(ttls => {
         ttls.forEach((ttl, index) => {
-          let name = result[1][index]
+          let name = result[1][index].replaceAll('.', '◦')
           _.set(keys.keys, `${name}.name`, name)
           _.set(keys.keys, `${name}.ttl`, ttl)
         })
@@ -122,7 +122,7 @@ export const redis = {
 
       await Promise.all(result[1].map(key => this.async('object', 'encoding', key))).then(encodings => {
         encodings.forEach((encoding, index) => {
-          let name = result[1][index]
+          let name = result[1][index].replaceAll('.', '◦')
           _.set(keys.keys, `${name}.name`, name)
           _.set(keys.keys, `${name}.encoding`, encoding)
         })
