@@ -1,5 +1,6 @@
 import { Color, Titlebar } from 'custom-electron-titlebar'
 import { remote, shell } from 'electron'
+import { findIndex } from 'lodash'
 
 const titleBarColors = {
   dark: '#111827',
@@ -19,10 +20,18 @@ window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
 })
 
 const menu = remote.Menu.getApplicationMenu()
-if (!menu.getMenuItemById('redis')) {
+
+if (!menu.getMenuItemById('help')) {
+  // Remove default Help item
+  let items = menu.items
+  let helpIndex = findIndex(items, { label: 'Help' })
+  delete items[helpIndex]
+  items.splice(helpIndex, 1)
+  menu.items = items
+
   menu.append(new remote.MenuItem({
-    label: 'Redis',
-    id: 'redis',
+    label: 'Help',
+    id: 'help',
     submenu: [
       {
         label: 'Commands',
@@ -32,22 +41,26 @@ if (!menu.getMenuItemById('redis')) {
         label: 'Documentation',
         click: () => shell.openExternal('https://redis.io/documentation'),
       },
+      {
+        label: 'Create issue',
+        click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui/issues/new'),
+      },
     ],
   }))
 }
 
-if (!menu.getMenuItemById('redis-gui')) {
+if (!menu.getMenuItemById('follow')) {
   menu.append(new remote.MenuItem({
-    label: 'Redis GUI',
-    id: 'redis-gui',
+    label: 'Follow',
+    id: 'follow',
     submenu: [
       {
-        label: 'GitHub',
-        click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui'),
+        label: 'Releases',
+        click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui/releases'),
       },
       {
-        label: 'Create issue',
-        click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui/issues/new'),
+        label: 'GitHub',
+        click: () => shell.openExternal('https://github.com/ekvedaras'),
       },
       {
         label: 'Twitter',
