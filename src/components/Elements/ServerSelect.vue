@@ -2,7 +2,7 @@
   <div class="flex items-center">
     <StateIndicator :key="connectingTo" :state="connectionState" v-tooltip="connectionMessage"/>
     <select id="server" @change="connect" class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1" v-tooltip="'Choose redis server'">
-      <option v-for="(storeServer, key) in list" :key="key" :value="storeServer.name" :selected="storeServer.name === selected">
+      <option v-for="(storeServer, key) in list" :key="key" :value="key" :selected="storeServer.name === selected">
         {{ storeServer.name }}
       </option>
     </select>
