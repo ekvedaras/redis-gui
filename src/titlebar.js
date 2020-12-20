@@ -18,27 +18,27 @@ window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
   titleBar.updateBackground(Color.fromHex(e.matches ? titleBarColors.dark : titleBarColors.light))
 })
 
-const menu = new remote.Menu()
+const menu = remote.Menu.getApplicationMenu()
 menu.append(new remote.MenuItem({
-  label: 'Info',
+  label: 'Redis',
   submenu: [
     {
-      label: 'GitHub',
-      click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui'),
-    },
-    {
-      label: 'Redis commands',
+      label: 'Commands',
       click: () => shell.openExternal('https://redis.io/commands'),
     },
     {
-      label: 'Redis documentation',
+      label: 'Documentation',
       click: () => shell.openExternal('https://redis.io/documentation'),
     },
   ],
 }))
 menu.append(new remote.MenuItem({
-  label: 'Help',
+  label: 'Redis GUI',
   submenu: [
+    {
+      label: 'GitHub',
+      click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui'),
+    },
     {
       label: 'Create issue',
       click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui/issues/new'),
