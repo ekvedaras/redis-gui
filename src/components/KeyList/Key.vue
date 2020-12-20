@@ -12,6 +12,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import LevelTab from '@/components/KeyList/LevelTab'
 import TimeIcon from '@/components/Icons/TimeIcon'
 import KeyIcon from '@/components/KeyList/KeyIcon'
+import { redis } from '@/services/redis'
 
 export default {
   name: 'Key',
@@ -21,6 +22,10 @@ export default {
   computed: {
     ...mapGetters('keys', ['current']),
     nameWithDots () {
+      if (redis.namespaceSeparator === '.') {
+        return this.name
+      }
+
       return this.name.replaceAll('◦', '.')
     },
     isSelected () {

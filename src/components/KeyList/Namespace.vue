@@ -19,6 +19,7 @@ import LevelTab from '@/components/KeyList/LevelTab'
 import OpenFolderIcon from '@/components/Icons/OpenFolderIcon'
 import LaravelIcon from '@/components/Icons/LaravelIcon'
 import HorizonIcon from '@/components/Icons/HorizonIcon'
+import { redis } from '@/services/redis'
 
 export default {
   name: 'Namespace',
@@ -34,6 +35,10 @@ export default {
   },
   computed: {
     namespaceWithDots () {
+      if (redis.namespaceSeparator === '.') {
+        return this.namespace
+      }
+
       return this.namespace.replaceAll('◦', '.')
     },
     overlayIcon () {

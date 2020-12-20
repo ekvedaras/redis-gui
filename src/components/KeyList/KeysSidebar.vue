@@ -93,17 +93,17 @@ export default {
             this.isLoading = result.wasCancelled
             this.$toasted.info(`${result.loaded} keys loaded`)
           })
-        .catch(() => this.isLoading = false)
+          .catch(() => this.isLoading = false)
     },
     showKeyAddModal () {
       this.$modal.show(AddKeyModal)
     },
     openTwitter () {
-      shell.openExternal('https://twitter.com/ekvedaras');
+      shell.openExternal('https://twitter.com/ekvedaras')
     },
     openGitHub () {
-      shell.openExternal('https://github.com/ekvedaras/redis-gui');
-    }
+      shell.openExternal('https://github.com/ekvedaras/redis-gui')
+    },
   },
   computed: {
     ...mapState('servers', ['selected']),
@@ -114,6 +114,7 @@ export default {
       Object.entries(this.list).forEach(([name, key]) => {
         if (Object.prototype.hasOwnProperty.call(key, 'name')) {
           key.name = key.name.replaceAll('◦', '.')
+          name = name.replaceAll('◦', '.')
         }
 
         if (name.indexOf(redis.namespaceSeparator) < 0) {
@@ -121,7 +122,9 @@ export default {
           return true
         }
 
-        let path = name.replace(new RegExp(`${redis.namespaceSeparator}`, 'g'), '.')
+        let path = redis.namespaceSeparator === '.'
+            ? name
+            : name.replace(new RegExp(redis.namespaceSeparator, 'g'), '.')
 
         let nestedKey, folderPath
         [nestedKey, folderPath] = nestKey(grouped, path)
