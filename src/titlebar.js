@@ -19,35 +19,42 @@ window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
 })
 
 const menu = remote.Menu.getApplicationMenu()
-menu.append(new remote.MenuItem({
-  label: 'Redis',
-  submenu: [
-    {
-      label: 'Commands',
-      click: () => shell.openExternal('https://redis.io/commands'),
-    },
-    {
-      label: 'Documentation',
-      click: () => shell.openExternal('https://redis.io/documentation'),
-    },
-  ],
-}))
-menu.append(new remote.MenuItem({
-  label: 'Redis GUI',
-  submenu: [
-    {
-      label: 'GitHub',
-      click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui'),
-    },
-    {
-      label: 'Create issue',
-      click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui/issues/new'),
-    },
-    {
-      label: 'Twitter',
-      click: () => shell.openExternal('https://twitter.com/ekvedaras'),
-    },
-  ],
-}))
+if (!menu.getMenuItemById('redis')) {
+  menu.append(new remote.MenuItem({
+    label: 'Redis',
+    id: 'redis',
+    submenu: [
+      {
+        label: 'Commands',
+        click: () => shell.openExternal('https://redis.io/commands'),
+      },
+      {
+        label: 'Documentation',
+        click: () => shell.openExternal('https://redis.io/documentation'),
+      },
+    ],
+  }))
+}
 
+if (!menu.getMenuItemById('redis-gui')) {
+  menu.append(new remote.MenuItem({
+    label: 'Redis GUI',
+    id: 'redis-gui',
+    submenu: [
+      {
+        label: 'GitHub',
+        click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui'),
+      },
+      {
+        label: 'Create issue',
+        click: () => shell.openExternal('https://github.com/ekvedaras/redis-gui/issues/new'),
+      },
+      {
+        label: 'Twitter',
+        click: () => shell.openExternal('https://twitter.com/ekvedaras'),
+      },
+    ],
+  }))
+
+}
 titleBar.updateMenu(menu)
