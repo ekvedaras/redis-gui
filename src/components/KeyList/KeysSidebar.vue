@@ -73,7 +73,7 @@ export default {
       this.isLoading = true
       let wildcard = this.search.indexOf('*') > -1 ? '' : '*'
       this.loadKeys({ pattern: `${wildcard}${this.search}${wildcard}` })
-          .then(result => result.wasCancelled)
+          .then(result => this.isLoading = result.wasCancelled)
           .catch(() => this.isLoading = false)
     },
   },
