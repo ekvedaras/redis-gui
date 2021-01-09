@@ -1,4 +1,4 @@
-# Redis GUI
+# Redis GUI (unofficial)
 
 [![redis-gui](https://snapcraft.io/redis-gui/badge.svg)](https://snapcraft.io/redis-gui)
 
