@@ -20,6 +20,7 @@ const defaultDatabase = {
   settings: {
     itemsPerPage: 100,
     namespaceSeparator: ':',
+    leftPaneSize: '25%',
   },
 }
 

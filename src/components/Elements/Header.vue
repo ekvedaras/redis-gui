@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex justify-between items-center space-x-2 px-2">
+  <div class="w-full flex justify-between items-center space-x-2 px-2">
     <div class="py-2 h-full">
       <img src="@/assets/redis.svg" alt="Redis logo" class="h-full"/>
     </div>
