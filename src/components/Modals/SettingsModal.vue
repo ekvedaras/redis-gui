@@ -29,11 +29,13 @@ export default {
   data: () => ({
     itemsPerPage: 0,
     namespaceSeparator: '-',
+    leftPaneSize: '25%',
   }),
   mounted () {
     let settings = database.get('settings').value()
     this.itemsPerPage = settings.itemsPerPage
     this.namespaceSeparator = settings.namespaceSeparator
+    this.leftPaneSize = settings.leftPaneSize
   },
   methods: {
     ...mapActions('keys', ['loadKeys']),
@@ -41,6 +43,7 @@ export default {
       database.set('settings', {
         itemsPerPage: redis.pageSize = parseInt(this.itemsPerPage),
         namespaceSeparator: redis.namespaceSeparator = this.namespaceSeparator,
+        leftPaneSize: this.leftPaneSize,
       }).write()
 
       this.$toasted.success('Saved')
