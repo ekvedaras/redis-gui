@@ -3,7 +3,7 @@
     <LevelTab :level="level"></LevelTab>
     <KeyIcon :redis-key="redisKey" v-tooltip="redisKey.type"/>
     <div class="ml-2 flex-1">{{ nameWithDots }}</div>
-    <TimeIcon class="w-3 mt-1-5 text-gray-600" v-if="redisKey.ttl > -1" v-tooltip="expiresIn"/>
+    <TimeIcon class="w-3 mt-1-5 text-gray-600" v-if="redisKey.ttl > -1" v-tooltip="expiresIn" :style="{minWidth: '0.75rem'}"/>
   </div>
 </template>
 
