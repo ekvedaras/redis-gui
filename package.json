@@ -19,7 +19,7 @@
   "dependencies": {
     "core-js": "^3.7.0",
     "custom-electron-titlebar": "^3.2.5",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "lowdb": "^1.0.0",
     "redis": "^3.1.1",
     "redis-ssh": "^1.0.0",
