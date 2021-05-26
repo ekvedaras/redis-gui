@@ -1,6 +1,6 @@
 {
   "name": "redis-gui",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "Graphical UI for managing Redis databases",
   "author": {
@@ -17,12 +17,16 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@tailwindcss/postcss7-compat": "^2.0.2",
+    "autoprefixer": "^9",
     "core-js": "^3.7.0",
     "custom-electron-titlebar": "^3.2.5",
     "lodash": "^4.17.21",
     "lowdb": "^1.0.0",
-    "redis": "^3.1.1",
+    "postcss": "^7",
+    "redis": "^3.0.2",
     "redis-ssh": "^1.0.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "v-tooltip": "^2.0.3",
     "vue": "^2.6.12",
     "vue-clipboard2": "^0.3.1",
@@ -46,7 +50,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-cli-plugin-electron-builder": "^2.0.0-rc.5",
-    "vue-cli-plugin-tailwind": "^2.0.1",
+    "vue-cli-plugin-tailwind": "~2.0.6",
     "vue-template-compiler": "^2.6.12"
   },
   "eslintConfig": {
