@@ -15,6 +15,23 @@ A graphical UI for managing Redis databases.
 * Light and dark mode
 * TTL management
 
+## Installation
+
+`brew` and `snap` packages available. For Windows and other you can [download](#download) binaries from releases page.
+
+### Mac OS
+
+```shell
+brew tap ekvedaras/homebrew-cask
+brew install --cask redis-gui
+```
+
+### Linux
+
+```shell
+sudo snap install redis-gui
+```
+
 ## Download
 
 Binaries are available to download on [releases page](https://github.com/ekvedaras/redis-gui/releases/latest).
