@@ -4,7 +4,7 @@
     <multipane layout="vertical" :style="{height: 'calc(100% - 55px)'}" @paneResizeStop="saveLayout">
       <KeysSidebar id="key-pane" ref="key-pane" class="pt-2 px-1 overflow-auto max-h-screen"/>
       <multipane-resizer class="transition transition-colors rounded hover:bg-gray-300 dark:hover:bg-gray-700"/>
-      <KeyContent class="pb-2 px-4 overflow-hidden rounded-b" :style="{flexGrow: 1}"/>
+      <KeyContent class="flex-1 pb-2 px-4 overflow-hidden rounded-b" />
     </multipane>
   </div>
 </template>
