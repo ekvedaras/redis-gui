@@ -20,6 +20,7 @@
       </tr>
     </table>
     <div class="flex justify-end">
+      <Button class="mr-5" @click="hide">Cancel</Button>
       <PrimaryButton @click="openAddModal">Add</PrimaryButton>
     </div>
   </Modal>
@@ -54,6 +55,9 @@ export default {
     }
   },
   methods: {
+    hide () {
+      this.$emit('close')
+    },
     ...mapMutations('servers', ['setServers']),
     edit (key) {
       this.$modal.show(ServerModal, { serverKey: key })
@@ -61,6 +65,7 @@ export default {
     deleteServer (server, key) {
       this.$modal.show(Dialog, {
         text: `Are you sure you want to delete <b>${server.name}</b>?`,
+        dangerBtn: true,
         handler: () => {
           database.get('servers').unset(key).write()
           database.get('history').unset(key).write()
