@@ -4,7 +4,7 @@
       <li v-for="tab in list"
           :key="tab.key"
           @click="select(tab)"
-          class="p-2 tracking-wider"
+          class="p-2 tracking-wider cursor-pointer"
           :class="{'font-semibold text-redis': tab.selected}">
         {{ tab.key }}
       </li>
