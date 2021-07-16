@@ -17,6 +17,7 @@
     <div class="flex justify-end space-x-4">
       <Button v-if="['list', 'set'].indexOf(type) > -1" @click="values.push('')">Add</Button>
       <input type="number" class="w-20" v-if="type === 'string'" placeholder="TTL" v-model="ttl"/>
+      <Button @click="hide">Cancel</Button>
       <PrimaryButton @click="save">Save</PrimaryButton>
     </div>
   </Modal>
@@ -54,6 +55,9 @@ export default {
     })
   },
   methods: {
+    hide () {
+      this.$emit('close')
+    },
     ...mapMutations('keys', ['select', 'refreshTTL']),
     ...mapActions('keys', ['loadKeys']),
     save () {
