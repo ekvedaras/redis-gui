@@ -99,6 +99,7 @@ export default {
     confirmDelete () {
       this.$modal.show(Dialog, {
         text: `Are you sure you want to delete <b>${this.selected}</b> key?`,
+        dangerBtn: true,
         handler: () => {
           this.deleteKey(this.selected)
           this.load()
