@@ -1,7 +1,7 @@
 <template>
   <Button @click="$emit('click')"
           :type="type"
-          class="shadow hover:bg-redis focus:bg-redis bg-red-700 text-white hover:text-white focus:text-white hover:no-underline focus:no-underline">
+          class="shadow hover:bg-redis focus:bg-redis bg-green-700 text-white hover:text-white focus:text-white hover:no-underline focus:no-underline">
     <slot/>
   </Button>
 </template>
