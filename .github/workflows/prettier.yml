@@ -1,0 +1,23 @@
+name: prettier
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
+
+    - name: Prettify code
+      uses: creyD/prettier_action@v3.3
+      with:
+        only_changed: True
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
