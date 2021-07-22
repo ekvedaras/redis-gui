@@ -11,6 +11,7 @@
       </tr>
     </table>
     <div class="flex justify-end space-x-4">
+      <Button @click="hide">Cancel</Button>
       <PrimaryButton @click="save">Save</PrimaryButton>
     </div>
   </Modal>
@@ -38,6 +39,9 @@ export default {
     this.leftPaneSize = settings.leftPaneSize
   },
   methods: {
+    hide () {
+      this.$emit('close')
+    },
     ...mapActions('keys', ['loadKeys']),
     save () {
       database.set('settings', {

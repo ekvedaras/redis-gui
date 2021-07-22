@@ -17,6 +17,10 @@
           @keydown.enter="send()"
           class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none"/>
     </div>
+
+    <div class="flex justify-end space-x-4">
+      <Button @click="hide">Close</Button>
+    </div>
   </Modal>
 </template>
 
@@ -66,6 +70,9 @@ export default {
     },
   },
   methods: {
+    hide () {
+      this.$emit("close")
+    },
     history (previous) {
       if (previous) {
         this.historyIndex = Math.max(-1, this.historyIndex - 1)
