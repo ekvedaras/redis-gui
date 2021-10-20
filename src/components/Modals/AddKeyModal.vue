@@ -54,6 +54,13 @@ export default {
       this[name] = value
     })
   },
+  watch: {
+    type(newType) {
+      if (!['list', 'set'].includes(newType)) {
+        this.values.splice(1, this.values.length - 1)
+      }
+    }
+  },
   methods: {
     hide () {
       this.$emit('close')
