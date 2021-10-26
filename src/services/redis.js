@@ -7,7 +7,7 @@ const { promisify } = require('util')
 export const redis = {
   pageSize: database.get('settings.itemsPerPage').value(),
   namespaceSeparator: database.get('settings.namespaceSeparator').value(),
-  current: 'default',
+  current: Object.keys(database.get('servers').value())[0] ?? 'default',
   client: {},
   promises: {},
   beSilent: false,

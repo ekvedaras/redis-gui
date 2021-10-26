@@ -3,7 +3,7 @@ import { database } from '@/services/database'
 export default {
   namespaced: true,
   state: {
-    selected: 'default',
+    selected: Object.keys(database.get('servers').value())[0] ?? 'default',
     list: database.get('servers').value(),
   },
   getters: {
