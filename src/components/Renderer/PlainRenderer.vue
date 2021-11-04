@@ -10,7 +10,7 @@
           :without-delete="withoutDelete"
           :with-json="withJson"/>
     </div>
-    <div :class="['overflow-x-auto -my-2', breakWords ? 'break-all' : 'whitespace-pre']">
+    <div :class="['overflow-x-auto', breakWords ? 'break-all' : 'whitespace-pre']">
       {{ data }}
     </div>
     <div class="sticky bottom-0 right-0 text-right h-0 pb-5">
