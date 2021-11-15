@@ -1,6 +1,6 @@
 {
   "name": "redis-gui",
-  "version": "1.2.8",
+  "version": "2.0.0",
   "private": true,
   "description": "Graphical UI for managing Redis databases",
   "author": {
@@ -8,74 +8,57 @@
     "name": "Ernestas Kvedaras",
     "url": "https://ernestas.app"
   },
+  "engines": {
+    "node": ">=v16.13",
+    "npm": ">=8.1"
+  },
+  "main": "packages/main/dist/index.cjs",
   "scripts": {
-    "serve": "vue-cli-service electron:serve",
-    "build": "vue-cli-service electron:build",
-    "lint": "vue-cli-service lint",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
-  },
-  "main": "background.js",
-  "dependencies": {
-    "@tailwindcss/postcss7-compat": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "autoprefixer": "^9",
-    "core-js": "^3.7.0",
-    "custom-electron-titlebar": "^3.2.5",
-    "lodash": "^4.17.21",
-    "lowdb": "^1.0.0",
-    "postcss": "^7",
-    "redis": "^3.0.2",
-    "redis-ssh": "^1.0.0",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "v-tooltip": "^2.0.3",
-    "vue": "^2.6.12",
-    "vue-clipboard2": "^0.3.1",
-    "vue-filter-pretty-bytes": "^0.1.6",
-    "vue-js-modal": "^2.0.0-rc.6",
-    "vue-json-pretty": "^1.7.1",
-    "vue-moment": "^4.1.0",
-    "vue-multipane": "^0.9.5",
-    "vue-shortkey": "^3.1.7",
-    "vue-toasted": "^1.1.28",
-    "vuex": "^3.5.1"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.9",
-    "@vue/cli-plugin-eslint": "^4.5.9",
-    "@vue/cli-plugin-vuex": "^4.5.9",
-    "@vue/cli-service": "^4.5.13",
-    "babel-eslint": "^10.1.0",
-    "electron": "^11.5.0",
-    "electron-devtools-installer": "^3.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "prettier": "^2.3.2",
-    "vue-cli-plugin-electron-builder": "^2.0.0-rc.5",
-    "vue-cli-plugin-tailwind": "~2.0.6",
-    "vue-template-compiler": "^2.6.12"
-  },
-  "resolutions": {
-    "redis-ssh/redis": "^3.0.2",
-    "@vue/cli-service/**/dns-packet": "^5.2.2"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
+    "build": "node scripts/build.js",
+    "precompile": "cross-env MODE=production npm run build",
+    "compile": "electron-builder build --config electron-builder.config.js --dir --config.asar=false",
+    "pretest": "yarn run build",
+    "test": "node tests/app.spec.js",
+    "watch": "node scripts/watch.js",
+    "lint": "eslint . --ext js,ts,vue",
+    "typecheck-main": "tsc --noEmit -p packages/main/tsconfig.json",
+    "typecheck-preload": "tsc --noEmit -p packages/preload/tsconfig.json",
+    "typecheck-renderer": "vue-tsc --noEmit -p packages/renderer/tsconfig.json",
+    "typecheck": "yarn run typecheck-main && yarn run typecheck-preload && yarn run typecheck-renderer"
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
+    "Chrome 94"
   ],
-  "license": "MIT"
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged",
+    "pre-push": "npm run typecheck"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": "eslint --cache --fix"
+  },
+  "devDependencies": {
+    "@types/electron-devtools-installer": "2.2.0",
+    "@typescript-eslint/eslint-plugin": "5.3.1",
+    "@vitejs/plugin-vue": "1.9.4",
+    "autoprefixer": "^10.4.0",
+    "cross-env": "7.0.3",
+    "electron": "15.3.1",
+    "electron-builder": "22.13.1",
+    "electron-devtools-installer": "3.2.0",
+    "eslint": "8.2.0",
+    "eslint-plugin-vue": "8.0.3",
+    "lint-staged": "11.2.6",
+    "playwright": "1.16.3",
+    "postcss": "^8.3.11",
+    "simple-git-hooks": "2.7.0",
+    "tailwindcss": "^2.2.19",
+    "typescript": "4.4.4",
+    "vite": "2.6.14",
+    "vue-tsc": "0.29.4"
+  },
+  "dependencies": {
+    "electron-updater": "4.6.2",
+    "vue": "3.2.22",
+    "vue-router": "4.0.12"
+  }
 }
