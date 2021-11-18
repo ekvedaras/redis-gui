@@ -1,3 +1,245 @@
+@import "fonts.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer base {
+    body {
+        font-family: 'Open Sans', Helvetica, sans-serif;
+    }
+
+    * {
+        outline-color: theme('colors.redis.default') !important;
+    }
+
+    input, textarea, select {
+        @apply p-2 rounded shadow;
+    }
+
+    @screen dark {
+        input, textarea, select {
+            @apply bg-gray-700 text-gray-100;
+        }
+    }
+
+    /*<editor-fold desc="Table" defaultstate="collapsed">*/
+    table {
+        @apply rounded overflow-hidden shadow bg-white;
+    }
+
+    table th {
+        @apply bg-gray-100 font-semibold tracking-wide text-gray-800;
+    }
+
+    table td, table th {
+        @apply py-2 px-4 text-center;
+    }
+
+    table.compact td, table.compact th {
+        @apply py-1 px-2;
+    }
+
+    table > thead > tr, table > tbody > tr:not(:last-child) {
+        @apply border-b border-gray-200;
+    }
+
+    @screen dark {
+        table {
+            @apply bg-gray-900;
+        }
+
+        table th {
+            @apply bg-black text-gray-300;
+        }
+
+        table > thead > tr, table > tbody > tr:not(:last-child) {
+            @apply border-gray-800;
+        }
+    }
+    /*</editor-fold>*/
+    /*<editor-fold desc="Toasted" defaultstate="collapsed">*/
+    div.toasted.toasted-primary {
+        @apply rounded shadow-xl py-2 px-4;
+        font-weight: 400;
+    }
+
+    div.toasted.toasted-primary.default {
+        @apply bg-gray-800
+    }
+
+    div.toasted.toasted-primary.info {
+        @apply bg-picton-blue-600
+    }
+
+    div.toasted.toasted-primary.success {
+        @apply bg-jungle-green-500
+    }
+
+    div.toasted.toasted-primary.error {
+        @apply bg-red-600
+    }
+
+    /*</editor-fold>*/
+    /*<editor-fold desc="Tooltip" defaultstate="collapsed">*/
+    .tooltip {
+        display: block !important;
+        z-index: 10000;
+        font-size: 0.85rem;
+        max-width: 20em;
+    }
+
+    .tooltip .tooltip-inner {
+        @apply rounded shadow-lg py-2 px-3 text-justify;
+        background: theme("colors.gray.700");
+        color: white;
+    }
+
+    .tooltip .tooltip-arrow {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        position: absolute;
+        margin: 5px;
+        border-color: theme("colors.gray.700");
+        z-index: 1;
+    }
+
+    .tooltip[x-placement^=top] {
+        margin-bottom: 5px;
+    }
+
+    .tooltip[x-placement^=top] .tooltip-arrow {
+        border-width: 5px 5px 0 5px;
+        border-left-color: transparent !important;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        bottom: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .tooltip[x-placement^=bottom] {
+        margin-top: 5px;
+    }
+
+    .tooltip[x-placement^=bottom] .tooltip-arrow {
+        border-width: 0 5px 5px 5px;
+        border-left-color: transparent !important;
+        border-right-color: transparent !important;
+        border-top-color: transparent !important;
+        top: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .tooltip[x-placement^=right] {
+        margin-left: 5px;
+    }
+
+    .tooltip[x-placement^=right] .tooltip-arrow {
+        border-width: 5px 5px 5px 0;
+        border-left-color: transparent !important;
+        border-top-color: transparent !important;
+        border-bottom-color: transparent !important;
+        left: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .tooltip[x-placement^=left] {
+        margin-right: 5px;
+    }
+
+    .tooltip[x-placement^=left] .tooltip-arrow {
+        border-width: 5px 0 5px 5px;
+        border-top-color: transparent !important;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        right: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .tooltip.popover .popover-inner {
+        background: #f9f9f9;
+        color: black;
+        padding: 24px;
+        border-radius: 5px;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .tooltip.popover .popover-arrow {
+        border-color: #f9f9f9;
+    }
+
+    .tooltip[aria-hidden=true] {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.15s, visibility 0.15s;
+    }
+
+    .tooltip[aria-hidden=false] {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.15s;
+    }
+
+    /*</editor-fold>*/
+    /*<editor-fold desc="Scrollbar" defaultstate="collapsed">*/
+    /* Turn on custom 8px wide scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    ::-webkit-scrollbar, ::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 100px;
+    }
+
+    /* hover effect for both scrollbar area, and scrollbar 'thumb' */
+    ::-webkit-scrollbar:hover {
+        background-color: rgba(0, 0, 0, 0.09);
+    }
+
+    /* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+    ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+        background: rgba(0, 0, 0, 0.61);
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    @screen dark {
+        ::-webkit-scrollbar {
+            background-color: rgba(200, 200, 200, 0);
+        }
+
+        /* hover effect for both scrollbar area, and scrollbar 'thumb' */
+        ::-webkit-scrollbar:hover {
+            background-color: rgba(200, 200, 200, 0.09);
+        }
+
+        /* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+        ::-webkit-scrollbar-thumb {
+            background: rgba(200, 200, 200, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background: rgba(200, 200, 200, 0.61);
+        }
+    }
+
+    /*</editor-fold>*/
+}

@@ -1,13 +1,18 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "/@/*": [
-        "./src/*"
-      ]
-    },
-    "lib": ["ESNext", "dom", "dom.iterable"]
+      "baseUrl": ".",
+      "paths": {
+          "/@/*": [
+              "./src/*"
+          ]
+      },
+      "lib": [
+          "ESNext",
+          "dom",
+          "dom.iterable"
+      ],
+      "allowSyntheticDefaultImports": true
   },
 
   "include": [

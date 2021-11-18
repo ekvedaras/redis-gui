@@ -9,8 +9,10 @@
     }
   },
   "files": [
-    "types/electron-api.d.ts",
-    "src/index.ts"
+      "types/electron-api.d.ts",
+      "types/fs-api.d.ts",
+      "types/redis-ssh.d.ts",
+      "src/index.ts"
   ],
   "include": [
     "../../types/**/*.d.ts"
