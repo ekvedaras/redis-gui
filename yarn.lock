@@ -146,10 +146,9 @@
     lodash "^4.17.15"
     tmp-promise "^3.0.2"
 
-"@meforma/vue-toaster@^1.2.2":
+"@meforma/vue-toaster@https://github.com/MeForma/vue-toaster.git#1.3.0":
   version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@meforma/vue-toaster/-/vue-toaster-1.2.2.tgz#7d0ee9504a68f856c29bc6f53b8dbb7b5bfbea55"
-  integrity sha512-J/UKmqi2BLgiYrex4OclWvID5QDZO2IHGn9ZJZF+HjnLG1TgR4VvWnHGTeyr2/EUQfFc64qC78Jd66TAp9zvzg==
+  resolved "https://github.com/MeForma/vue-toaster.git#358d6c24d62219df1c3a3445298fdf86c45a0696"
   dependencies:
     stylus "~0.54.8"
     stylus-loader "~3.0.2"

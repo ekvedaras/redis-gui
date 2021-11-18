@@ -46,7 +46,7 @@ export type Redis = {
   createClient: (config: Server) => Promise<RedisClient>,
   disconnect: (server: string) => void,
   silently: () => Redis
-  async: (command: string, ...args: unknown[]) => Promise<AsyncResult>,
+  async: (command: string, ...args: unknown[]) => Promise<unknown>,
   multi: (args?: Array<Array<string | number | Callback<unknown>>>) => Promise<Multi>,
   keys: (pattern: string, limit: number, cursor: number) => Promise<KeysResult>,
 };

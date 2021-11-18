@@ -28,5 +28,5 @@ declare module '@meforma/vue-toaster' {
     warning(message: string, options: ?ToasterOptions = {}): Toast,
   };
 
-  export function createToaster(options: ?ToasterOptions = {}): Toaster;
+  export const createToaster = () => Toaster;
 }

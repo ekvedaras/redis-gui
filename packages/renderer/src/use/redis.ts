@@ -59,7 +59,7 @@ export function useRedis(): Redis {
         }
       }
 
-      return window.createRedisClient(config) as RedisClient
+      return window.redisApi.createClient(config)
     },
     disconnect(server = 'default'): void {
       this.client[server] && this.client[server].quit(() => {
@@ -72,7 +72,7 @@ export function useRedis(): Redis {
       this.beSilent = true
       return this
     },
-    async: async function (command: string, ...args): Promise<AsyncResult> {
+    async: async function (command: string, ...args): Promise<unknown> {
       const beSilent = this.beSilent
       this.beSilent = false
 
@@ -85,7 +85,7 @@ export function useRedis(): Redis {
       if (!Object.prototype.hasOwnProperty.call(this.promises[this.current], command)) {
         try {
 
-          this.promises[this.current][command] = window.promisify(this.client[this.current][command]).bind(this.client[this.current])
+          this.promises[this.current][command] = window.utilApi.promisify(this.client[this.current][command]).bind(this.client[this.current])
         } catch (e) {
           return Promise.reject('Invalid redis command')
         }
@@ -103,34 +103,35 @@ export function useRedis(): Redis {
     },
     keys(pattern = '*', limit = pageSize, cursor = 0) {
       return this.async('scan', cursor, 'match', pattern, 'count', limit).then(async (result) => {
+        const results = result as AsyncResult
         const keys = {
-          nextCursor: parseInt(result[0]),
+          nextCursor: parseInt(results[0]),
           keys: {},
         }
 
-        if (!result[1]) {
+        if (!results[1]) {
           return keys
         }
 
-        await Promise.all(result[1].map((key: string) => this.async('type', key))).then(types => {
+        await Promise.all(results[1].map((key: string) => this.async('type', key))).then(types => {
           types.forEach((type, index) => {
-            const name = result[1][index].replaceAll('.', '◦')
+            const name = (results[1] as string[])[index].replaceAll('.', '◦')
             set(keys.keys, `${name}.name`, name)
             set(keys.keys, `${name}.type`, type)
           })
         })
 
-        await Promise.all(result[1].map((key: string) => this.async('ttl', key))).then(ttls => {
+        await Promise.all(results[1].map((key: string) => this.async('ttl', key))).then(ttls => {
           ttls.forEach((ttl, index) => {
-            const name = result[1][index].replaceAll('.', '◦')
+            const name = (results[1] as string[])[index].replaceAll('.', '◦')
             set(keys.keys, `${name}.name`, name)
             set(keys.keys, `${name}.ttl`, ttl)
           })
         })
 
-        await Promise.all(result[1].map((key: string) => this.async('object', 'encoding', key))).then(encodings => {
+        await Promise.all(results[1].map((key: string) => this.async('object', 'encoding', key))).then(encodings => {
           encodings.forEach((encoding, index) => {
-            const name = result[1][index].replaceAll('.', '◦')
+            const name = (results[1] as string[])[index].replaceAll('.', '◦')
             set(keys.keys, `${name}.name`, name)
             set(keys.keys, `${name}.encoding`, encoding)
           })

@@ -60,7 +60,7 @@
     "vue-tsc": "^0.29.4"
   },
   "dependencies": {
-    "@meforma/vue-toaster": "^1.2.2",
+    "@meforma/vue-toaster": "https://github.com/MeForma/vue-toaster.git#1.3.0",
     "electron-updater": "^4.6.2",
     "lodash": "^4.17.21",
     "lowdb": "^3.0.0",

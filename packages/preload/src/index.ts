@@ -6,6 +6,9 @@ import type {ElectronApi} from '../types/electron-api'
 import {promisify} from 'util'
 import type {FsApi} from '../types/fs-api'
 import {homedir} from 'os'
+import type {UtilApi} from '../types/util-api';
+import type {RedisApi} from '../types/redis-api';
+import type {RedisClient} from '../../renderer/types/redis';
 
 const apiKey = 'electron';
 /**
@@ -15,9 +18,17 @@ const api: ElectronApi = {
   versions: process.versions,
 };
 
+const redisApi: RedisApi = {
+  createClient: (...args) => createClient(...args) as RedisClient,
+};
+
 const fsApi: FsApi = {
   readFileSync,
   homedir: homedir(),
+};
+
+const utilApi: UtilApi = {
+  promisify,
 };
 
 /**
@@ -27,7 +38,7 @@ const fsApi: FsApi = {
  * @see https://www.electronjs.org/docs/api/context-bridge
  */
 contextBridge.exposeInMainWorld(apiKey, api);
-contextBridge.exposeInMainWorld('createRedisClient', createClient);
+contextBridge.exposeInMainWorld('redisApi', redisApi);
 contextBridge.exposeInMainWorld('redisSsh', RedisSsh);
 contextBridge.exposeInMainWorld('fsApi', fsApi);
-contextBridge.exposeInMainWorld('promisify', promisify);
+contextBridge.exposeInMainWorld('utilApi', utilApi);
