@@ -268,6 +268,13 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.9.tgz#152c6c20a7688c30b967ec1841d31ace569863fc"
   integrity sha512-L/TMpyURfBkf+o/526Zb6kd/tchUP3iBDEPjqjb+U2MAJhVRxxrmr2fwpe08E7QsV7YLcpq0tUaQ9O9x97ZIxQ==
 
+"@types/splitpanes@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@types/splitpanes/-/splitpanes-2.2.1.tgz#7ff67e639b16eecfc3ad403269dff320cf96e866"
+  integrity sha512-H5BgO6UdJRzz5ddRzuGvLBiPSPEuuHXb5ET+7avLLrEx1uc7f5Ut5oLMDQsfvGtHBBAFczt1QNYuDf27wHbvDQ==
+  dependencies:
+    vue "^2.0.0"
+
 "@types/verror@^1.10.3":
   version "1.10.5"
   resolved "https://registry.yarnpkg.com/@types/verror/-/verror-1.10.5.tgz#2a1413aded46e67a1fe2386800e291123ed75eb1"
@@ -3813,6 +3820,11 @@ sourcemap-codec@^1.4.4:
   resolved "https://registry.yarnpkg.com/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
   integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
 
+splitpanes@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/splitpanes/-/splitpanes-3.0.6.tgz#45636c36972d3391f837073807726a2dcc49af15"
+  integrity sha512-Ogxc+e2te4Tp5IpMwjOPO1ZvXUf2PsuEoyZhF9H5Hp6XOB0mLg/OnEZFaK2MxT7Q3O+WSEKE7CeOoTC+4zsQ6A==
+
 sprintf-js@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.1.2.tgz#da1765262bf8c0f571749f2ad6c26300207ae673"
@@ -4399,6 +4411,11 @@ vue-tsc@^0.29.4:
   dependencies:
     "@volar/shared" "0.29.5"
     vscode-vue-languageservice "0.29.5"
+
+vue@^2.0.0:
+  version "2.6.14"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
+  integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
 
 vue@^3.2.22:
   version "3.2.22"

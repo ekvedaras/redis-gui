@@ -44,7 +44,7 @@ export type Redis = {
   beSilent: boolean,
   connect: (server?: string = 'default', onReady?: () => void) => Promise<RedisClient>,
   createClient: (config: Server) => Promise<RedisClient>,
-  disconnect: (server: string) => void,
+  disconnect: (server?: string = 'default') => void,
   silently: () => Redis
   async: (command: string, ...args: unknown[]) => Promise<unknown>,
   multi: (args?: Array<Array<string | number | Callback<unknown>>>) => Promise<Multi>,

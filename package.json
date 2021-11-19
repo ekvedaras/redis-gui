@@ -40,6 +40,7 @@
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/lodash": "^4.14.177",
     "@types/redis": "^2.8.32",
+    "@types/splitpanes": "^2.2.1",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "@vitejs/plugin-vue": "^1.9.4",
@@ -66,6 +67,7 @@
     "lowdb": "^3.0.0",
     "redis": "^3.1.2",
     "redis-ssh": "^1.0.0",
+    "splitpanes": "^3.0.6",
     "vue": "^3.2.22",
     "vuex": "^4.0.0"
   },
