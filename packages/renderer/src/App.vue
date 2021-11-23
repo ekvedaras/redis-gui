@@ -1,7 +1,5 @@
 <template>
-  <div class="h-12 z-20">
-    Header
-  </div>
+  <Header class="h-12 z-20" />
   <Splitpanes
     class="default-theme"
     style="height: calc(100% - 3em)"
@@ -27,9 +25,10 @@
 import { onUnmounted } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useDatabase } from '/@/use/database'
-import type { SplitpaneIndexedType} from 'splitpanes';
+import type { SplitpaneIndexedType } from 'splitpanes'
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
+import Header from '/@/components/Elements/Header.vue'
 
 const redis = useRedis()
 const database = useDatabase()

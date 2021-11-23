@@ -1,5 +1,6 @@
-import type {Callback, Multi, RedisClient as BaseRedisClient} from 'redis'
 import type {Server} from '/@/use/database'
+import type {RedisClientType} from "@node-redis/client/dist/lib/client";
+import {RedisClientOptions} from "@node-redis/client/dist/lib/client";
 
 export type Key = {
   name: string,
@@ -19,12 +20,8 @@ export type KeysResult = {
   keys: Keys,
 }
 
-interface RedisClient extends BaseRedisClient {
-  [key: string]: () => unknown,
-}
-
 type RedisClients = {
-  [key: string]: RedisClient,
+  [key: string]: RedisClientType,
 }
 
 type CommandPromise = {
@@ -39,15 +36,12 @@ export type Redis = {
   pageSize: number,
   namespaceSeparator: string,
   current: string,
-  client: RedisClients,
-  promises: Promises,
+  client: ?RedisClientType,
   beSilent: boolean,
-  connect: (server?: string = 'default', onReady?: () => void) => Promise<RedisClient>,
-  createClient: (config: Server) => Promise<RedisClient>,
-  disconnect: (server?: string = 'default') => void,
+  connect: (server?: string = 'default', options?: { onReady?: () => void }) => Promise<RedisClientType>,
+  buildConnectionConfig: (config: Server) => RedisClientOptions,
+  disconnect: () => void,
   silently: () => Redis
-  async: (command: string, ...args: unknown[]) => Promise<unknown>,
-  multi: (args?: Array<Array<string | number | Callback<unknown>>>) => Promise<Multi>,
   keys: (pattern: string, limit: number, cursor: number) => Promise<KeysResult>,
 };
 

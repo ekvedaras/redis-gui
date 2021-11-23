@@ -1,9 +1,8 @@
-import set from 'lodash/set'
 import {useDatabase} from '/@/use/database'
-import type {AsyncResult, Redis, RedisClient} from '../../types/redis'
+import type {KeysResult, Redis} from '../../types/redis'
 import {useToaster} from '/@/use/toaster'
 import type {Server} from '../../types/database'
-import type {Multi} from 'redis'
+import {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client';
 
 const database = useDatabase()
 const toaster = useToaster()
@@ -15,130 +14,85 @@ export function useRedis(): Redis {
     pageSize,
     namespaceSeparator: database.data.settings.namespaceSeparator,
     current: Object.keys(database.data.servers)[0] ?? 'default',
-    client: {},
-    promises: {},
+    client: null,
     beSilent: false,
-    async connect(server = 'default', onReady = undefined): Promise<RedisClient> {
-      if (server !== this.current) {
-        Object.entries(this.client).forEach(([key, client]) => {
-          if (!client.connected) {
-            this.disconnect(key)
-          }
-        })
+    async connect(server = 'default', options = {
+      onReady: () => {
       }
-
+    }): Promise<RedisClientType> {
       this.current = server
 
-      if (this.client[server]) {
-        return this.client[server]
-      }
+      this.client = window.redisApi.createClient(
+        // this.buildConnectionConfig(database.data.servers[server]),
+      )
+// console.log(this.buildConnectionConfig(database.data.servers[server]), this.client)
+      // this.client.on('ready', () => {
+      //   toaster.info('Connected')
+      //   options.onReady && options.onReady()
+      // }).on('error', error => {
+      //   toaster.error('REDIS ERROR: ' + error)
+      // })
 
-      const config: Server = database.data.servers[server]
+      await this.client.connect()
 
-      return this.client[server] = (await this.createClient(config))
-        .on('ready', () => {
-          toaster.info('Connected')
-          onReady && onReady()
-        })
-        .on('error', error => {
-          toaster.error('REDIS ERROR: ' + error)
-        })
+      return this.client
     },
-    async createClient(config: Server): Promise<RedisClient> {
-      if (config.ssh.tunnel) {
-        try {
-          const tunnel = await window.redisSsh.connect({
-            ...config.ssh,
-            privateKey: window.fsApi.readFileSync(config.ssh.privateKey || `${window.fsApi.homedir}/.ssh/id_rsa`),
-          }, config)
-
-          return tunnel.client.on('end', tunnel.close)
-        } catch (error: unknown) {
-          toaster.error(String(error))
-          throw error
-        }
+    buildConnectionConfig(config: Server): RedisClientOptions<Record<string, never>, Record<string, never>> {
+      // TODO: support ssh tunnel
+      return {
+        url: `redis://${config.host}:${config.port}`
       }
-
-      return window.redisApi.createClient(config)
     },
-    disconnect(server = 'default'): void {
-      this.client[server] && this.client[server].quit(() => {
-        this.client[server].end(true)
-        delete this.client[server]
-        delete this.promises[server]
+    disconnect(): void {
+      this.client?.quit().then(() => {
+        this.client = null
       })
     },
     silently(): Redis {
       this.beSilent = true
       return this
     },
-    async: async function (command: string, ...args): Promise<unknown> {
-      const beSilent = this.beSilent
-      this.beSilent = false
-
-      await this.connect(this.current)
-
-      if (!Object.prototype.hasOwnProperty.call(this.promises, this.current)) {
-        this.promises[this.current] = {}
+    keys: async function (pattern = '*', limit = pageSize, cursor = 0): Promise<KeysResult> {
+      if (!this.client) {
+        return Promise.reject(new Error('Redis client is not connected'))
       }
 
-      if (!Object.prototype.hasOwnProperty.call(this.promises[this.current], command)) {
-        try {
+      const result: KeysResult = {
+        nextCursor: 0,
+        keys: {},
+      }
 
-          this.promises[this.current][command] = window.utilApi.promisify(this.client[this.current][command]).bind(this.client[this.current])
-        } catch (e) {
-          return Promise.reject('Invalid redis command')
+      const {keys, cursor: nextCursor} = await this.client.scan(cursor, {MATCH: pattern})
+      result.nextCursor = nextCursor
+
+      for await (const key of keys) {
+        result.keys[key] = {
+          encoding: '',
+          name: key,
+          ttl: 0,
+          type: ''
+        }
+
+        if (Object.keys(result.keys).length >= limit) {
+          break
         }
       }
 
-      return this.promises[this.current][command](...args).catch((error: unknown) => {
-        if (!beSilent) toaster.error(String(error))
-        throw error
-      })
-    },
-    async multi(args): Promise<Multi> {
-      await this.connect(this.current)
-
-      return this.client[this.current].multi(args)
-    },
-    keys(pattern = '*', limit = pageSize, cursor = 0) {
-      return this.async('scan', cursor, 'match', pattern, 'count', limit).then(async (result) => {
-        const results = result as AsyncResult
-        const keys = {
-          nextCursor: parseInt(results[0]),
-          keys: {},
-        }
-
-        if (!results[1]) {
-          return keys
-        }
-
-        await Promise.all(results[1].map((key: string) => this.async('type', key))).then(types => {
-          types.forEach((type, index) => {
-            const name = (results[1] as string[])[index].replaceAll('.', '◦')
-            set(keys.keys, `${name}.name`, name)
-            set(keys.keys, `${name}.type`, type)
+      await Promise.all(
+        Object.keys(keys).map(key => () => {
+          this.client?.type(key).then(type => {
+            result.keys[key].type = type
+          })
+          this.client?.ttl(key).then(ttl => {
+            result.keys[key].ttl = ttl
+          })
+          this.client?.sendCommand(['object', 'encoding', key]).then(encoding => {
+            result.keys[key].encoding = encoding?.toString() ?? ''
           })
         })
+      )
 
-        await Promise.all(results[1].map((key: string) => this.async('ttl', key))).then(ttls => {
-          ttls.forEach((ttl, index) => {
-            const name = (results[1] as string[])[index].replaceAll('.', '◦')
-            set(keys.keys, `${name}.name`, name)
-            set(keys.keys, `${name}.ttl`, ttl)
-          })
-        })
-
-        await Promise.all(results[1].map((key: string) => this.async('object', 'encoding', key))).then(encodings => {
-          encodings.forEach((encoding, index) => {
-            const name = (results[1] as string[])[index].replaceAll('.', '◦')
-            set(keys.keys, `${name}.name`, name)
-            set(keys.keys, `${name}.encoding`, encoding)
-          })
-        })
-
-        return keys
-      })
+      return result
     },
   }
 }

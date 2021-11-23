@@ -11,7 +11,8 @@
   "files": [
       "types/electron-api.d.ts",
       "types/fs-api.d.ts",
-      "types/redis-ssh.d.ts",
+      "types/redis-api.d.ts",
+      "types/util-api.ts",
       "src/index.ts"
   ],
   "include": [
