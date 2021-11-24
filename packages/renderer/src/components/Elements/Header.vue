@@ -1,9 +1,15 @@
 <template>
   <div class="w-full flex justify-between items-center space-x-2 px-2">
     <div class="py-2 h-full">
-      <img src="/@/../assets/redis.svg" alt="Redis logo" class="h-full" />
+      <img
+        src="/@/../assets/redis.svg"
+        alt="Redis logo"
+        class="h-full"
+      >
     </div>
-    <h1 class="text-left text-xl font-semibold tracking-widest">Redis GUI</h1>
+    <h1 class="text-left text-xl font-semibold tracking-widest">
+      Redis GUI
+    </h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center">
       <ServerSelect />
       <IconButton>

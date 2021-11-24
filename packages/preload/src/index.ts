@@ -5,6 +5,8 @@ import {promisify} from 'util'
 import type {FsApi} from '../types/fs-api'
 import {homedir} from 'os'
 import type {UtilApi} from '../types/util-api'
+import type {RedisClientType} from '@node-redis/client/dist/lib/client'
+import RedisClient from '@node-redis/client/dist/lib/client'
 import type {RedisApi} from '../types/redis-api'
 
 const redis = require('redis')
@@ -16,7 +18,30 @@ const api: ElectronApi = {
   versions: process.versions,
 };
 
-const redisApi: RedisApi = redis;
+let client: RedisClientType;
+
+const redisApi: RedisApi = {
+  createClient: (options) => {
+    return client = redis.createClient(options)
+  },
+
+  client: {
+    connect: () => client.connect(),
+    disconnect: () => client.disconnect(),
+    quit: () => client.quit(),
+    on: (...args) => {
+      client.on(...args)
+      return redisApi.client
+    },
+  },
+};
+
+for (const method of Object.keys(RedisClient.prototype)) {
+  redisApi.client[method] = (...args: unknown[]) => {
+    return client[method](...args)
+  }
+}
+
 
 const fsApi: FsApi = {
   readFileSync,

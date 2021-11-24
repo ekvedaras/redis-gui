@@ -2,7 +2,7 @@ import {useDatabase} from '/@/use/database'
 import type {KeysResult, Redis} from '../../types/redis'
 import {useToaster} from '/@/use/toaster'
 import type {Server} from '../../types/database'
-import {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client';
+import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client';
 
 const database = useDatabase()
 const toaster = useToaster()
@@ -14,39 +14,37 @@ export function useRedis(): Redis {
     pageSize,
     namespaceSeparator: database.data.settings.namespaceSeparator,
     current: Object.keys(database.data.servers)[0] ?? 'default',
-    client: null,
+    client: window.redisApi.client,
     beSilent: false,
     async connect(server = 'default', options = {
       onReady: () => {
-      }
+      },
     }): Promise<RedisClientType> {
       this.current = server
 
-      this.client = window.redisApi.createClient(
-        // this.buildConnectionConfig(database.data.servers[server]),
+      window.redisApi.createClient(
+        this.buildConnectionConfig(database.data.servers[server]),
       )
-// console.log(this.buildConnectionConfig(database.data.servers[server]), this.client)
-      // this.client.on('ready', () => {
-      //   toaster.info('Connected')
-      //   options.onReady && options.onReady()
-      // }).on('error', error => {
-      //   toaster.error('REDIS ERROR: ' + error)
-      // })
 
-      await this.client.connect()
+      this.client.on('ready', () => {
+        toaster.info('Connected')
+        options.onReady && options.onReady()
+      }).on('error', error => {
+        toaster.error('REDIS ERROR: ' + error)
+      })
+
+      await window.redisApi.client.connect()
 
       return this.client
     },
     buildConnectionConfig(config: Server): RedisClientOptions<Record<string, never>, Record<string, never>> {
       // TODO: support ssh tunnel
       return {
-        url: `redis://${config.host}:${config.port}`
+        url: `redis://${config.host}:${config.port}`,
       }
     },
-    disconnect(): void {
-      this.client?.quit().then(() => {
-        this.client = null
-      })
+    async disconnect(): Promise<void> {
+      await this.client.quit()
     },
     silently(): Redis {
       this.beSilent = true
@@ -70,7 +68,7 @@ export function useRedis(): Redis {
           encoding: '',
           name: key,
           ttl: 0,
-          type: ''
+          type: '',
         }
 
         if (Object.keys(result.keys).length >= limit) {
@@ -89,7 +87,7 @@ export function useRedis(): Redis {
           this.client?.sendCommand(['object', 'encoding', key]).then(encoding => {
             result.keys[key].encoding = encoding?.toString() ?? ''
           })
-        })
+        }),
       )
 
       return result

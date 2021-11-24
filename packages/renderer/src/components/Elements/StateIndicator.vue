@@ -1,5 +1,8 @@
 <template>
-  <div class="rounded-full w-3 h-3 shadow" :class="stateClass" />
+  <div
+    class="rounded-full w-3 h-3 shadow"
+    :class="stateClass"
+  />
 </template>
 
 <script setup lang="ts">

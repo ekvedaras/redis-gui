@@ -7,6 +7,6 @@ import '../assets/index.css'
 createApp(App)
   .use(store, key)
   .use(VueUniversalModal, {
-    teleportTarget: '#modals'
+    teleportTarget: '#modals',
   })
   .mount('#app');

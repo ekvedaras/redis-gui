@@ -1,6 +1,14 @@
 <template>
-  <select id="database" @change="store.dispatch('select', $event.target.value)">
-    <option v-for="(_db, index) in store.state.databases.total" :key="index" :value="index" :selected="index === store.state.databases.selected">
+  <select
+    id="database"
+    @change="store.dispatch('select', $event.target.value)"
+  >
+    <option
+      v-for="(_db, index) in store.state.databases.total"
+      :key="index"
+      :value="index"
+      :selected="index === store.state.databases.selected"
+    >
       db{{ index }} {{ keys(index) }}
     </option>
   </select>

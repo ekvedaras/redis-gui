@@ -1,6 +1,5 @@
 import type {Server} from '/@/use/database'
-import type {RedisClientType} from "@node-redis/client/dist/lib/client";
-import {RedisClientOptions} from "@node-redis/client/dist/lib/client";
+import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client';
 
 export type Key = {
   name: string,
@@ -36,11 +35,11 @@ export type Redis = {
   pageSize: number,
   namespaceSeparator: string,
   current: string,
-  client: ?RedisClientType,
+  client: RedisClientType,
   beSilent: boolean,
   connect: (server?: string = 'default', options?: { onReady?: () => void }) => Promise<RedisClientType>,
   buildConnectionConfig: (config: Server) => RedisClientOptions,
-  disconnect: () => void,
+  disconnect: () => Promise<void>,
   silently: () => Redis
   keys: (pattern: string, limit: number, cursor: number) => Promise<KeysResult>,
 };

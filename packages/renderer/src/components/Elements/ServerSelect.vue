@@ -1,8 +1,21 @@
 <template>
   <div class="flex items-center">
-    <StateIndicator :key="connectingTo" :state="connectionState" />
-    <select id="server" @change="connect" class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1">
-      <option v-for="(storeServer, key) in store.state.databases.list" :key="key" :value="key" :selected="storeServer.name === store.state.databases.selected">
+    <StateIndicator
+      :key="connectingTo"
+      :state="connectionState"
+    />
+    <select
+      id="server"
+      class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1"
+      :title="connectionMessage"
+      @change="connect"
+    >
+      <option
+        v-for="(storeServer, key) in store.state.databases.list"
+        :key="key"
+        :selected="storeServer.name === store.state.databases.selected"
+        :value="key"
+      >
         {{ storeServer.name }}
       </option>
     </select>
@@ -20,7 +33,7 @@ const store = useStore()
 
 const connectingTo = ref<string>()
 
-const connectionState = computed(() => {
+const connectionState = computed<'pending' | 'ok' | 'fail'>(() => {
   if (!connectingTo.value || !redis.client) {
     return 'pending'
   }
@@ -32,7 +45,7 @@ const connectionState = computed(() => {
   return 'fail'
 })
 
-const connectionMessage = computed(() => {
+const connectionMessage = computed<string>(() => {
   switch (connectionState.value) {
     case 'ok':
       return 'Connected'
