@@ -14,7 +14,7 @@
   </select>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import { useStore } from '/@/store'
 // import { EventBus } from '@/services/eventBus'
 // mounted () {
