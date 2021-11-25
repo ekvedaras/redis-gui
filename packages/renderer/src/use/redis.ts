@@ -16,10 +16,7 @@ export function useRedis(): Redis {
     current: Object.keys(database.data.servers)[0] ?? 'default',
     client: window.redisApi.client,
     beSilent: false,
-    async connect(server = 'default', options = {
-      onReady: () => {
-      },
-    }): Promise<RedisClientType> {
+    async connect(server = 'default', options): Promise<RedisClientType> {
       this.current = server
 
       window.redisApi.createClient(
@@ -28,12 +25,12 @@ export function useRedis(): Redis {
 
       this.client.on('ready', () => {
         toaster.info('Connected')
-        options.onReady && options.onReady()
+        options?.onReady && options.onReady()
       }).on('error', error => {
         toaster.error('REDIS ERROR: ' + error)
       })
 
-      await window.redisApi.client.connect()
+      await this.client.connect()
 
       return this.client
     },

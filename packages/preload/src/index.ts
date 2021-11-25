@@ -29,7 +29,9 @@ const redisApi: RedisApi = {
     connect: () => client.connect(),
     disconnect: () => client.disconnect(),
     quit: () => client.quit(),
+    // @ts-ignore
     on: (...args) => {
+      // @ts-ignore
       client.on(...args)
       return redisApi.client
     },
@@ -38,6 +40,7 @@ const redisApi: RedisApi = {
 
 for (const method of Object.keys(RedisClient.prototype)) {
   redisApi.client[method] = (...args: unknown[]) => {
+    // @ts-ignore
     return client[method](...args)
   }
 }

@@ -21,7 +21,8 @@
   "ignorePatterns": [
     "types/env.d.ts",
     "node_modules/**",
-    "**/dist/**"
+    "**/dist/**",
+    "dist_electron/**"
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",

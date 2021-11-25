@@ -15,6 +15,6 @@
 
 <script setup lang="ts">
 const emit = defineEmits<{
-  click: MouseEvent;
+  (e: 'click') : void;
 }>()
 </script>

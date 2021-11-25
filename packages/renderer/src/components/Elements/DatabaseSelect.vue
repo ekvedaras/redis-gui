@@ -1,7 +1,7 @@
 <template>
   <select
     id="database"
-    @change="store.dispatch('select', $event.target.value)"
+    @change="select"
   >
     <option
       v-for="(_db, index) in store.state.databases.total"
@@ -14,7 +14,7 @@
   </select>
 </template>
 
-<script setup lang="ts">
+<script setup lang='ts'>
 import { useStore } from '/@/store'
 // import { EventBus } from '@/services/eventBus'
 // mounted () {
@@ -28,5 +28,9 @@ const keys = (index: number) => {
   }
 
   return ''
+}
+
+const select = ({ target }: Event) => {
+  store.dispatch('databases/select', (target as HTMLSelectElement).value)
 }
 </script>

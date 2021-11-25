@@ -69,7 +69,7 @@ const connect = ({target}: Event) => {
       selectAndReload(select.value)
     },
   }).catch((e) => {
-    select.value = store.state.databases.selected
+    select.value = String(store.state.databases.selected)
     throw e
   })
 }

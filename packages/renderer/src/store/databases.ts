@@ -8,7 +8,7 @@ const redis = useRedis()
 export interface DatabasesState {
   list: Array<Database>,
   total: number,
-  selected: string,
+  selected: number | null,
 }
 
 export const databasesStore: Module<DatabasesState, State> = {
@@ -16,7 +16,7 @@ export const databasesStore: Module<DatabasesState, State> = {
   state: {
     list: [],
     total: 0,
-    selected: '',
+    selected: null,
   },
   mutations: {
     resetList(state) {
