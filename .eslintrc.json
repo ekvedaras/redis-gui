@@ -28,7 +28,6 @@
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/consistent-type-imports": "error",
-
     /**
      * This will make the history of changes in the hit a little cleaner
      */
@@ -40,7 +39,8 @@
      * Just for beauty
      */
     "quotes": [
-      "warn", "single"
+      "warn",
+      "single"
     ]
   }
 }

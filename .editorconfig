@@ -792,7 +792,7 @@ ij_php_version_weight = 28
 ij_php_while_brace_force = always
 ij_php_while_on_new_line = false
 
-[package.json]
+[*.json]
 indent_size = 2
 
 [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,composer.lock,jest.config}]

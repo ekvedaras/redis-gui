@@ -1,5 +1,5 @@
 import type {FsApi} from './fs-api'
-import type {UtilApi} from './util-api'
+import type {UtilApi} from 'types/util-api'
 import type {RedisApi} from './redis-api'
 
 interface ElectronApi {

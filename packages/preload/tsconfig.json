@@ -9,11 +9,11 @@
     }
   },
   "files": [
-      "types/electron-api.d.ts",
-      "types/fs-api.d.ts",
-      "types/redis-api.d.ts",
-      "types/util-api.ts",
-      "src/index.ts"
+    "types/electron-api.d.ts",
+    "types/fs-api.d.ts",
+    "types/redis-api.d.ts",
+    "types/util-api.d.ts",
+    "src/index.ts"
   ],
   "include": [
     "../../types/**/*.d.ts"
