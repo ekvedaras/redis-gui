@@ -1,44 +1,27 @@
-import type {Module} from 'vuex'
 import {useRedis} from '/@/use/redis'
-import type {State} from '/@/store/index'
 import {parseInt} from 'lodash'
+import {defineStore} from 'pinia'
 
 const redis = useRedis()
 
-export interface DatabasesState {
+interface State {
   list: Array<Database>,
   total: number,
   selected: number | null,
 }
 
-export const databasesStore: Module<DatabasesState, State> = {
-  namespaced: true,
-  state: {
+export const databasesStore = defineStore('databases', {
+  state: (): State => ({
     list: [],
     total: 0,
     selected: null,
-  },
-  mutations: {
-    resetList(state) {
-      state.list = []
-    },
-    setDatabase(state, database: Database) {
-      state.list[database.index] = database
-    },
-    setTotal(state, total) {
-      state.total = total
-    },
-    select(state, index) {
-      state.selected = index
-    },
-  },
+  }),
   actions: {
-    load({commit}) {
+    load() {
       return Promise.all([
-        redis.client.configGet('databases').then(({databases}) => {
-          commit('setTotal', parseInt(databases))
-        }),
+        redis.client.configGet('databases').then(({databases}) => this.total = parseInt(databases)),
         redis.client.info('keyspace').then(result => {
+          this.list = []
           result.split('\n').slice(1, -1).forEach((db: string) => {
             let key, value;
 
@@ -50,19 +33,17 @@ export const databasesStore: Module<DatabasesState, State> = {
               database[key] = value
             })
 
-            commit('resetList')
-            commit('setDatabase', database)
+            this.list[database.index] = database
           })
         }),
       ])
     },
-    select({commit, dispatch}, index) {
-      index = parseInt(index)
+    select(index: number) {
       return redis.client.select(index).then(() => {
-        commit('select', index)
-        commit('keys/unloadKey', undefined, {root: true})
-        dispatch('keys/loadKeys', undefined, {root: true})
+        this.selected = index
+        // commit('keys/unloadKey', undefined, {root: true})
+        // dispatch('keys/loadKeys', undefined, {root: true})
       })
     },
   },
-}
+})
