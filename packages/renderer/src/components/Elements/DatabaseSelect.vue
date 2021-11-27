@@ -4,10 +4,10 @@
     @change="select"
   >
     <option
-      v-for="(_db, index) in store.state.databases.total"
+      v-for="(_db, index) in databasesStore.total"
       :key="index"
       :value="index"
-      :selected="index === store.state.databases.selected"
+      :selected="index === databasesStore.selected"
     >
       db{{ index }} {{ keys(index) }}
     </option>
@@ -15,22 +15,24 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from '/@/store'
+// TODO
 // import { EventBus } from '@/services/eventBus'
 // mounted () {
 //   EventBus.$on('key-updated', this.load)
 // },
 
-const store = useStore()
+import { useDatabasesStore } from '/@/store/databases'
+
+const databasesStore = useDatabasesStore()
 const keys = (index: number) => {
-  if (Object.prototype.hasOwnProperty.call(store.state.databases.list, index)) {
-    return `(${ store.state.databases.list[index].keys } keys)`
+  if (Object.prototype.hasOwnProperty.call(databasesStore.list, index)) {
+    return `(${ databasesStore.list[index].keys } keys)`
   }
 
   return ''
 }
 
-const select = ({ target }: Event) => {
-  store.dispatch('databases/select', (target as HTMLSelectElement).value)
+const select = ({target}: Event) => {
+  databasesStore.select(Number((target as HTMLSelectElement).value))
 }
 </script>

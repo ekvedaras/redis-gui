@@ -10,7 +10,7 @@ interface State {
   selected: number | null,
 }
 
-export const databasesStore = defineStore('databases', {
+export const useDatabasesStore = defineStore('databases', {
   state: (): State => ({
     list: [],
     total: 0,

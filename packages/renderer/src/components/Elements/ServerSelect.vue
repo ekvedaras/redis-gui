@@ -11,9 +11,9 @@
       @change="connect"
     >
       <option
-        v-for="(storeServer, key) in store.state.databases.list"
+        v-for="(storeServer, key) in serversStore.list"
         :key="key"
-        :selected="storeServer.name === store.state.databases.selected"
+        :selected="storeServer.name === serversStore.selected"
         :value="key"
       >
         {{ storeServer.name }}
@@ -26,10 +26,12 @@
 import StateIndicator from './StateIndicator.vue'
 import { useRedis } from '/@/use/redis'
 import { computed, nextTick, onMounted, ref } from 'vue'
-import { useStore } from '/@/store'
+import { useServersStore } from '/@/store/servers'
+import { useDatabasesStore } from '/@/store/databases'
 
 const redis = useRedis()
-const store = useStore()
+const serversStore = useServersStore()
+const databasesStore = useDatabasesStore()
 
 const connectingTo = ref<string>()
 
@@ -59,7 +61,7 @@ const connectionMessage = computed<string>(() => {
 const connect = ({target}: Event) => {
   const select = target as HTMLSelectElement
 
-  if (select.value === store.state.databases.selected) {
+  if (select.value === serversStore.selected) {
     return
   }
 
@@ -69,20 +71,22 @@ const connect = ({target}: Event) => {
       selectAndReload(select.value)
     },
   }).catch((e) => {
-    select.value = String(store.state.databases.selected)
+    select.value = String(serversStore.selected)
     throw e
   })
 }
 
-const selectAndReload = (server: string) => {
-  redis.disconnect()
-  store.dispatch('databases/select', server)
-  store.dispatch('databases/load').then(() => nextTick(() => connectingTo.value = String(Math.random())))
+const selectAndReload = async (server: string) => {
+  await redis.disconnect()
+  serversStore.select(server)
+  await databasesStore.load()
+  await nextTick(() => connectingTo.value = String(Math.random()))
 }
 
-onMounted(() => setTimeout(() => {
-  redis.connect('default')
-  store.dispatch('databases/load').then(() => connectingTo.value = String(Math.random()))
+onMounted(() => setTimeout(async () => {
+  await redis.connect('default')
+  await databasesStore.load()
+  connectingTo.value = String(Math.random())
 }, 1000))
 </script>
 
