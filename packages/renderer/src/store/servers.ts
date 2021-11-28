@@ -1,5 +1,8 @@
 import type {ServerArray} from '../../types/database'
 import {defineStore} from 'pinia'
+import {useDatabase} from '/@/use/database';
+
+const database = useDatabase()
 
 interface State {
   selected: string,
@@ -8,8 +11,8 @@ interface State {
 
 export const useServersStore = defineStore('servers', {
   state: (): State => ({
-    selected: '',
-    list: {},
+    selected: database.data.servers.default ? 'default' : Object.keys(database.data.servers)[0],
+    list: database.data.servers,
   }),
   getters: {
     selectedHost: state => state.list[state.selected].host,
