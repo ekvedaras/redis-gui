@@ -1,4 +1,4 @@
-import type {RedisClient, RedisClientOptions} from '@node-redis/client/dist/lib/client';
+import type {RedisClient, RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client';
 
 type ServerConfig = {
   host: string
@@ -7,7 +7,7 @@ type ServerConfig = {
 }
 
 export interface RedisApi {
-  createClient(options?: RedisClientOptions): RedisClient,
+  createClient(options?: RedisClientOptions): RedisClientType,
 
   client: RedisClient,
 }

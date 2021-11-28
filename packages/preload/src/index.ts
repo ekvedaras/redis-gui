@@ -22,7 +22,7 @@ let client: RedisClientType;
 
 const redisApi: RedisApi = {
   createClient: (options) => {
-    return client = redis.createClient(options)
+    return client = redis.createClient(options);
   },
 
   client: {
@@ -44,7 +44,6 @@ for (const method of Object.keys(RedisClient.prototype)) {
     return client[method](...args)
   }
 }
-
 
 const fsApi: FsApi = {
   readFileSync,
