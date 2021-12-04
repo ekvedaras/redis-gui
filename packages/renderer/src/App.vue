@@ -13,7 +13,7 @@
       :size="database.data.settings.leftPaneSize"
       class="pt-2 px-1 overflow-auto max-h-screen"
     >
-      Keys
+      <KeysSidebar />
     </Pane>
     <Pane class="flex-1 pb-2 px-4 overflow-hidden rounded-b">
       Content
@@ -29,6 +29,7 @@ import type { SplitpaneIndexedType } from 'splitpanes'
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import Header from '/@/components/Elements/Header.vue'
+import KeysSidebar from '/@/components/Elements/KeysSidebar.vue'
 
 const redis = useRedis()
 const database = useDatabase()

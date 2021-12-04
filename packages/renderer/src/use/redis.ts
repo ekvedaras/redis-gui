@@ -57,14 +57,14 @@ export function useRedis(): Redis {
         keys: {},
       }
 
-      const {keys, cursor: nextCursor} = await this.client.scan(cursor, {MATCH: pattern})
-      result.nextCursor = nextCursor
+      const scanResult = await this.client.scan(cursor, {MATCH: pattern})
+      result.nextCursor = scanResult.cursor
 
-      for await (const key of keys) {
+      for await (const key of scanResult.keys) {
         result.keys[key] = {
           encoding: '',
           name: key,
-          ttl: 0,
+          ttl: -1,
           type: '',
         }
 
@@ -74,17 +74,17 @@ export function useRedis(): Redis {
       }
 
       await Promise.all(
-        Object.keys(keys).map(key => () => {
+        scanResult.keys.map(key => [
           this.client?.type(key).then(type => {
             result.keys[key].type = type
-          })
+          }),
           this.client?.ttl(key).then(ttl => {
             result.keys[key].ttl = ttl
-          })
+          }),
           this.client?.sendCommand(['object', 'encoding', key]).then(encoding => {
             result.keys[key].encoding = encoding?.toString() ?? ''
-          })
-        }),
+          }),
+        ]).flat(),
       )
 
       return result

@@ -3,11 +3,9 @@ import {defineStore} from 'pinia'
 import type {Key, Keys, KeysResult} from '../../types/redis'
 import {useRedis} from '/@/use/redis'
 import {useToaster} from '/@/use/toaster'
-import {useTtlTimer} from '/@/use/ttlTimer'
 
 const redis = useRedis()
 const toaster = useToaster()
-const {clearTtlTimer, registerTtlTimer} = useTtlTimer()
 
 interface KeysLoadResult {
   result: KeysResult
@@ -21,6 +19,7 @@ interface State {
   cursor: number,
   selected: string | undefined,
   pattern: string,
+  ttlTimer: NodeJS.Timer | undefined,
 }
 
 export const useKeysStore = defineStore('keys', {
@@ -29,6 +28,7 @@ export const useKeysStore = defineStore('keys', {
     cursor: 0,
     selected: undefined,
     pattern: '*',
+    ttlTimer: undefined,
   }),
   getters: {
     withTTL(state) {
@@ -50,11 +50,11 @@ export const useKeysStore = defineStore('keys', {
       this.refreshTTL()
     },
     refreshTTL() {
-      clearTtlTimer()
-      registerTtlTimer()
+      this.clearTtlTimer()
+      this.registerTtlTimer()
     },
     async loadKeys(pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0): Promise<KeysLoadResult> {
-      registerTtlTimer()
+      this.registerTtlTimer()
 
       if (pattern === '**') {
         pattern = '*'
@@ -133,6 +133,37 @@ export const useKeysStore = defineStore('keys', {
     async deleteHashItem(keyName: string, key: string): Promise<void> {
       await redis.client.hDel(keyName, key)
       toaster.info(`${keyName} hash ${key} key deleted`)
+    },
+    tick() {
+      return Object
+        .values(this.withTTL)
+        .forEach(key => {
+          this.list[key.name].ttl--
+          if (this.list[key.name].ttl <= 0) {
+            if (this.selected === key.name) {
+              this.selected = undefined
+            }
+
+            delete this.list[key.name]
+
+            toaster.info(`Key ${key.name} has expired`)
+          }
+        })
+    },
+    registerTtlTimer() {
+      if (this.ttlTimer) {
+        return
+      }
+
+      this.ttlTimer = setInterval(this.tick, 1000)
+    },
+    clearTtlTimer() {
+      if (!this.ttlTimer) {
+        return
+      }
+
+      clearInterval(this.ttlTimer)
+      this.ttlTimer = undefined
     },
   },
 })

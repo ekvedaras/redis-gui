@@ -1,4 +1,4 @@
-import {contextBridge} from 'electron'
+import {contextBridge, shell} from 'electron'
 import {readFileSync} from 'fs'
 import type {ElectronApi} from '../types/electron-api'
 import {promisify} from 'util'
@@ -16,6 +16,7 @@ const redis = require('redis')
  */
 const api: ElectronApi = {
   versions: process.versions,
+  openExternal: shell.openExternal,
 };
 
 let client: RedisClientType;
@@ -26,6 +27,7 @@ const redisApi: RedisApi = {
   },
 
   client: {
+    isConnectionOpen: () => client.isOpen,
     connect: () => client.connect(),
     disconnect: () => client.disconnect(),
     quit: () => client.quit(),
@@ -35,14 +37,14 @@ const redisApi: RedisApi = {
       client.on(...args)
       return redisApi.client
     },
+    // @ts-ignore
+    sendCommand: (...args) => client.sendCommand(...args),
   },
 };
 
 for (const method of Object.keys(RedisClient.prototype)) {
-  redisApi.client[method] = (...args: unknown[]) => {
-    // @ts-ignore
-    return client[method](...args)
-  }
+  // @ts-ignore
+  redisApi.client[method] = (...args) => client[method](...args)
 }
 
 const fsApi: FsApi = {
@@ -53,7 +55,6 @@ const fsApi: FsApi = {
 const utilApi: UtilApi = {
   promisify,
 };
-
 /**
  * The "Main World" is the JavaScript context that your main renderer code runs in.
  * By default, the page you load in your renderer executes code in this world.

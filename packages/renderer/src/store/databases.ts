@@ -1,6 +1,7 @@
 import {useRedis} from '/@/use/redis'
 import {parseInt} from 'lodash'
 import {defineStore} from 'pinia'
+import {Database} from "../../types/models";
 
 const redis = useRedis()
 

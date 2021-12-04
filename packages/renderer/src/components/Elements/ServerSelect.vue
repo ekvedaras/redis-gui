@@ -28,10 +28,12 @@ import { useRedis } from '/@/use/redis'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useServersStore } from '/@/store/servers'
 import { useDatabasesStore } from '/@/store/databases'
+import { useKeysStore } from '/@/store/keys'
 
 const redis = useRedis()
 const serversStore = useServersStore()
 const databasesStore = useDatabasesStore()
+const keysStore = useKeysStore()
 
 const connectingTo = ref<string>()
 
@@ -39,8 +41,7 @@ const connectionState = computed<'pending' | 'ok' | 'fail'>(() => {
   if (!connectingTo.value || !redis.client) {
     return 'pending'
   }
-
-  if (redis.client.isOpen) {
+  if (redis.client.isConnectionOpen()) {
     return 'ok'
   }
 
@@ -58,34 +59,36 @@ const connectionMessage = computed<string>(() => {
   }
 })
 
-const connect = ({target}: Event) => {
+const connect = async ({target}: Event) => {
   const select = target as HTMLSelectElement
 
   if (select.value === serversStore.selected) {
     return
   }
 
-  connectingTo.value = select.value
-  redis.connect(select.value, {
-    onReady: () => {
-      selectAndReload(select.value)
-    },
-  }).catch((e) => {
+  try {
+    connectingTo.value = select.value
+    await redis.connect(select.value)
+    await selectAndReload(select.value, false)
+  } catch (error) {
     select.value = String(serversStore.selected)
-    throw e
-  })
+    throw error
+  }
 }
 
-const selectAndReload = async (server: string) => {
-  await redis.disconnect()
+const selectAndReload = async (server: string, disconnect = true) => {
+  if (disconnect) {
+    await redis.disconnect()
+  }
   serversStore.select(server)
-  await databasesStore.load()
+  await Promise.all([databasesStore.load, keysStore.loadKeys])
   await nextTick(() => connectingTo.value = String(Math.random()))
 }
 
 onMounted(() => setTimeout(async () => {
   await redis.connect('default')
   await databasesStore.load()
+  await keysStore.loadKeys()
   connectingTo.value = String(Math.random())
 }, 1000))
 </script>

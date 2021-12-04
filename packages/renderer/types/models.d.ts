@@ -1,7 +1,12 @@
-interface Database {
+export interface Database {
   id: string,
   index: number,
   name?: string,
 
   [key: string]: unknown,
+}
+
+export interface ClickKeys {
+  main: string[],
+  forced?: string[],
 }
