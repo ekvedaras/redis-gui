@@ -2,8 +2,10 @@ import {useRedis} from '/@/use/redis'
 import {parseInt} from 'lodash'
 import {defineStore} from 'pinia'
 import {Database} from "../../types/models";
+import {useKeysStore} from "/@/store/keys";
 
 const redis = useRedis()
+const keysStore = useKeysStore()
 
 interface State {
   list: Array<Database>,
@@ -20,8 +22,8 @@ export const useDatabasesStore = defineStore('databases', {
   actions: {
     load() {
       return Promise.all([
-        redis.client.configGet('databases').then(({databases}) => this.total = parseInt(databases)),
-        redis.client.info('keyspace').then(result => {
+        redis.client.configGet('databases').then(({databases}: { databases: string }) => this.total = parseInt(databases)),
+        redis.client.info('keyspace').then((result: string) => {
           this.list = []
           result.split('\n').slice(1, -1).forEach((db: string) => {
             let key, value;
@@ -42,8 +44,8 @@ export const useDatabasesStore = defineStore('databases', {
     select(index: number) {
       return redis.client.select(index).then(() => {
         this.selected = index
-        // commit('keys/unloadKey', undefined, {root: true})
-        // dispatch('keys/loadKeys', undefined, {root: true})
+        keysStore.selected = undefined
+        keysStore.loadKeys()
       })
     },
   },
