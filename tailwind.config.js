@@ -1,6 +1,5 @@
 module.exports = {
-  mode: 'jit',
-  purge: ['./packages/**/*.{vue,js,ts,jsx,tsx}'],
+  content: ['./packages/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'media',
   theme: {
     extend: {
