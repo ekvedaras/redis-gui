@@ -61,6 +61,10 @@ export default {
     background-color: theme('colors.gray.900');
   }
 
+   .vjs-tree__node:hover {
+    background-color: theme("colors.picton-blue.900");
+  }
+
   .controls {
     top: 30px;
   }
