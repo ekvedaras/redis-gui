@@ -1,7 +1,7 @@
-name: redis-gui
-version: '1.2.7'
-summary: 'Graphical UI for managing Redis databases'
-description: |
+name : redis-gui
+version : '1.2.8'
+summary : 'Graphical UI for managing Redis databases'
+description : |
   Manage your Redis database with graphical UI.
 
   **Main features**
@@ -15,9 +15,9 @@ description: |
 
   https://github.com/ekvedaras/redis-gui
 
-grade: stable
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade : stable
+confinement : strict
 
-parts:
-  my-part:
-    plugin: nil
+parts :
+  my-part :
+    plugin : nil
