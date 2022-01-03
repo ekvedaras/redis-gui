@@ -16,7 +16,7 @@
       <KeysSidebar />
     </Pane>
     <Pane class="flex-1 pb-2 px-4 overflow-hidden rounded-b">
-      Content
+      <KeyContent class="flex-1 pb-2 px-4 overflow-hidden rounded-b" />
     </Pane>
   </Splitpanes>
 </template>
@@ -30,6 +30,7 @@ import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import Header from '/@/components/Elements/Header.vue'
 import KeysSidebar from '/@/components/Elements/KeysSidebar.vue'
+import KeyContent from '/@/components/Elements/KeyContent.vue'
 
 const redis = useRedis()
 const database = useDatabase()
