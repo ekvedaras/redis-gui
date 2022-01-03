@@ -1,35 +1,35 @@
-name: Build/release
+name : Build/release
 
-on: push
+on : push
 
-jobs:
-  release:
-    runs-on: ${{ matrix.os }}
+jobs :
+  release :
+    runs-on : ${{ matrix.os }}
 
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+    strategy :
+      matrix :
+        os : [ macos-latest, ubuntu-latest, windows-latest ]
 
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
+    steps :
+      - name : Check out Git repository
+        uses : actions/checkout@v2
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 15
+      - name : Install Node.js, NPM and Yarn
+        uses : actions/setup-node@v1
+        with :
+          node-version : 15
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          use_vue_cli: true
+      - name : Build/release Electron app
+        uses : samuelmeuli/action-electron-builder@v1
+        with :
+          use_vue_cli : true
 
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
+          github_token : ${{ secrets.github_token }}
 
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          
-          args: "-c.snap.publish=github"
+          release : ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+          args : "-c.snap.publish=github -c.extraMetadata.main=src/background.js"
