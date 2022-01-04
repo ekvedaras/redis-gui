@@ -1,6 +1,7 @@
 import {onMounted, ref, watch} from 'vue'
-import {useKeysStore} from "/@/store/keys";
-import {useRedis} from "/@/use/redis";
+import {useKeysStore} from '/@/store/keys'
+import {useRedis} from '/@/use/redis'
+import {StringArray} from "../../types/models";
 
 type ScanType = 'scan' | 'sscan' | 'hscan' | 'zscan'
 
@@ -11,15 +12,13 @@ interface Result {
   lastLoad?: number,
 }
 
-export function useKeyScanner(name: string, scanUsing: ScanType, setValueUsing: (value: string[], shouldMerge: boolean) => void) {
+export function useCursorScanner(name: string, scanUsing: ScanType, setValueUsing: (value: string[] | StringArray, shouldMerge: boolean) => void) {
   const search = ref('')
   const isLoading = ref(true)
   const nextCursor = ref(0)
 
   const keysStore = useKeysStore()
   const redis = useRedis()
-
-  onMounted(() => keysStore.loadKeys())
 
   watch(() => search.value, () => {
     let wildcard = search.value.indexOf('*') > -1 ? '' : '*'
@@ -48,10 +47,15 @@ export function useKeyScanner(name: string, scanUsing: ScanType, setValueUsing: 
     return null
   }
 
+  const loadMore = () => loadKeys(`*${search.value}*`, nextCursor.value)
+
+  onMounted(() => loadKeys())
+
   return {
     search,
     isLoading,
     nextCursor,
     loadKeys,
+    loadMore,
   }
 }

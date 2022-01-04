@@ -28,7 +28,7 @@ import JsonRenderer from '/@/components/Elements/JsonRenderer.vue'
 import PlainRenderer from '/@/components/Elements/PlainRenderer.vue'
 
 const props = defineProps<{
-  value: any
+  value: string
   withoutDelete: boolean
   withKeys: boolean
 }>()

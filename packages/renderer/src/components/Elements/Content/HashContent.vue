@@ -6,8 +6,8 @@
     <div class="overflow-y-auto h-full rounded mt-4">
       <Value v-for="(item, key) in value"
              class="relative"
-             :key="key" :value="item" :item-key="key"
-             @save="save(key, $event)"
+             :key="key" :value="item" :item-key="String(key)"
+             @save="save(key, $event.key, $event.value)"
              @delete="deleteItem(key, 'keys/deleteHashItem')" />
       <LoadMoreButton @click="loadMore" v-if="nextCursor" />
       <CenteredLoader v-if="isLoading && !hasItems" />
@@ -16,49 +16,56 @@
 </template>
 
 <script setup lang="ts">
-import { redis } from '@/services/redis'
-import SearchBar from '@/components/Elements/SearchBar'
-import Value from '@/components/Elements/Value'
-import LoadMoreButton from '@/components/Elements/LoadMoreButton'
-import ScansKey from '@/components/Mixins/ScansKey'
-import _ from 'lodash'
-import DeletesItems from '@/components/Mixins/DeletesItems'
-import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate'
-import CountsItems from '@/components/Mixins/CountsItems'
-import CenteredLoader from '@/components/Elements/CenteredLoader'
+import { useCursorScanner } from '/@/use/cursorScanner'
+import { chunk, fromPairs } from 'lodash'
+import { ref } from 'vue'
+import { useRedis } from '/@/use/redis'
+import { useToaster } from '/@/use/toaster'
+import { useKeysStore } from '/@/store/keys'
+import SearchBar from '/@/components/Elements/SearchBar.vue'
+import Value from '/@/components/Elements/Value.vue'
+import { useDeletesItems } from '/@/use/deletesItems'
+import { useHasItems } from '/@/use/hasItems'
+import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
+import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 
-export default {
-  name: 'HashContent',
-  components: {CenteredLoader, LoadMoreButton, Value, SearchBar},
-  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate, CountsItems],
-  props: ['name'],
-  data: () => ({
-    value: '',
-    scanUsing: 'hscan',
-  }),
-  methods: {
-    setScannedValue(value, merge) {
-      let parsed = _.fromPairs(_.chunk(value, 2))
-      this.value = merge ? {...this.value, ...parsed} : parsed
-    },
-    async save(key, {key: newKey, value}) {
-      let commands = []
-      if (key !== newKey) {
-        commands.push(['hdel', this.name, key])
-      }
+const props = defineProps<{
+  name: string,
+}>()
 
-      commands.push(['hset', this.name, newKey, value]);
+const value = ref({})
 
-      (await redis.multi(commands)).exec(error => {
-        if (!error) {
-          this.$toasted.success('Saved')
-          this.loadKeys()
-        } else {
-          this.$toasted.error(error)
-        }
-      })
-    },
-  },
+const redis = useRedis()
+const toaster = useToaster()
+const keysStore = useKeysStore()
+const deleteItem = useDeletesItems()
+const hasItems = useHasItems(value)
+const {
+  search,
+  isLoading,
+  nextCursor,
+  loadKeys,
+  loadMore,
+} = useCursorScanner(props.name, 'hscan', (newValue, shouldMerge) => {
+  let parsed = fromPairs(chunk((newValue as string[]), 2))
+  value.value = shouldMerge ? {...value.value, ...parsed} : parsed
+})
+
+const save = async (key: string, newKey: string, value: string) => {
+  let commands = []
+  if (key !== newKey) {
+    commands.push(['hdel', props.name, key])
+  }
+
+  commands.push(['hset', props.name, newKey, value])
+
+  try {
+    await redis.client.multi(commands).exec()
+    toaster.success('Saved')
+    keysStore.loadKeys()
+  } catch (error) {
+    toaster.error(error)
+  }
 }
 </script>
 

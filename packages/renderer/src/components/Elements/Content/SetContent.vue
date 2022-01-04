@@ -15,46 +15,57 @@
   </div>
 </template>
 
-<script>
-import { redis } from '@/services/redis';
-import SearchBar from '@/components/Elements/SearchBar';
-import Value from '@/components/Elements/Value';
-import LoadMoreButton from '@/components/Elements/LoadMoreButton';
-import ScansKey from '@/components/Mixins/ScansKey';
-import DeletesItems from '@/components/Mixins/DeletesItems';
-import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate';
-import CountsItems from '@/components/Mixins/CountsItems';
-import CenteredLoader from '@/components/Elements/CenteredLoader';
+<script setup lang="ts">
+import { useCursorScanner } from '/@/use/cursorScanner'
+import { ref } from 'vue'
+import { useRedis } from '/@/use/redis'
+import { useToaster } from '/@/use/toaster'
+import { useKeysStore } from '/@/store/keys'
+import SearchBar from '/@/components/Elements/SearchBar.vue'
+import Value from '/@/components/Elements/Value.vue'
+import { useDeletesItems } from '/@/use/deletesItems'
+import { useHasItems } from '/@/use/hasItems'
+import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
+import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
+import { StringArray } from '../../../../types/models'
 
-export default {
-  name: 'SetContent',
-  components: { CenteredLoader, LoadMoreButton, Value, SearchBar },
-  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate, CountsItems],
-  props: ['name'],
-  data: () => ({
-    value: [],
-    scanUsing: 'sscan',
-  }),
-  methods: {
-    setScannedValue (value, merge) {
-      this.value = merge ? { ...this.value, ...value } : value;
-    },
-    async save (key, { value }) {
-      (await redis.multi([
-        ['srem', this.name, this.value[key]],
-        ['sadd', this.name, value],
-      ])).exec(error => {
-        if (!error) {
-          this.$set(this.value, key, value);
-          this.$toasted.success('Saved');
-          this.loadKeys();
-        } else {
-          this.$toasted.error(error);
-        }
-      });
-    },
-  },
-};
+const props = defineProps<{
+  name: string,
+}>()
+
+const value = ref<StringArray>({})
+
+const redis = useRedis()
+const toaster = useToaster()
+const keysStore = useKeysStore()
+const deleteItem = useDeletesItems()
+const hasItems = useHasItems(value)
+
+const {
+  search,
+  isLoading,
+  nextCursor,
+  loadKeys,
+  loadMore,
+} = useCursorScanner(props.name, 'sscan', (newValue, shouldMerge) => {
+  newValue = newValue as StringArray
+  value.value = shouldMerge ? {...value.value, ...newValue} : newValue
+})
+
+const save = async (key: string, newValue: string) => {
+  let commands = []
+  commands.push(['srem', props.name, value.value[key]])
+  commands.push(['sadd', props.name, key, newValue])
+
+  try {
+    await redis.client.multi(commands).exec()
+    value.value[key] = newValue
+    toaster.success('Saved')
+    keysStore.loadKeys()
+  } catch (error) {
+    toaster.error(error)
+  }
+}
 </script>
 
 <style scoped>

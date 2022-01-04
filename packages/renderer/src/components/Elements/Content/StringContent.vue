@@ -5,31 +5,37 @@
   </div>
 </template>
 
-<script>
-import { redis } from '@/services/redis';
-import Value from '@/components/Elements/Value';
-import CenteredLoader from '@/components/Elements/CenteredLoader';
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useRedis } from '/@/use/redis'
+import { useToaster } from '/@/use/toaster'
+import Value from '/@/components/Elements/Value.vue'
+import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 
-export default {
-  name: 'StringContent',
-  components: { CenteredLoader, Value },
-  props: ['name'],
-  data: () => ({
-    value: '',
-    isLoading: true,
-  }),
-  async mounted () {
-    this.value = await redis.async('get', this.name);
-    this.isLoading = false;
-  },
-  methods: {
-    save ({ value }) {
-      redis.async('set', this.name, value)
-        .then(() => this.value = value)
-        .then(() => this.$toasted.success('Saved'));
-    },
-  },
-};
+const props = defineProps<{
+  name: string,
+}>()
+
+const value = ref('')
+const isLoading = ref(true)
+
+const redis = useRedis()
+const toaster = useToaster()
+
+const save = async (newValue: string) => {
+  try {
+    await redis.client.set(props.name, newValue)
+    value.value = newValue
+    toaster.success('Saved')
+  } catch (error) {
+    toaster.error(error)
+  }
+}
+
+onMounted(async () => {
+  value.value = await redis.client.get(props.name)
+  isLoading.value = false
+})
 </script>
 
 <style scoped>

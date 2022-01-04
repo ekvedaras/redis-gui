@@ -40,6 +40,11 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'
 import NoKeySelected from '/@/components/Elements/NoKeySelected.vue'
 import TTL from '/@/components/Elements/TTL.vue'
+import HashContent from '/@/components/Elements/Content/HashContent.vue'
+import ListContent from '/@/components/Elements/Content/ListContent.vue'
+import SetContent from '/@/components/Elements/Content/SetContent.vue'
+import StringContent from '/@/components/Elements/Content/StringContent.vue'
+import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
 
 const redis = useRedis()
 const keysStore = useKeysStore()
@@ -127,15 +132,18 @@ const currentContent = computed(() => {
     return undefined
   }
 
-  const type = keysStore.current.type
-  const component = `${ type.charAt(0).toUpperCase() }${ type.slice(1) }Content`
-
-  // TODO adapt for vue3
-  // if (!Object.prototype.hasOwnProperty.call(this.$options.components, component)) {
-  //   return undefined
-  // }
-
-  return component
+  switch (keysStore.current.type) {
+    case 'hash':
+      return HashContent
+    case 'list':
+      return ListContent
+    case 'set':
+      return SetContent
+    case 'zset':
+      return ZSetContent
+    default:
+      return StringContent
+  }
 })
 </script>
 

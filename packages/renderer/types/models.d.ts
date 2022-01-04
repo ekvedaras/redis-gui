@@ -10,3 +10,7 @@ export interface ClickKeys {
   main: string[],
   forced?: string[],
 }
+
+export type StringArray = {
+  [key: string]: string,
+}

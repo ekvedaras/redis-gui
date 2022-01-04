@@ -7,84 +7,66 @@
       <Value v-for="(item, i) in filtered"
              class="relative"
              :key="i" :value="item"
-             @save="save(i, $event)"
+             @save="save(i, $event.value)"
              @delete="deleteItem({label: item, index: i}, 'keys/deleteListItem')" />
-      <LoadMoreButton @click="loadMore" v-if="start" />
+      <LoadMoreButton @click="loadMore" v-if="pointer" />
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
   </div>
 </template>
 
-<script>
-import { redis } from '@/services/redis';
-import SearchBar from '@/components/Elements/SearchBar';
-import Value from '@/components/Elements/Value';
-import LoadMoreButton from '@/components/Elements/LoadMoreButton';
-import DeletesItems from '@/components/Mixins/DeletesItems';
-import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate';
-import CountsItems from '@/components/Mixins/CountsItems';
-import CenteredLoader from '@/components/Elements/CenteredLoader';
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRedis } from '/@/use/redis'
+import { useToaster } from '/@/use/toaster'
+import { useKeysStore } from '/@/store/keys'
+import { useDeletesItems } from '/@/use/deletesItems'
+import { useHasItems } from '/@/use/hasItems'
+import { useReloadOnKeyUpdate } from '/@/use/reloadOnKeyUpdate'
+import SearchBar from '/@/components/Elements/SearchBar.vue'
+import Value from '/@/components/Elements/Value.vue'
+import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
+import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
+import { usePointerScanner } from '/@/use/pointerScanner'
+import { useRegexFilter } from '/@/use/regexFilter'
 
-export default {
-  name: 'ListContent',
-  components: { CenteredLoader, LoadMoreButton, Value, SearchBar },
-  mixins: [DeletesItems, ReloadsOnKeyUpdate, CountsItems],
-  props: ['name'],
-  data: () => ({
-    value: [],
-    size: 0,
-    start: 0,
-    isLoading: true,
-    search: '',
-  }),
-  computed: {
-    filtered () {
-      if (!this.search.length) {
-        return this.value;
-      }
+const props = defineProps<{
+  name: string,
+}>()
 
-      let pattern = new RegExp(this.search, 'i');
-      return this.value.filter(item => pattern.test(item));
-    },
-  },
-  async mounted () {
-    await this.resetCursor();
-    this.loadKeys();
-  },
-  methods: {
-    async resetCursor () {
-      this.size = await redis.async('llen', this.name);
-      this.start = 0;
-    },
-    loadKeys ({ start = 0, limit = Math.min(this.size - this.start, redis.pageSize) } = {}) {
-      this.isLoading = true;
-      return redis.async('lrange', this.name, start, start + limit - 1).then(result => {
-        if (start + result.length < this.size) {
-          this.start = start + result.length;
-        } else {
-          this.start = 0;
-        }
+const value = ref<string[]>([])
 
-        if (start) {
-          result.forEach(item => this.value.push(item));
-        } else {
-          this.value = result;
-        }
-      }).finally(() => this.isLoading = false);
-    },
-    loadMore () {
-      this.loadKeys({ start: this.start });
-    },
-    save (key, { value }) {
-      redis.async('lset', this.name, key, value)
-        .then(() => this.$set(this.value, key, value))
-        .then(() => this.$toasted.success('Saved'));
-    },
-    async afterDeleteItem () {
-      await this.resetCursor();
-    },
-  },
-};
+const redis = useRedis()
+const toaster = useToaster()
+const keysStore = useKeysStore()
+const deleteItem = useDeletesItems(() => resetCursor())
+const hasItems = useHasItems(value)
+useReloadOnKeyUpdate(() => resetCursor())
+
+const {search, filtered} = useRegexFilter(value)
+
+const {
+  isLoading,
+  pointer,
+  size,
+  loadKeys,
+  loadMore,
+} = usePointerScanner(props.name, 'lrange', 'llength', value)
+
+const resetCursor = async () => {
+  size.value = await redis.client.lLen(props.name)
+  pointer.value = 0
+}
+
+const save = async (key: number, newValue: string) => {
+  try {
+    await redis.client.lSet(props.name, key, newValue)
+    value.value[key] = newValue
+    toaster.success('Saved')
+  } catch (error) {
+    toaster.error(error)
+  }
+}
 </script>
 
 <style scoped>

@@ -28,8 +28,8 @@ const props = withDefaults(defineProps<{
   withAdd: boolean,
   addName?: string,
   addType?: string,
-  focusKeys: ClickKeys,
-  addKeys: ClickKeys,
+  focusKeys?: ClickKeys,
+  addKeys?: ClickKeys,
 }>(), {
   showSpinner: false,
   withAdd: false,

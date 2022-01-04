@@ -15,39 +15,51 @@
   </div>
 </template>
 
-<script>
-import _ from 'lodash';
-import { redis } from '@/services/redis';
-import SearchBar from '@/components/Elements/SearchBar';
-import Value from '@/components/Elements/Value';
-import LoadMoreButton from '@/components/Elements/LoadMoreButton';
-import ScansKey from '@/components/Mixins/ScansKey';
-import DeletesItems from '@/components/Mixins/DeletesItems';
-import ReloadsOnKeyUpdate from '@/components/Mixins/ReloadsOnKeyUpdate';
-import CountsItems from '@/components/Mixins/CountsItems';
-import CenteredLoader from '@/components/Elements/CenteredLoader';
+<script setup lang="ts">
+import { useCursorScanner } from '/@/use/cursorScanner'
+import { chunk, fromPairs } from 'lodash'
+import { ref } from 'vue'
+import { useRedis } from '/@/use/redis'
+import { useToaster } from '/@/use/toaster'
+import { useKeysStore } from '/@/store/keys'
+import SearchBar from '/@/components/Elements/SearchBar.vue'
+import Value from '/@/components/Elements/Value.vue'
+import { useDeletesItems } from '/@/use/deletesItems'
+import { useHasItems } from '/@/use/hasItems'
+import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
+import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 
-export default {
-  name: 'ZsetContent',
-  components: { CenteredLoader, LoadMoreButton, Value, SearchBar },
-  mixins: [ScansKey, DeletesItems, ReloadsOnKeyUpdate, CountsItems],
-  props: ['name'],
-  data: () => ({
-    value: [],
-    scanUsing: 'zscan',
-  }),
-  methods: {
-    setScannedValue (value, merge) {
-      let parsed = _.fromPairs(_.chunk(value, 2));
-      this.value = merge ? { ...this.value, ...parsed } : parsed;
-    },
-    save ({ key, value }) {
-      redis.async('zadd', this.name, key, value)
-        .then(() => this.$toasted.success('Saved'))
-        .then(() => this.loadKeys());
-    },
-  },
-};
+const props = defineProps<{
+  name: string,
+}>()
+
+const value = ref({})
+
+const redis = useRedis()
+const toaster = useToaster()
+const keysStore = useKeysStore()
+const deleteItem = useDeletesItems()
+const hasItems = useHasItems(value)
+const {
+  search,
+  isLoading,
+  nextCursor,
+  loadKeys,
+  loadMore,
+} = useCursorScanner(props.name, 'zscan', (newValue, shouldMerge) => {
+  let parsed = fromPairs(chunk((newValue as string[]), 2))
+  value.value = shouldMerge ? {...value.value, ...parsed} : parsed
+})
+
+const save = async (score: number, newValue: string) => {
+  try {
+    await redis.client.zAdd(props.name, score, newValue)
+    toaster.success('Saved')
+    await loadKeys()
+  } catch (error) {
+    toaster.error(error)
+  }
+}
 </script>
 
 <style scoped>
