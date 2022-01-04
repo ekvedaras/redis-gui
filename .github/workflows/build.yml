@@ -39,5 +39,3 @@ jobs :
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release : ${{ startsWith(github.ref, 'refs/tags/v') }}
-
-          args : "-c.snap.publish=github -c.extraMetadata.main=src/background.js"
