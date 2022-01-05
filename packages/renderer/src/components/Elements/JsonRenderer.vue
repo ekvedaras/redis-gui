@@ -10,7 +10,7 @@
         with-json
         :without-delete="withoutDelete" />
     </div>
-    <vue-json-pretty
+    <VueJsonPretty
       :data="JSON.parse(data)"
       :deep="4"
       highlight-mouseover-node
@@ -28,6 +28,8 @@
 import ValueSize from '/@/components/Elements/ValueSize.vue'
 import { defineEmits } from 'vue'
 import KeyItemControls from '/@/components/Elements/KeyItemControls.vue'
+import VueJsonPretty from 'vue-json-pretty'
+import 'vue-json-pretty/lib/styles.css'
 
 const props = withDefaults(defineProps<{
   data: string;
