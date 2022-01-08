@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="value" :close="close">
+  <Modal v-model="show" :close="close">
     <div class="bg-white dark:bg-gray-700 dark:text-white rounded shadow-lg p-4">
       <div class="mt-2">
         <slot />
@@ -19,7 +19,7 @@ import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
 import DangerButton from '/@/components/Elements/DangerButton.vue'
 
 const props = withDefaults(defineProps<{
-  value: boolean;
+  show: boolean;
   confirmText?: string;
   cancelText?: string;
   danger?: boolean;
@@ -30,11 +30,11 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  (e: 'update:value', value: boolean): void;
+  (e: 'update:show', value: boolean): void;
   (e: 'confirm'): void;
 }>()
 
-const close = () => emit('update:value', false)
+const close = () => emit('update:show', false)
 </script>
 
 <style scoped>

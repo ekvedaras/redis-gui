@@ -8,7 +8,7 @@
           <span ref="keyName" class="break-all" tabindex="0" v-show="!isRenaming" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ keysStore.current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm" />
-          <span @click="openDocs" class="text-sm ml-2" style="cursor: help">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
+          <span @click="showDocs = true" class="text-sm ml-2" style="cursor: help">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
         </h2>
         <IconButton @click="showDeleteDialog = true" tabindex="0" @shortkey.native="showDeleteDialog = true">
           <DeleteIcon class="w-4 m-1" />
@@ -25,9 +25,10 @@
       <template v-else>
         Key type {{ keysStore.current.type }} is not supported
       </template>
-      <ConfirmDialog v-model:value="showDeleteDialog" @confirm="deleteKey" danger>
+      <ConfirmDialog v-model:show="showDeleteDialog" @confirm="deleteKey" danger>
         Are you sure you want to delete <b>{{ keysStore.selected }}</b> key?
       </ConfirmDialog>
+      <IFrameModal v-model:show="showDocs" :url="typeDocs" :title="docsTitle" />
     </template>
   </div>
 </template>
@@ -49,6 +50,7 @@ import SetContent from '/@/components/Elements/Content/SetContent.vue'
 import StringContent from '/@/components/Elements/Content/StringContent.vue'
 import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
+import IFrameModal from '/@/components/Elements/IFrameModal.vue'
 
 const redis = useRedis()
 const keysStore = useKeysStore()
@@ -97,6 +99,8 @@ const emitUpdate = () => {
   // EventBus.$emit('key-updated', this.selected)
 }
 
+const showDocs = ref(false)
+const docsTitle = computed(() => `${ keysStore.current!.type.substr(0, 1).toUpperCase() }${ keysStore.current!.type.substr(1) } documentation`)
 const typeDocs = computed(() => {
   switch (keysStore.current?.type) {
     case 'hash':
@@ -113,14 +117,6 @@ const typeDocs = computed(() => {
       return 'https://redis.io/topics/data-types'
   }
 })
-
-const openDocs = () => {
-  alert('TODO: open docs modal')
-  // this.$modal.show(IFrameModal, {
-  //   title: `${ this.current.type.substr(0, 1).toUpperCase() }${ this.current.type.substr(1) } documentation`,
-  //   url: this.typeDocs,
-  // })
-}
 
 const currentContent = computed(() => {
   if (!keysStore.current) {
