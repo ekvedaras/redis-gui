@@ -10,7 +10,7 @@
           <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm" />
           <span @click="openDocs" class="text-sm ml-2" style="cursor: help">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
         </h2>
-        <IconButton @click="confirmDelete" tabindex="0" @shortkey.native="confirmDelete">
+        <IconButton @click="showDeleteDialog = true" tabindex="0" @shortkey.native="showDeleteDialog = true">
           <DeleteIcon class="w-4 m-1" />
         </IconButton>
         <TTL :redis-key="keysStore.current" />
@@ -25,6 +25,9 @@
       <template v-else>
         Key type {{ keysStore.current.type }} is not supported
       </template>
+      <ConfirmDialog v-model="showDeleteDialog" @confirm="deleteKey">
+        Are you sure you want to delete <b>{{ keysStore.selected }}</b> key?
+      </ConfirmDialog>
     </template>
   </div>
 </template>
@@ -45,6 +48,7 @@ import ListContent from '/@/components/Elements/Content/ListContent.vue'
 import SetContent from '/@/components/Elements/Content/SetContent.vue'
 import StringContent from '/@/components/Elements/Content/StringContent.vue'
 import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
+import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 
 const redis = useRedis()
 const keysStore = useKeysStore()
@@ -81,20 +85,11 @@ const rename = async (save: boolean) => {
   }
 }
 
-const confirmDelete = () => {
-  if (confirm('Sure? (TODO)')) {
-    keysStore.deleteKey(keysStore.selected!)
-    databasesStore.load()
-  }
-  // this.$modal.show(Dialog, {
-  //   text: `Are you sure you want to delete <b>${ this.selected }</b> key?`,
-  //   dangerBtn: true,
-  //   handler: () => {
-  //     this.deleteKey(this.selected)
-  //     this.load()
-  //     this.$modal.hide('dialog')
-  //   },
-  // }, {name: 'dialog'})
+const showDeleteDialog = ref(false)
+const deleteKey = () => {
+  keysStore.deleteKey(keysStore.selected!)
+  databasesStore.load()
+  showDeleteDialog.value = false
 }
 
 const emitUpdate = () => {
