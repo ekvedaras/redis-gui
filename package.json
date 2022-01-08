@@ -23,7 +23,7 @@
     "custom-electron-titlebar": "^3.2.5",
     "lodash": "^4.17.21",
     "lowdb": "^1.0.0",
-    "postcss": "^7",
+    "postcss": "^8",
     "redis": "^3.0.2",
     "redis-ssh": "^1.0.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
