@@ -15,13 +15,8 @@
 </template>
 
 <script setup lang="ts">
-// TODO
-// import { EventBus } from '@/services/eventBus'
-// mounted () {
-//   EventBus.$on('key-updated', this.load)
-// },
-
 import { useDatabasesStore } from '/@/store/databases'
+import useEmitter from '/@/use/emitter'
 
 const databasesStore = useDatabasesStore()
 const keys = (index: number) => {
@@ -35,4 +30,7 @@ const keys = (index: number) => {
 const select = ({target}: Event) => {
   databasesStore.select(Number((target as HTMLSelectElement).value))
 }
+
+const emitter = useEmitter()
+emitter.on('key-updated', () => databasesStore.load())
 </script>

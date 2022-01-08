@@ -41,7 +41,7 @@ const toaster = useToaster()
 const keysStore = useKeysStore()
 const deleteItem = useDeletesItems(() => resetCursor())
 const hasItems = useHasItems(value)
-useReloadOnKeyUpdate(() => resetCursor())
+useReloadOnKeyUpdate(props.name, () => resetCursor())
 
 const {search, filtered} = useRegexFilter(value)
 

@@ -4,10 +4,14 @@ import VueUniversalModal from 'vue-universal-modal'
 import 'vue-universal-modal/dist/index.css'
 import '../assets/index.css'
 import {createPinia} from 'pinia'
+import mitt from 'mitt'
 
-createApp(App)
+const app = createApp(App)
   .use(createPinia())
   .use(VueUniversalModal, {
     teleportTarget: '#modals',
   })
-  .mount('#app');
+
+app.config.globalProperties.emitter = mitt()
+
+app.mount('#app');

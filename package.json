@@ -64,6 +64,7 @@
     "electron-updater": "^4.6.2",
     "lodash": "^4.17.21",
     "lowdb": "^3.0.0",
+    "mitt": "^3.0.0",
     "pinia": "^2.0.9",
     "redis": "^4.0.1",
     "splitpanes": "^3.0.6",

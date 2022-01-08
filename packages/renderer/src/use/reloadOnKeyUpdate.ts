@@ -1,23 +1,25 @@
 import {onMounted} from "vue";
 import {useKeysStore} from "/@/store/keys";
+import useEmitter from "/@/use/emitter";
 
 export function useReloadOnKeyUpdate(
+  name: string,
   resetCursor?: () => Promise<void>,
 ) {
-  alert('TODO implement event bus')
   const keysStore = useKeysStore()
+  const emitter = useEmitter()
 
   onMounted(async () => {
-    // EventBus.$on('key-updated', async name => {
-    //   if (name !== this.name) {
-    //     return
-    //   }
-    //
-    //   if (resetCursor) {
-    //     await resetCursor()
-    //   }
-    //
-    //   keysStore.loadKeys()
-    // })
+    emitter.on('key-updated', async (updatedKey: string) => {
+      if (updatedKey !== name) {
+        return
+      }
+
+      if (resetCursor) {
+        await resetCursor()
+      }
+
+      await keysStore.loadKeys()
+    })
   })
 }

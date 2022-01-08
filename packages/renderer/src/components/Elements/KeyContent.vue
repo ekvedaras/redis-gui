@@ -51,6 +51,7 @@ import StringContent from '/@/components/Elements/Content/StringContent.vue'
 import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import IFrameModal from '/@/components/Elements/IFrameModal.vue'
+import useEmitter from '/@/use/emitter'
 
 const redis = useRedis()
 const keysStore = useKeysStore()
@@ -94,10 +95,8 @@ const deleteKey = () => {
   showDeleteDialog.value = false
 }
 
-const emitUpdate = () => {
-  alert('TODO: emit key-updated')
-  // EventBus.$emit('key-updated', this.selected)
-}
+const emitter = useEmitter()
+const emitUpdate = () => emitter.emit('key-updated', keysStore.selected)
 
 const showDocs = ref(false)
 const docsTitle = computed(() => `${ keysStore.current!.type.substr(0, 1).toUpperCase() }${ keysStore.current!.type.substr(1) } documentation`)
