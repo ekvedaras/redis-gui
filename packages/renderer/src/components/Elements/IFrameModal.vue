@@ -1,14 +1,12 @@
 <template>
-  <Modal v-model="show" :close="close">
-    <div class="bg-white dark:bg-gray-700 dark:text-white rounded shadow-lg p-4 w-2/3">
-      <h2 class="text-lg font-semibold mt-2">{{ title }}</h2>
-      <iframe :src="url" :style="{height: '80vh'}" class="shadow rounded mt-4 w-full" ref="iframe" />
-    </div>
-  </Modal>
+  <AppModal :show="show" @update:show="emit('update:show', $event)" :title="title">
+    <iframe :src="url" :style="{height: '80vh'}" class="shadow rounded mt-4 w-full" ref="iframe" />
+  </AppModal>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import AppModal from '/@/components/Elements/AppModal.vue'
 
 const props = defineProps<{
   show: boolean;

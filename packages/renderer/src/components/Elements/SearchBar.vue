@@ -4,15 +4,16 @@
       :value="props.value"
       :focus-keys="props.focusKeys"
       :show-spinner="props.showSpinner"
-      @input="emit('input')"
+      @update:value="emit('update:value', $event)"
     />
     <IconButton
       v-if="props.withAdd"
-      @click="showKeyAddModal"
-      @shortkey="showKeyAddModal"
+      @click="showKeyAddModal = true"
+      @shortkey="showKeyAddModal = true"
     >
       <AddIcon class="w-10" />
     </IconButton>
+    <AddKeyModal v-model:show="showKeyAddModal" />
   </div>
 </template>
 
@@ -21,6 +22,8 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import AddIcon from '/@/components/Icons/AddIcon.vue'
 import Search from '/@/components/Elements/Search.vue'
 import type { ClickKeys } from '../../../types/models'
+import { ref } from 'vue'
+import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
 
 const props = withDefaults(defineProps<{
   value: string,
@@ -40,10 +43,10 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  (e: 'input'): void,
+  (e: 'update:value', value: string): void,
 }>()
 
-const showKeyAddModal = () => console.error('TODO: showKeyAddModal')
+const showKeyAddModal = ref(false)
 </script>
 
 <style scoped>

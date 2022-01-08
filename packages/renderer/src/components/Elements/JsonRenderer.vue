@@ -26,7 +26,6 @@
 
 <script setup lang="ts">
 import ValueSize from '/@/components/Elements/ValueSize.vue'
-import { defineEmits } from 'vue'
 import KeyItemControls from '/@/components/Elements/KeyItemControls.vue'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'

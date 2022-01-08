@@ -7,7 +7,6 @@
       :focus-keys="{main: ['/'], forced: ['ctrl', '/']}"
       :add-keys="{main: ['a'], forced: ['ctrl', 'a']}"
       class="px-2"
-      @add="showKeyAddModal"
     />
     <div class="overflow-y-auto mt-2 h-full px-1">
       <Keys
@@ -29,6 +28,7 @@
         <GitHubIcon />
       </IconButton>
     </div>
+    <AddKeyModal v-model:show="showKeyAddModal" />
   </div>
 </template>
 
@@ -55,7 +55,6 @@ const redis = useRedis()
 const search = ref('')
 const isLoading = ref(false)
 
-const showKeyAddModal = () => console.error('TODO: showKeyAddModal')
 const openTwitter = () => window.electron.openExternal('https://twitter.com/ekvedaras')
 const openGitHub = () => window.electron.openExternal('https://github.com/ekvedaras/redis-gui')
 

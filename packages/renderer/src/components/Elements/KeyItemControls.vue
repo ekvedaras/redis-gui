@@ -25,7 +25,6 @@ import CodeIcon from '/@/components/Icons/CodeIcon.vue'
 import DocumentIcon from '/@/components/Icons/DocumentIcon.vue'
 import EditIcon from '/@/components/Icons/EditIcon.vue'
 import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'
-import { defineEmits } from 'vue'
 
 const props = withDefaults(defineProps<{
   withoutDelete?: boolean,

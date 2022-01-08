@@ -6,7 +6,7 @@
       placeholder="Search..."
       :value="props.value"
       class="py-2 px-3 w-full"
-      @input="event => emit('input', event.target?.value)"
+      @input="event => emit('update:value', event.target?.value)"
       @keydown.esc="event => event.target?.blur()"
     >
     <Spinner :class="[showSpinner ? 'opacity-100' : 'opacity-0']" />
@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  (e: 'input', value: string): void,
+  (e: 'update:value', value: string): void,
 }>()
 </script>
 

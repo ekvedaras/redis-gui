@@ -1,22 +1,21 @@
 <template>
-  <Modal v-model="show" :close="close">
-    <div class="bg-white dark:bg-gray-700 dark:text-white rounded shadow-lg p-4">
-      <div class="mt-2">
-        <slot />
-      </div>
-      <div class="flex justify-end space-x-2 mt-6">
-        <Button @click="close">{{ cancelText }}</Button>
-        <DangerButton v-if="danger" @click="confirm">{{ confirmText }}</DangerButton>
-        <PrimaryButton v-else @click="emit('confirm')">{{ confirmText }}</PrimaryButton>
-      </div>
+  <AppModal :show="show" @update:show="emit('update:show', $event)">
+    <div class="mt-2">
+      <slot />
     </div>
-  </Modal>
+    <div class="flex justify-end space-x-2 mt-6">
+      <Button @click="close">{{ cancelText }}</Button>
+      <DangerButton v-if="danger" @click="emit('confirm')">{{ confirmText }}</DangerButton>
+      <PrimaryButton v-else @click="emit('confirm')">{{ confirmText }}</PrimaryButton>
+    </div>
+  </AppModal>
 </template>
 
 <script setup lang="ts">
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
 import DangerButton from '/@/components/Elements/DangerButton.vue'
+import AppModal from '/@/components/Elements/AppModal.vue'
 
 const props = withDefaults(defineProps<{
   show: boolean;

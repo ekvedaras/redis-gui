@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 import ValueSize from '/@/components/Elements/ValueSize.vue'
 import KeyItemControls from '/@/components/Elements/KeyItemControls.vue'
 
