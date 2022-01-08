@@ -49,7 +49,7 @@ let nestKey = (grouped, path) => {
   let lastPart = parts.splice(-1)
   let keyPath = parts.join('.')
 
-  _.setWith(grouped, `${keyPath}._${lastPart}`, key, Object)
+  _.setWith(grouped, `${keyPath}._+_+_${lastPart}`, key, Object)
 
   return [key, keyPath]
 }
