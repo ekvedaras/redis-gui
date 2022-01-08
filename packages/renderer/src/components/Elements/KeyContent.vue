@@ -25,7 +25,7 @@
       <template v-else>
         Key type {{ keysStore.current.type }} is not supported
       </template>
-      <ConfirmDialog v-model="showDeleteDialog" @confirm="deleteKey">
+      <ConfirmDialog v-model:value="showDeleteDialog" @confirm="deleteKey" danger>
         Are you sure you want to delete <b>{{ keysStore.selected }}</b> key?
       </ConfirmDialog>
     </template>

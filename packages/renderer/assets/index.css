@@ -240,6 +240,17 @@
             background: rgba(200, 200, 200, 0.61);
         }
     }
+    /*</editor-fold>*/
+    /*<editor-fold desc="Modal" defaultstate="collapsed">*/
+    .vue-universal-modal {
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 10;
+    }
 
+    @screen dark {
+        .vue-universal-modal {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+    }
     /*</editor-fold>*/
 }
