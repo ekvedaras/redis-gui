@@ -1,18 +1,19 @@
 import {onMounted, ref, watch} from 'vue'
 import {useKeysStore} from '/@/store/keys'
 import {useRedis} from '/@/use/redis'
-import {StringArray} from "../../types/models";
+import type {Tuple, ZMember} from '../../types/models'
 
-type ScanType = 'scan' | 'sscan' | 'hscan' | 'zscan'
+type ScanType = 'scan' | 'sScan' | 'hScan' | 'zScan'
 
 interface Result {
-  0: string, // cursor
-  1: string[], // data
+  cursor: number,
+  members?: string[] | ZMember[]
+  tuples?: Tuple[],
   nextCursor?: number,
   lastLoad?: number,
 }
 
-export function useCursorScanner(name: string, scanUsing: ScanType, setValueUsing: (value: string[] | StringArray, shouldMerge: boolean) => void) {
+export function useCursorScanner(name: string, scanUsing: ScanType, setValueUsing: (value: string[] | ZMember[] | Tuple[], shouldMerge: boolean) => void) {
   const search = ref('')
   const isLoading = ref(true)
   const nextCursor = ref(0)
@@ -29,14 +30,14 @@ export function useCursorScanner(name: string, scanUsing: ScanType, setValueUsin
     isLoading.value = true
     await keysStore.loadKeyInfo(name)
     try {
-      const result = await redis.client.sendCommand([scanUsing, name, cursor, 'MATCH', pattern, 'COUNT', limit]) as Result
-      result.lastLoad = Object.keys(result[1]).length
-      nextCursor.value = parseInt(result[0])
+      const result = await redis.client[scanUsing](name, cursor, {MATCH: pattern, COUNT: limit}) as Result
+      result.lastLoad = result.members?.length ?? Object.keys(result.tuples!).length
+      nextCursor.value = result.cursor
 
-      setValueUsing(result[1], cursor > 0)
+      setValueUsing(result.members ?? result.tuples!, cursor > 0)
 
       if (result.nextCursor && lastLoad + result.lastLoad < limit) {
-        return loadKeys(pattern, result.nextCursor, limit, lastLoad + Object.keys(result[1]).length)
+        return loadKeys(pattern, result.nextCursor, limit, lastLoad + result.lastLoad)
       }
 
       return result

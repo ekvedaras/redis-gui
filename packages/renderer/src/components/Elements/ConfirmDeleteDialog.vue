@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
-import { useRedis } from '/@/use/redis'
 import { useKeysStore } from '/@/store/keys'
 import { computed } from 'vue'
 
@@ -24,10 +23,9 @@ const emit = defineEmits<{
 
 const itemName = computed(() => (typeof props.item === 'object' ? props.item.label : props.item).substr(0, 50))
 
-const redis = useRedis()
 const keysStore = useKeysStore()
 const deleteItem = async () => {
-  await redis.client[props.using](props.name, props.item)
+  await keysStore[props.using](props.name, props.item)
   emit('deleted')
   keysStore.loadKeys()
   emit('update:show', false)

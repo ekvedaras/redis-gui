@@ -1,14 +1,14 @@
 <template>
   <div>
-    <SearchBar v-model="search"
+    <SearchBar v-model:value="search"
                :show-spinner="isLoading"
                with-add :add-name="name" add-type="hash" />
     <div class="overflow-y-auto h-full rounded mt-4">
-      <Value v-for="(item, key) in value"
+      <Value v-for="tuple in value"
              class="relative"
-             :key="key" :value="item" :item-key="String(key)"
-             @save="save(key, $event.key, $event.value)"
-             @delete="deleteItem(item)" />
+             :key="tuple.field" :value="tuple.value" :item-key="tuple.field"
+             @save="save(tuple.field, $event.key, $event.value)"
+             @delete="deleteItem(tuple.field)" />
       <LoadMoreButton @click="loadMore" v-if="nextCursor" />
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
@@ -21,7 +21,6 @@
 
 <script setup lang="ts">
 import { useCursorScanner } from '/@/use/cursorScanner'
-import { chunk, fromPairs } from 'lodash'
 import { ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
@@ -32,12 +31,13 @@ import { useHasItems } from '/@/use/hasItems'
 import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
+import type { Tuple } from '../../../../types/models'
 
 const props = defineProps<{
   name: string,
 }>()
 
-const value = ref({})
+const value = ref<Tuple[]>([])
 
 const redis = useRedis()
 const toaster = useToaster()
@@ -49,9 +49,8 @@ const {
   nextCursor,
   loadKeys,
   loadMore,
-} = useCursorScanner(props.name, 'hscan', (newValue, shouldMerge) => {
-  let parsed = fromPairs(chunk((newValue as string[]), 2))
-  value.value = shouldMerge ? {...value.value, ...parsed} : parsed
+} = useCursorScanner(props.name, 'hScan', (newValue, shouldMerge) => {
+  value.value = shouldMerge ? {...value.value, ...(newValue as Tuple[])} : (newValue as Tuple[])
 })
 
 const save = async (key: string, newKey: string, value: string) => {
@@ -72,7 +71,7 @@ const save = async (key: string, newKey: string, value: string) => {
 }
 
 const showDeleteDialog = ref(false)
-const itemToDelete = ref<string | null>(null)
+const itemToDelete = ref<string>('')
 const deleteItem = (item: string) => {
   itemToDelete.value = item
   showDeleteDialog.value = true

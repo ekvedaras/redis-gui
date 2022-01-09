@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBar v-model="search"
+    <SearchBar v-model:value="search"
                :show-spinner="isLoading"
                with-add :add-name="name" add-type="set" />
     <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
@@ -30,14 +30,13 @@ import Value from '/@/components/Elements/Value.vue'
 import { useHasItems } from '/@/use/hasItems'
 import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
-import { StringArray } from '../../../../types/models'
 import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
 
 const props = defineProps<{
   name: string,
 }>()
 
-const value = ref<StringArray>({})
+const value = ref<string[]>([])
 
 const redis = useRedis()
 const toaster = useToaster()
@@ -50,12 +49,11 @@ const {
   nextCursor,
   loadKeys,
   loadMore,
-} = useCursorScanner(props.name, 'sscan', (newValue, shouldMerge) => {
-  newValue = newValue as StringArray
-  value.value = shouldMerge ? {...value.value, ...newValue} : newValue
+} = useCursorScanner(props.name, 'sScan', (newValue, shouldMerge) => {
+  value.value = shouldMerge ? [...value.value, ...(newValue as string[])] : (newValue as string[])
 })
 
-const save = async (key: string, newValue: string) => {
+const save = async (key: number, newValue: string) => {
   let commands = []
   commands.push(['srem', props.name, value.value[key]])
   commands.push(['sadd', props.name, key, newValue])
@@ -71,7 +69,7 @@ const save = async (key: string, newValue: string) => {
 }
 
 const showDeleteDialog = ref(false)
-const itemToDelete = ref<string | null>(null)
+const itemToDelete = ref<string>('')
 const deleteItem = (item: string) => {
   itemToDelete.value = item
   showDeleteDialog.value = true

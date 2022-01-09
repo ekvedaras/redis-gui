@@ -14,3 +14,13 @@ export interface ClickKeys {
 export type StringArray = {
   [key: string]: string,
 }
+
+export interface Tuple {
+  field: string,
+  value: string,
+}
+
+export interface ZMember {
+  score: number,
+  value: string,
+}

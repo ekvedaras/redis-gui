@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, onMounted, ref, toRef, watch } from 'vue'
+import { onMounted, ref, toRef, watch } from 'vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
@@ -98,8 +98,7 @@ const save = async () => {
       await redis.client.sAdd(...params)
       break
     case 'zset':
-      params.push(String(score.value), ...values.value)
-      await redis.client.zAdd(...params)
+      await redis.client.zAdd(name.value, {score: score.value, value: values.value[0]})
       break
   }
 
