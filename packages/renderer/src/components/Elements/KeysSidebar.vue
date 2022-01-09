@@ -28,7 +28,6 @@
         <GitHubIcon />
       </IconButton>
     </div>
-    <AddKeyModal v-model:show="showKeyAddModal" />
   </div>
 </template>
 

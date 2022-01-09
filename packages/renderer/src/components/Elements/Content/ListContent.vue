@@ -8,10 +8,15 @@
              class="relative"
              :key="i" :value="item"
              @save="save(i, $event.value)"
-             @delete="deleteItem({label: item, index: i}, 'keys/deleteListItem')" />
+             @delete="deleteItem(item)" />
       <LoadMoreButton @click="loadMore" v-if="pointer" />
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
+    <ConfirmDeleteDialog v-model:show="showDeleteDialog"
+                         :item="itemToDelete"
+                         :name="name"
+                         using="deleteListItem"
+                         @confirm="resetCursor" />
   </div>
 </template>
 
@@ -20,7 +25,6 @@ import { ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
 import { useKeysStore } from '/@/store/keys'
-import { useDeletesItems } from '/@/use/deletesItems'
 import { useHasItems } from '/@/use/hasItems'
 import { useReloadOnKeyUpdate } from '/@/use/reloadOnKeyUpdate'
 import SearchBar from '/@/components/Elements/SearchBar.vue'
@@ -29,6 +33,7 @@ import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import { usePointerScanner } from '/@/use/pointerScanner'
 import { useRegexFilter } from '/@/use/regexFilter'
+import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
 
 const props = defineProps<{
   name: string,
@@ -39,7 +44,6 @@ const value = ref<string[]>([])
 const redis = useRedis()
 const toaster = useToaster()
 const keysStore = useKeysStore()
-const deleteItem = useDeletesItems(() => resetCursor())
 const hasItems = useHasItems(value)
 useReloadOnKeyUpdate(props.name, () => resetCursor())
 
@@ -66,6 +70,13 @@ const save = async (key: number, newValue: string) => {
   } catch (error) {
     toaster.error(error)
   }
+}
+
+const showDeleteDialog = ref(false)
+const itemToDelete = ref<string | null>(null)
+const deleteItem = (item: string) => {
+  itemToDelete.value = item
+  showDeleteDialog.value = true
 }
 </script>
 
