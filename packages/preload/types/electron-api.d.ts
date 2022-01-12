@@ -1,6 +1,7 @@
 import type {FsApi} from './fs-api'
 import type {UtilApi} from 'types/util-api'
 import type {RedisApi} from './redis-api'
+import * as prettyBytes from 'pretty-bytes'
 
 
 interface ElectronApi {
@@ -16,5 +17,6 @@ declare global {
     redisApi: Readonly<RedisApi>,
     fsApi: Readonly<FsApi>,
     utilApi: Readonly<UtilApi>,
+    prettyBytes: (bytes: number, options?: prettyBytes.Options) => string,
   }
 }

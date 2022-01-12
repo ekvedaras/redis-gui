@@ -10,6 +10,7 @@ import RedisClient from '@node-redis/client/dist/lib/client'
 import type {RedisApi} from '../types/redis-api'
 
 const redis = require('redis')
+const prettyBytes = require('pretty-bytes')
 
 /**
  * @see https://github.com/electron/electron/issues/21437#issuecomment-573522360
@@ -65,3 +66,4 @@ contextBridge.exposeInMainWorld('electron', api);
 contextBridge.exposeInMainWorld('redisApi', redisApi);
 contextBridge.exposeInMainWorld('fsApi', fsApi);
 contextBridge.exposeInMainWorld('utilApi', utilApi);
+contextBridge.exposeInMainWorld('prettyBytes', prettyBytes);
