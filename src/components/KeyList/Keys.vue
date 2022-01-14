@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="(key, name) in keys" :key="name">
-      <Key v-if="isKey(key)" :name="name.replace(/_+_+_/, '')" :redis-key="key" :level="level"/>
+      <Key v-if="isKey(key)" :name="name.replace(/_\+_\+_/, '')" :redis-key="key" :level="level"/>
       <Namespace v-else :namespace="name" :keys="key" :level="level"/>
     </li>
   </ul>
