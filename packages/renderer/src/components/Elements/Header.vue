@@ -21,7 +21,7 @@
       <IconButton>
         <TerminalIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton>
+      <IconButton @click="shouldShowInfoModal = true">
         <InfoIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
       <IconButton @click="shouldShowSettingsModal = true">
@@ -29,6 +29,7 @@
       </IconButton>
     </div>
     <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
+    <InfoModal v-model:show="shouldShowInfoModal" />
     <SettingsModal v-model:show="shouldShowSettingsModal" />
   </div>
 </template>
@@ -44,6 +45,8 @@ import ServerSelect from '/@/components/Elements/ServerSelect.vue'
 import DatabaseSelect from '/@/components/Elements/DatabaseSelect.vue'
 import { ref } from 'vue'
 import SettingsModal from '/@/components/Elements/SettingsModal.vue'
+import InfoModal from '/@/components/Elements/InfoModal.vue'
 
+const shouldShowInfoModal = ref(false)
 const shouldShowSettingsModal = ref(false)
 </script>
