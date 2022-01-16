@@ -26,7 +26,7 @@ export function useRedis(): Redis {
       this.client.on('ready', () => {
         toaster.info('Connected')
         options?.onReady && options.onReady()
-      }).on('error', error => {
+      }).on('error', (error: any) => {
         toaster.error('REDIS ERROR: ' + error)
       })
 
@@ -74,14 +74,14 @@ export function useRedis(): Redis {
       }
 
       await Promise.all(
-        scanResult.keys.map(key => [
-          this.client?.type(key).then(type => {
+        scanResult.keys.map((key: string) => [
+          this.client?.type(key).then((type: string) => {
             result.keys[key].type = type
           }),
-          this.client?.ttl(key).then(ttl => {
+          this.client?.ttl(key).then((ttl: number) => {
             result.keys[key].ttl = ttl
           }),
-          this.client?.sendCommand(['object', 'encoding', key]).then(encoding => {
+          this.client?.sendCommand(['object', 'encoding', key]).then((encoding: any) => {
             result.keys[key].encoding = encoding?.toString() ?? ''
           }),
         ]).flat(),

@@ -24,11 +24,12 @@
       <IconButton>
         <InfoIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton>
+      <IconButton @click="shouldShowSettingsModal = true">
         <CogIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
     </div>
     <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
+    <SettingsModal v-model:show="shouldShowSettingsModal" />
   </div>
 </template>
 
@@ -40,4 +41,9 @@ import CogIcon from '/@/components/Icons/CogIcon.vue'
 import IconButton from '/@/components/Elements/IconButton.vue'
 import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
 import ServerSelect from '/@/components/Elements/ServerSelect.vue'
-import DatabaseSelect from '/@/components/Elements/DatabaseSelect.vue'</script>
+import DatabaseSelect from '/@/components/Elements/DatabaseSelect.vue'
+import { ref } from 'vue'
+import SettingsModal from '/@/components/Elements/SettingsModal.vue'
+
+const shouldShowSettingsModal = ref(false)
+</script>
