@@ -15,7 +15,7 @@
       <IconButton>
         <EditIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton>
+      <IconButton @click="refresh">
         <RefreshIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
       <IconButton>
@@ -46,7 +46,18 @@ import DatabaseSelect from '/@/components/Elements/DatabaseSelect.vue'
 import { ref } from 'vue'
 import SettingsModal from '/@/components/Elements/SettingsModal.vue'
 import InfoModal from '/@/components/Elements/InfoModal.vue'
+import { useDatabasesStore } from '/@/store/databases'
+import { useKeysStore } from '/@/store/keys'
+import { useToaster } from '/@/use/toaster'
 
 const shouldShowInfoModal = ref(false)
 const shouldShowSettingsModal = ref(false)
+
+const databasesStore = useDatabasesStore()
+const keysStore = useKeysStore()
+const toaster = useToaster()
+const refresh = async () => {
+  await Promise.all([databasesStore.load(), keysStore.loadKeys()])
+  toaster.info('Keys refreshed')
+}
 </script>
