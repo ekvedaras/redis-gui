@@ -21,6 +21,7 @@ const api: ElectronApi = {
 };
 
 let client: RedisClientType;
+let testClient: RedisClientType;
 
 const redisApi: RedisApi = {
   createClient: (options) => {
@@ -48,6 +49,32 @@ for (const method of Object.keys(RedisClient.prototype)) {
   redisApi.client[method] = (...args) => client[method](...args)
 }
 
+const testRedisApi: RedisApi = {
+  createClient: (options) => {
+    return testClient = redis.createClient(options);
+  },
+
+  client: {
+    isConnectionOpen: () => testClient.isOpen,
+    connect: () => testClient.connect(),
+    disconnect: () => testClient.disconnect(),
+    quit: () => testClient.quit(),
+    // @ts-ignore
+    on: (...args) => {
+      // @ts-ignore
+      testClient.on(...args)
+      return testRedisApi.client
+    },
+    // @ts-ignore
+    sendCommand: (...args) => testClient.sendCommand(...args),
+  },
+};
+
+for (const method of Object.keys(RedisClient.prototype)) {
+  // @ts-ignore
+  testRedisApi.client[method] = (...args) => testClient[method](...args)
+}
+
 const fsApi: FsApi = {
   readFileSync,
   homedir: homedir(),
@@ -64,6 +91,7 @@ const utilApi: UtilApi = {
  */
 contextBridge.exposeInMainWorld('electron', api);
 contextBridge.exposeInMainWorld('redisApi', redisApi);
+contextBridge.exposeInMainWorld('testRedisApi', testRedisApi);
 contextBridge.exposeInMainWorld('fsApi', fsApi);
 contextBridge.exposeInMainWorld('utilApi', utilApi);
 contextBridge.exposeInMainWorld('prettyBytes', prettyBytes);

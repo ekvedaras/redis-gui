@@ -12,7 +12,7 @@
     </h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center">
       <ServerSelect />
-      <IconButton>
+      <IconButton @click="shouldShowServerListModal = true">
         <EditIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
       <IconButton @click="refresh">
@@ -29,6 +29,7 @@
       </IconButton>
     </div>
     <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
+    <ServerListModal v-model:show="shouldShowServerListModal" />
     <InfoModal v-model:show="shouldShowInfoModal" />
     <SettingsModal v-model:show="shouldShowSettingsModal" />
   </div>
@@ -49,7 +50,9 @@ import InfoModal from '/@/components/Elements/InfoModal.vue'
 import { useDatabasesStore } from '/@/store/databases'
 import { useKeysStore } from '/@/store/keys'
 import { useToaster } from '/@/use/toaster'
+import ServerListModal from '/@/components/Elements/ServerListModal.vue'
 
+const shouldShowServerListModal = ref(false)
 const shouldShowInfoModal = ref(false)
 const shouldShowSettingsModal = ref(false)
 
