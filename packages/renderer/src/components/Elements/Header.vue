@@ -18,7 +18,7 @@
       <IconButton @click="refresh">
         <RefreshIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton>
+      <IconButton @click="shouldShowConsoleModal = true">
         <TerminalIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
       <IconButton @click="shouldShowInfoModal = true">
@@ -31,6 +31,7 @@
     <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
     <ServerListModal v-model:show="shouldShowServerListModal" />
     <InfoModal v-model:show="shouldShowInfoModal" />
+    <ConsoleModal v-model:show="shouldShowConsoleModal" />
     <SettingsModal v-model:show="shouldShowSettingsModal" />
   </div>
 </template>
@@ -51,9 +52,11 @@ import { useDatabasesStore } from '/@/store/databases'
 import { useKeysStore } from '/@/store/keys'
 import { useToaster } from '/@/use/toaster'
 import ServerListModal from '/@/components/Elements/ServerListModal.vue'
+import ConsoleModal from '/@/components/Elements/ConsoleModal.vue'
 
 const shouldShowServerListModal = ref(false)
 const shouldShowInfoModal = ref(false)
+const shouldShowConsoleModal = ref(false)
 const shouldShowSettingsModal = ref(false)
 
 const databasesStore = useDatabasesStore()
