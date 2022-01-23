@@ -63,9 +63,9 @@ const props = defineProps<{
   log: ConsoleLog,
 }>()
 
-const shouldAttemptJson = computed(() => props.log.content.length < 1024 * 10 && (props.log.content.startsWith('[') || props.log.content.startsWith('{')))
+const shouldAttemptJson = computed(() => typeof props.log.content === 'string' && props.log.content.length < 1024 * 10 && (props.log.content.startsWith('[') || props.log.content.startsWith('{')))
 const {isJSON: _isJson} = useJson()
-const isJSON = computed(() => _isJson(props.log.content))
+const isJSON = computed(() => typeof props.log.content === 'string' && _isJson(props.log.content))
 
 const collapsed = ref(false)
 const breakWords = ref(false)

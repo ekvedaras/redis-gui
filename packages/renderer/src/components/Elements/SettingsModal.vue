@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useDatabase } from '/@/use/database'
 import AppModal from '/@/components/Elements/AppModal.vue'
 import Button from '/@/components/Elements/Button.vue'

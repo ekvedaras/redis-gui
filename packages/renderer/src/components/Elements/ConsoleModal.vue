@@ -9,12 +9,11 @@
       </div>
       <input
         type="text"
-        ref="command"
         :placeholder="placeholder"
         v-model="command"
         @keydown.up.prevent="history(false)"
         @keydown.down="history(true)"
-        @keydown.enter="send"
+        @keydown.enter="send()"
         class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none" />
     </div>
 
@@ -82,7 +81,7 @@ const history = (previous: boolean) => {
     historyIndex.value += 1
   }
 
-  let cmd = database.data.history[serversStore.selected][historyIndex.value]
+  const cmd = database.data.history[serversStore.selected][historyIndex.value]
 
   if (cmd !== undefined) {
     command.value = cmd
@@ -116,8 +115,10 @@ const send = async (cmd?: string) => {
 
 
   try {
-    // TODO redis.silently() ??
-    const result = await redis.client.sendCommand(command.value.split(' '))
+    const result = await redis.client.sendCommand(
+      command.value.match(/(?:[^\s"]+|"[^"]*")+/g)
+        ?.map(s => s.replace(/^"/, '').replace(/"$/, '')),
+    )
     if (result === null) {
       log.value.push(new ConsoleLog('(nil)'))
     } else {

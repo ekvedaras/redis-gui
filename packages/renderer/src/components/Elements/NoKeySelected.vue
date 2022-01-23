@@ -4,7 +4,7 @@
       {{ serversStore.selectedHost }}
     </div>
     <div class="text-4xl font-medium text-gray-500">
-      db{{ databasesStore.selected }}
+      db{{ databasesStore.selected ?? 0 }}
     </div>
     <div class="mt-4 text-gray-500">
       Select or <a href="#" @click="showAddKeyModal = true" class="text-red-500 hover:text-redis hover:underline">add</a> a new key.
