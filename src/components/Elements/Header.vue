@@ -15,7 +15,7 @@
       <IconButton @click="openTerminal" v-shortkey="['c']" @shortkey.native="openTerminal" v-tooltip="'Redis console'">
         <TerminalIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
-      <IconButton @click="openInfo" v-shortkey="['i']" @shortkey.native="openInfo" v-tooltip="'Show server info and statistics'">
+      <IconButton v-if="infoAllowed" @click="openInfo" v-shortkey="['i']" @shortkey.native="openInfo" v-tooltip="'Show server info and statistics'">
         <InfoIcon class="w-6 m-1 cursor-pointer"/>
       </IconButton>
       <IconButton @click="openSettings" v-shortkey="['s']" @shortkey.native="openSettings" v-tooltip="'Settings'">
@@ -34,7 +34,7 @@ import EditIcon from '@/components/Icons/EditIcon'
 import ServerListModal from '@/components/Modals/ServerListModal'
 import TerminalIcon from '@/components/Icons/TerminalIcon'
 import ConsoleModal from '@/components/Modals/ConsoleModal'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex';
 import IconButton from '@/components/Elements/IconButton'
 import CogIcon from '@/components/Icons/CogIcon'
 import SettingsModal from '@/components/Modals/SettingsModal'
@@ -44,6 +44,9 @@ import ShortKeyModal from '@/components/Modals/ShortKeyModal'
 
 export default {
   components: { InfoIcon, CogIcon, IconButton, TerminalIcon, EditIcon, RefreshIcon, ServerSelect, DatabaseSelect },
+  computed: {
+    ...mapState('databases', ['infoAllowed'])
+  },
   methods: {
     ...mapActions('keys', ['loadKeys']),
     ...mapActions('databases', ['load']),

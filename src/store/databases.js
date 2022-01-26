@@ -7,6 +7,7 @@ export default {
     list: [],
     total: 0,
     selected: 0,
+    infoAllowed: true,
   },
   mutations: {
     resetList(state) {
@@ -20,6 +21,9 @@ export default {
     },
     select (state, index) {
       state.selected = index
+    },
+    setInfoAllowed (state, isAllowed) {
+      state.infoAllowed = isAllowed
     },
   },
   actions: {
@@ -41,6 +45,19 @@ export default {
 
             commit('setDatabase', database)
           })
+        }).catch(e => {
+          if (String(e).includes('NOPERM')) {
+            commit('setInfoAllowed', false)
+            commit('setDatabase', {
+              avg_ttl: '?',
+              expires: '?',
+              id: 'db0',
+              index: 0,
+              keys: '?',
+            })
+          } else {
+            throw e
+          }
         }),
       ])
     },
