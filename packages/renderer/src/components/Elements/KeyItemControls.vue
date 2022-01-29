@@ -1,18 +1,18 @@
 <template>
   <div class="absolute h-6 p-0 top-0 right-0 rounded bg-white-80p dark:bg-black-10p dark:group-hover:bg-black-50p text-gray-400 group-hover:text-gray-900 dark:text-gray-700 dark:group-hover:text-gray-500 ">
-    <IconButton v-if="!withoutWordBreak" @click="emit('toggleWordBreak')" class="z-10">
+    <IconButton v-if="!withoutWordBreak" @click="emit('toggleWordBreak')" class="z-10" v-tooltip="'Toggle word break'">
       <WordBreakIcon class="w-4 m-1" />
     </IconButton>
     <IconButton v-if="withJson" @click="emit('toggleJson')">
-      <CodeIcon class="w-5" />
+      <CodeIcon class="w-5" v-tooltip.left="'Toggle JSON view'" />
     </IconButton>
-    <IconButton @click="emit('copy')" class="z-10">
+    <IconButton @click="emit('copy')" class="z-10" v-tooltip="'Copy'">
       <DocumentIcon class="w-4 m-1" />
     </IconButton>
-    <IconButton @click="emit('edit')" class="z-10">
+    <IconButton @click="emit('edit')" class="z-10" v-tooltip="'Edit'">
       <EditIcon class="w-4 m-1" />
     </IconButton>
-    <IconButton v-if="!withoutDelete" @click="emit('delete')" class="z-10">
+    <IconButton v-if="!withoutDelete" @click="emit('delete')" class="z-10" v-tooltip="'Delete'">
       <DeleteIcon class="w-4 m-1" />
     </IconButton>
   </div>

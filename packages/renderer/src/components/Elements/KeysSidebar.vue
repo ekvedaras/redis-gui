@@ -22,10 +22,10 @@
     />
     <div class="flex space-x-2 p-2 justify-start">
       <IconButton @click="openTwitter">
-        <TwitterIcon />
+        <TwitterIcon v-tooltip="{ content: 'Follow <b>@ekvedaras</b> on twitter', html: true}" />
       </IconButton>
       <IconButton @click="openGitHub">
-        <GitHubIcon />
+        <GitHubIcon v-tooltip="{ content: 'Star <b>redis-gui</b> on GitHub', html: true}" />
       </IconButton>
     </div>
   </div>

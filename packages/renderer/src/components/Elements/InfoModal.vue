@@ -1,6 +1,6 @@
 <template>
   <AppModal :show="show" @update:show="emit('update:show', $event)" title="Server info" class="overflow-y-hidden h-screen">
-    <IconButton @click="fetch" class="absolute right-0 mr-3 mt-3 top-0">
+    <IconButton @click="fetch" class="absolute right-0 mr-3 mt-3 top-0" v-tooltip="'Refresh'">
       <RefreshIcon class="w-8" />
     </IconButton>
     <Tabs :tabs="tabs" />

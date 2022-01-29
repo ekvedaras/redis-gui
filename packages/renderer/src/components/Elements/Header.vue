@@ -12,23 +12,23 @@
     </h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center">
       <ServerSelect />
-      <IconButton @click="shouldShowServerListModal = true">
+      <IconButton @click="shouldShowServerListModal = true" v-tooltip="'Edit saved redis servers'">
         <EditIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="refresh">
+      <IconButton @click="refresh" v-tooltip="'Refresh key list and database information'">
         <RefreshIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="shouldShowConsoleModal = true">
+      <IconButton @click="shouldShowConsoleModal = true" v-tooltip="'Redis console'">
         <TerminalIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="shouldShowInfoModal = true">
+      <IconButton @click="shouldShowInfoModal = true" v-tooltip="'Show server info and statistics'">
         <InfoIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="shouldShowSettingsModal = true">
+      <IconButton @click="shouldShowSettingsModal = true" v-tooltip="'Settings'">
         <CogIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
     </div>
-    <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
+    <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" v-tooltip="'Choose redis database'" />
     <ServerListModal v-model:show="shouldShowServerListModal" />
     <InfoModal v-model:show="shouldShowInfoModal" />
     <ConsoleModal v-model:show="shouldShowConsoleModal" />

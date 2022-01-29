@@ -7,6 +7,7 @@
          @keydown.enter="startEditing"
          @click="startEditing"
          @shortkey="startEditing"
+         v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
     >
       <TimeIcon class="w-4 m-1" />
       <div v-show="!isEditing" v-if="redisKey.ttl > -1">

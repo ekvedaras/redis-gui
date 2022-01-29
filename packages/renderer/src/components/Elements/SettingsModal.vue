@@ -1,11 +1,11 @@
 <template>
   <AppModal :show="show" @update:show="emit('update:show', $event)" title="Settings">
     <table>
-      <tr>
+      <tr v-tooltip="'Applies to key list on the left and key items. However, if key contains not too many items, redis might return more then this, since it is more efficient.'">
         <th><label for="items-per-page" class="font-semibold mr-2">Items per page</label></th>
         <td><input type="number" step="1" min="1" id="items-per-page" v-model="itemsPerPage" /></td>
       </tr>
-      <tr>
+      <tr v-tooltip="'Key containing this symbol will be split into nested folders for easier management.'">
         <th><label for="namespace-separator" class="font-semibold mr-2">Namespace separator</label></th>
         <td><input type="text" min="1" id="namespace-separator" v-model="namespaceSeparator" /></td>
       </tr>
