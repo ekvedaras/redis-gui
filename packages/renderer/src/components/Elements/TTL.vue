@@ -6,7 +6,6 @@
          ref="ttlText"
          @keydown.enter="startEditing"
          @click="startEditing"
-         @shortkey="startEditing"
          v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
     >
       <TimeIcon class="w-4 m-1" />
@@ -26,6 +25,7 @@ import { computed, nextTick, ref } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useRedis } from '/@/use/redis'
 import TimeIcon from '/@/components/Icons/TimeIcon.vue'
+import useHotKey from 'vue3-hotkey'
 
 const props = defineProps<{
   redisKey: Key,
@@ -70,6 +70,14 @@ const edit = async (save: boolean) => {
     nextTick(() => ttlText.value?.focus())
   }
 }
+
+useHotKey([
+  {
+    keys: ['t'],
+    preventDefault: true,
+    handler: () => startEditing(),
+  },
+])
 </script>
 
 <style scoped>

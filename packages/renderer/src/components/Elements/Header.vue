@@ -33,6 +33,7 @@
     <InfoModal v-model:show="shouldShowInfoModal" />
     <ConsoleModal v-model:show="shouldShowConsoleModal" />
     <SettingsModal v-model:show="shouldShowSettingsModal" />
+    <ShortKeyModal v-model:show="shouldShowShortKeysModal" />
   </div>
 </template>
 
@@ -51,13 +52,16 @@ import InfoModal from '/@/components/Elements/InfoModal.vue'
 import { useDatabasesStore } from '/@/store/databases'
 import { useKeysStore } from '/@/store/keys'
 import { useToaster } from '/@/use/toaster'
+import useHotKey from 'vue3-hotkey'
 import ServerListModal from '/@/components/Elements/ServerListModal.vue'
 import ConsoleModal from '/@/components/Elements/ConsoleModal.vue'
+import ShortKeyModal from '/@/components/Elements/ShortKeyModal.vue'
 
 const shouldShowServerListModal = ref(false)
 const shouldShowInfoModal = ref(false)
 const shouldShowConsoleModal = ref(false)
 const shouldShowSettingsModal = ref(false)
+const shouldShowShortKeysModal = ref(false)
 
 const databasesStore = useDatabasesStore()
 const keysStore = useKeysStore()
@@ -66,4 +70,32 @@ const refresh = async () => {
   await Promise.all([databasesStore.load(), keysStore.loadKeys()])
   toaster.info('Keys refreshed')
 }
+
+useHotKey([
+  {
+    keys: ['shift', '?'],
+    preventDefault: true,
+    handler: () => shouldShowShortKeysModal.value = true,
+  },
+  {
+    keys: ['ctrl', 'r'],
+    preventDefault: true,
+    handler: () => refresh(),
+  },
+  {
+    keys: ['c'],
+    preventDefault: true,
+    handler: () => shouldShowConsoleModal.value = true,
+  },
+  {
+    keys: ['i'],
+    preventDefault: true,
+    handler: () => shouldShowInfoModal.value = true,
+  },
+  {
+    keys: ['s'],
+    preventDefault: true,
+    handler: () => shouldShowSettingsModal.value = true,
+  },
+])
 </script>

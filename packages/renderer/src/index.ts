@@ -20,7 +20,6 @@ app.config.globalProperties.emitter = mitt()
 app.mount('#app');
 
 // TODO: fix dark mode
-// TODO: port short keys
 // TODO: fix key content searchbar actually searching keys sidebar
 // TODO: twitter and github logos should be at the bottom
 // TODO: improve split pane UI

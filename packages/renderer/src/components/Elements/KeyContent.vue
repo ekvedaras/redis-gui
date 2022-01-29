@@ -52,6 +52,7 @@ import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import IFrameModal from '/@/components/Elements/IFrameModal.vue'
 import useEmitter from '/@/use/emitter'
+import useHotKey from 'vue3-hotkey'
 
 const redis = useRedis()
 const keysStore = useKeysStore()
@@ -135,6 +136,24 @@ const currentContent = computed(() => {
       return StringContent
   }
 })
+
+useHotKey([
+  {
+    keys: ['e'],
+    preventDefault: true,
+    handler: () => startRename(),
+  },
+  {
+    keys: ['d'],
+    preventDefault: true,
+    handler: () => showDeleteDialog.value = true,
+  },
+  {
+    keys: ['r'],
+    preventDefault: true,
+    handler: () => emitUpdate(),
+  },
+])
 </script>
 
 <style scoped>
