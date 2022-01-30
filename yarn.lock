@@ -1499,6 +1499,11 @@ csstype@^2.6.8:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.19.tgz#feeb5aae89020bb389e1f63669a5ed490e391caa"
   integrity sha512-ZVxXaNy28/k3kJg0Fou5MiYpp88j7H9hLZp8PDC3jV0WFjfH5E9xHb56L0W59cPbKbcHXeP4qyT8PrHp8t6LcQ==
 
+custom-electron-titlebar@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/custom-electron-titlebar/-/custom-electron-titlebar-4.0.1.tgz#cc337e21a4bf5522c7c9729a41657049a56de003"
+  integrity sha512-fdnAylObN/qvmd+UFwlWnJqttbOBkuWF7tSPe19R12CtadNTw9PWzWC8NM5KuoKanCSq6KclruhgQeH++16cuQ==
+
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"

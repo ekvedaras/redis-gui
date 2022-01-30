@@ -21,7 +21,7 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import AddIcon from '/@/components/Icons/AddIcon.vue'
 import Search from '/@/components/Elements/Search.vue'
 import type { ClickKeys } from '../../../types/models'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
 import useHotKey from 'vue3-hotkey'
 
@@ -48,13 +48,13 @@ const emit = defineEmits<{
 
 const showKeyAddModal = ref(false)
 
-useHotKey([
+onMounted(() => useHotKey([
   {
     keys: props.addKeys.main,
     preventDefault: true,
     handler: () => showKeyAddModal.value = true,
   },
-])
+]))
 </script>
 
 <style scoped>

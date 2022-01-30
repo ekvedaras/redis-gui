@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import { useKeysStore } from '/@/store/keys'
 import { useDatabasesStore } from '/@/store/databases'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { Key } from '../../../types/redis'
 import KeyIcon from '/@/components/Elements/KeyIcon.vue'
@@ -137,7 +137,7 @@ const currentContent = computed(() => {
   }
 })
 
-useHotKey([
+onMounted(() => useHotKey([
   {
     keys: ['e'],
     preventDefault: true,
@@ -153,7 +153,7 @@ useHotKey([
     preventDefault: true,
     handler: () => emitUpdate(),
   },
-])
+]))
 </script>
 
 <style scoped>

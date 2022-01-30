@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { Key } from '../../../types/redis'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useRedis } from '/@/use/redis'
 import TimeIcon from '/@/components/Icons/TimeIcon.vue'
@@ -71,13 +71,13 @@ const edit = async (save: boolean) => {
   }
 }
 
-useHotKey([
+onMounted(() => useHotKey([
   {
     keys: ['t'],
     preventDefault: true,
     handler: () => startEditing(),
   },
-])
+]))
 </script>
 
 <style scoped>

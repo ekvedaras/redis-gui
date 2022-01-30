@@ -46,7 +46,7 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
 import ServerSelect from '/@/components/Elements/ServerSelect.vue'
 import DatabaseSelect from '/@/components/Elements/DatabaseSelect.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import SettingsModal from '/@/components/Elements/SettingsModal.vue'
 import InfoModal from '/@/components/Elements/InfoModal.vue'
 import { useDatabasesStore } from '/@/store/databases'
@@ -71,7 +71,7 @@ const refresh = async () => {
   toaster.info('Keys refreshed')
 }
 
-useHotKey([
+onMounted(() => useHotKey([
   {
     keys: ['shift', '?'],
     preventDefault: true,
@@ -97,5 +97,5 @@ useHotKey([
     preventDefault: true,
     handler: () => shouldShowSettingsModal.value = true,
   },
-])
+]))
 </script>

@@ -1,6 +1,7 @@
-import {app, BrowserWindow, shell} from 'electron';
-import {join} from 'path';
-import {URL} from 'url';
+import {app, BrowserWindow, ipcMain, Menu, MenuItem, shell} from 'electron'
+import {join} from 'path'
+import {URL} from 'url'
+import menu from '/@/menu'
 
 
 const isSingleInstance = app.requestSingleInstanceLock();
@@ -29,6 +30,8 @@ let mainWindow: BrowserWindow | null = null;
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false, // Use 'ready-to-show' event to show window
+    titleBarStyle: 'hidden',
+    frame: false,
     webPreferences: {
       nativeWindowOpen: true,
       preload: join(__dirname, '../../preload/dist/index.cjs'),
@@ -54,9 +57,9 @@ const createWindow = async () => {
    *
    * @see https://stackoverflow.com/a/67409223
    */
-   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+  mainWindow.webContents.setWindowOpenHandler(({url}) => {
     shell.openExternal(url);
-    return { action: 'deny' };
+    return {action: 'deny'};
   });
 
   /**
@@ -88,6 +91,18 @@ app.on('window-all-closed', () => {
   }
 });
 
+app.whenReady()
+  .then(() => {
+    const current = Menu.getApplicationMenu()
+    const newMenu = Menu.buildFromTemplate(menu)
+    const appMenu = Menu.buildFromTemplate([])
+
+    current?.items.filter(item => item.label !== 'Help').forEach(item => appMenu?.append(item))
+    newMenu.items.forEach(item => appMenu?.append(item))
+
+    Menu.setApplicationMenu(appMenu)
+  })
+  .catch((e) => console.error('Failed to build menu:', e));
 
 app.whenReady()
   .then(createWindow)
@@ -102,3 +117,58 @@ if (import.meta.env.PROD) {
     .catch((e) => console.error('Failed check updates:', e));
 }
 
+ipcMain.on('window-minimize', function (event) {
+  BrowserWindow.fromWebContents(event.sender)?.minimize();
+})
+
+ipcMain.on('window-maximize', function (event) {
+  const window = BrowserWindow.fromWebContents(event.sender);
+  window?.isMaximized() ? window?.unmaximize() : window?.maximize();
+})
+
+ipcMain.on('window-close', function (event) {
+  BrowserWindow.fromWebContents(event.sender)?.close()
+})
+
+ipcMain.on('window-is-maximized', function (event) {
+  event.returnValue = BrowserWindow.fromWebContents(event.sender)?.isMaximized()
+})
+
+ipcMain.on('request-application-menu', function (event) {
+  const menu = Menu.getApplicationMenu();
+  const jsonMenu = JSON.parse(JSON.stringify(menu, parseMenu()));
+  event.sender.send('titlebar-menu', jsonMenu);
+});
+
+ipcMain.on('menu-event', (event, commandId) => {
+  const menu = Menu.getApplicationMenu();
+  const item = getMenuItemByCommandId(commandId, menu);
+  item?.click(undefined, BrowserWindow.fromWebContents(event.sender), event.sender);
+});
+
+// Parse menu to send it to the title bar
+const parseMenu = () => {
+  const menu = new WeakSet();
+  return (key: string, value: any) => {
+    if (key === 'commandsMap') return;
+    if (typeof value === 'object' && value !== null) {
+      if (menu.has(value)) return;
+      menu.add(value);
+    }
+    return value;
+  };
+}
+
+// Gets the menu item on click
+const getMenuItemByCommandId = (commandId: number, menu = Menu.getApplicationMenu()): MenuItem | null => {
+  let menuItem: MenuItem | undefined;
+  menu?.items.forEach(item => {
+    if (item.submenu) {
+      const submenuItem = getMenuItemByCommandId(commandId, item.submenu);
+      if (submenuItem) menuItem = submenuItem;
+    }
+    if (item.commandId === commandId) menuItem = item;
+  });
+
+  return menuItem || null;
+};

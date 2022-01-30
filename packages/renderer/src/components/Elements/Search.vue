@@ -18,7 +18,7 @@
 import Spinner from '/@/components/Elements/Spinner.vue'
 import type { ClickKeys } from '../../../types/models'
 import useHotKey from 'vue3-hotkey'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   value: string
@@ -34,13 +34,13 @@ const emit = defineEmits<{
 
 const input = ref<HTMLInputElement>()
 
-useHotKey([
+onMounted(() => useHotKey([
   {
     keys: props.focusKeys.main,
     preventDefault: true,
     handler: () => input.value?.focus(),
   },
-])
+]))
 </script>
 
 <style scoped>

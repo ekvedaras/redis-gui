@@ -1,4 +1,4 @@
-import {contextBridge, shell} from 'electron'
+import {contextBridge, ipcRenderer, shell} from 'electron'
 import {readFileSync} from 'fs'
 import type {ElectronApi} from '../types/electron-api'
 import {promisify} from 'util'
@@ -8,6 +8,7 @@ import type {UtilApi} from '../types/util-api'
 import type {RedisClientType} from '@node-redis/client/dist/lib/client'
 import RedisClient from '@node-redis/client/dist/lib/client'
 import type {RedisApi} from '../types/redis-api'
+import {Color, Titlebar} from 'custom-electron-titlebar';
 
 const redis = require('redis')
 const prettyBytes = require('pretty-bytes')
@@ -83,6 +84,42 @@ const fsApi: FsApi = {
 const utilApi: UtilApi = {
   promisify,
 };
+
+let titlebar: unknown;
+const titleBarColors = {
+  dark: '#111827',
+  light: '#F3F4F6',
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+  titlebar = new Titlebar({
+    backgroundColor: Color.fromHex(
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? titleBarColors.dark : titleBarColors.light,
+    ),
+    onMinimize: () => ipcRenderer.send('window-minimize'),
+    onMaximize: () => ipcRenderer.send('window-maximize'),
+    onClose: () => ipcRenderer.send('window-close'),
+    isMaximized: () => ipcRenderer.sendSync('window-is-maximized'),
+    onMenuItemClick: (commandId) => ipcRenderer.send('menu-event', commandId),
+  });
+
+  ipcRenderer.send('request-application-menu');
+})
+
+window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+  if (titlebar instanceof Titlebar) {
+    titlebar.updateBackground(Color.fromHex(e.matches ? titleBarColors.dark : titleBarColors.light))
+  }
+});
+
+ipcRenderer.on('titlebar-menu', (event, menu) => {
+  if (titlebar instanceof Titlebar) {
+    titlebar.updateMenu(menu)
+    titlebar.updateTitle('Redis GUI')
+  }
+})
+
 /**
  * The "Main World" is the JavaScript context that your main renderer code runs in.
  * By default, the page you load in your renderer executes code in this world.
