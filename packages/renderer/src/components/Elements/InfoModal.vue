@@ -1,6 +1,16 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" title="Server info" class="overflow-y-hidden h-screen">
-    <IconButton @click="fetch" class="absolute right-0 mr-3 mt-3 top-0" v-tooltip="'Refresh'">
+  <AppModal
+    :show="show"
+    title="Server info"
+    class="overflow-y-hidden"
+    full-height
+    @update:show="emit('update:show', $event)"
+  >
+    <IconButton
+      v-tooltip="'Refresh'"
+      class="absolute right-0 mr-3 mt-3 top-0"
+      @click="fetch"
+    >
       <RefreshIcon class="w-8" />
     </IconButton>
     <Tabs :tabs="tabs" />
@@ -35,43 +45,43 @@ const info = ref<Record<string, Record<string, string>>>({})
 const tabs = ref<Record<string, PropTab>>({
   Server: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Clients: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Memory: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Persistence: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Stats: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Replication: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   CPU: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Errorstats: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Cluster: {
     component: tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Keyspace: {
     component: keySpaceInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
 })
 

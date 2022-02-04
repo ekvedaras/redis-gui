@@ -1,8 +1,20 @@
 <template>
-  <Modal v-model="show" :close="() => emit('update:show', false)">
-    <div class="bg-gray-200 dark:bg-gray-800 rounded p-4 flex flex-col space-y-4 overflow-y-auto" :style="{maxHeight: '90vh'}">
-      <h2 v-if="title" class="text-xl font-semibold tracking-wider">{{ title }}</h2>
-      <div class="flex-1 flex flex-col space-y-4">
+  <Modal
+    v-model="show"
+    :close="() => emit('update:show', false)"
+  >
+    <div
+      class="bg-gray-200 dark:bg-gray-800 rounded p-4 flex flex-col space-y-4 overflow-y-auto"
+      :class="{'h-screen' : fullHeight, 'w-4/5' : fullWidth}"
+      :style="{maxHeight: '92vh'}"
+    >
+      <h2
+        v-if="title"
+        class="text-xl font-semibold tracking-wider"
+      >
+        {{ title }}
+      </h2>
+      <div class="flex-1 flex flex-col space-y-4 h-full">
         <slot />
       </div>
     </div>
@@ -10,10 +22,16 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+withDefaults(defineProps<{
   show: boolean;
   title?: string;
-}>()
+  fullWidth?: boolean;
+  fullHeight?: boolean;
+}>(), {
+  title: undefined,
+  fullWidth: false,
+  fullHeight: false,
+})
 
 const emit = defineEmits<{
   (e: 'update:show', value: boolean): void;

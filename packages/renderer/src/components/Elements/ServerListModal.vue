@@ -1,10 +1,23 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" title="Servers">
+  <AppModal
+    :show="show"
+    title="Servers"
+    @update:show="emit('update:show', $event)"
+  >
     <table class="rounded">
-      <tr v-for="(server, key) in serversStore.list" :key="key" class="rounded hover:bg-gray-300 dark:hover:bg-gray-700">
-        <th class="p-2 font-semibold">{{ server.name }}</th>
+      <tr
+        v-for="(server, key) in serversStore.list"
+        :key="key"
+        class="rounded hover:bg-gray-300 dark:hover:bg-gray-700"
+      >
+        <th class="p-2 font-semibold">
+          {{ server.name }}
+        </th>
         <td class="w-full whitespace-no-wrap p-2 text-gray-600">
-          <span v-if="server.ssh.tunnel" class="rounded shadow bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 px-1 mx-1">SSH</span>
+          <span
+            v-if="server.ssh.tunnel"
+            class="rounded shadow bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 px-1 mx-1"
+          >SSH</span>
           {{ serverDetails(server) }}
         </td>
         <td class="p-2">
@@ -20,20 +33,34 @@
       </tr>
     </table>
     <div class="flex justify-end">
-      <Button class="mr-5" @click="close">Cancel</Button>
-      <PrimaryButton @click="edit">Add</PrimaryButton>
+      <Button
+        class="mr-5"
+        @click="close"
+      >
+        Cancel
+      </Button>
+      <PrimaryButton @click="edit">
+        Add
+      </PrimaryButton>
     </div>
-    <ConfirmDialog v-model:show="shouldShowDeleteDialog" @confirm="deleteServer(serverToDelete)" danger>
-      Are you sure you want to delete <b>{{ serverToDelete.name }}</b>?
+    <ConfirmDialog
+      v-model:show="shouldShowDeleteDialog"
+      danger
+      @confirm="deleteServer(serverToDelete)"
+    >
+      Are you sure you want to delete <b>{{ serverToDelete?.name }}</b>?
     </ConfirmDialog>
-    <ServerModal v-model:show="shouldShowServerModal" :server-key="serverToEdit" />
+    <ServerModal
+      v-model:show="shouldShowServerModal"
+      :server-key="serverToEdit"
+    />
   </AppModal>
 </template>
 
 <script setup lang="ts">
 import AppModal from '/@/components/Elements/AppModal.vue'
 import { useServersStore } from '/@/store/servers'
-import { Server } from '../../../types/database'
+import type { Server } from '../../../types/database'
 import { ref } from 'vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import { useDatabase } from '/@/use/database'
@@ -55,7 +82,7 @@ const emit = defineEmits<{
 const close = () => emit('update:show', false)
 
 const serversStore = useServersStore()
-const serverDetails = ({host, path, port, url}: Server) => {
+const serverDetails = ({ host, path, port, url }: Server) => {
   if (path) {
     return path
   }

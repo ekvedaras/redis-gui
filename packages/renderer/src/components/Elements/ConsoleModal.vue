@@ -1,24 +1,47 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" title="Console" id="console-modal">
+  <AppModal
+    id="console-modal"
+    :show="show"
+    title="Console"
+    full-height
+    full-width
+    @update:show="emit('update:show', $event)"
+  >
     <div class="rounded bg-white dark:bg-black w-full font-mono shadow flex-1 flex flex-col">
       <div class="relative flex-1">
-        <CommandInfo v-if="!hideInfo" :command="command" class="z-40" />
-        <div class="overflow-y-auto pb-4 px-4 relative" :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}" ref="logDiv">
-          <ConsoleLogLine v-for="(line, i) in log" :key="i" :log="line" @rerun="send" />
+        <CommandInfo
+          v-if="!hideInfo"
+          :command="command"
+          class="z-40"
+        />
+        <div
+          ref="logDiv"
+          class="overflow-y-auto pb-4 px-4 relative"
+          :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}"
+        >
+          <ConsoleLogLine
+            v-for="(line, i) in log"
+            :key="i"
+            :log="line"
+            @rerun="send"
+          />
         </div>
       </div>
       <input
+        v-model="command"
         type="text"
         :placeholder="placeholder"
-        v-model="command"
+        class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none"
         @keydown.up.prevent="history(false)"
         @keydown.down="history(true)"
         @keydown.enter="send()"
-        class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none" />
+      >
     </div>
 
     <div class="flex justify-end space-x-4">
-      <Button @click="close">Close</Button>
+      <Button @click="close">
+        Close
+      </Button>
     </div>
   </AppModal>
 </template>

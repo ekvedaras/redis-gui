@@ -1,6 +1,17 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" :title="title">
-    <iframe :src="url" :style="{height: '80vh'}" class="shadow rounded mt-4 w-full" ref="iframe" />
+  <AppModal
+    :show="show"
+    :title="title"
+    full-height
+    full-width
+    @update:show="emit('update:show', $event)"
+  >
+    <iframe
+      ref="iframe"
+      :src="url"
+      :style="{height: '80vh'}"
+      class="shadow rounded mt-4 w-full"
+    />
   </AppModal>
 </template>
 
