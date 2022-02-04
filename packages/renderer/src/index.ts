@@ -21,7 +21,6 @@ app.mount('#app');
 
 // TODO: fix dark mode
 // TODO: fix key content searchbar actually searching keys sidebar
-// TODO: twitter and github logos should be at the bottom
 // TODO: improve split pane UI
 // TODO: add icon to show shortcuts modal
 // TODO: info modal should not change height between tabs

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col h-full">
     <SearchBar
       v-model:value="search"
       :show-spinner="isLoading"

@@ -6,3 +6,4 @@ node_modules
 thumbs.db
 .eslintcache
 yarn-error.log
+/dist_electron/
