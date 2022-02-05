@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex justify-between items-center space-x-2 px-2">
+  <div class="w-full flex justify-between items-center space-x-2 px-2 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div class="py-2 h-full">
       <img
         src="/@/../assets/redis.svg"

@@ -40,7 +40,7 @@ svg {
   color: #405263;
 }
 
-@screen dark {
+@media (prefers-color-scheme: dark) {
   svg {
     color: theme('colors.gray.200');
   }

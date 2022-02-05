@@ -26,7 +26,7 @@ const stateClass = computed(() => {
 
 <style scoped>
 div.green {
-  @apply bg-green-500
+  @apply bg-emerald-500
 }
 
 div.orange {

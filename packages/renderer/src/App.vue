@@ -13,10 +13,10 @@
       :size="database.data.settings.leftPaneSize"
       class="pt-2 px-1 overflow-auto max-h-screen"
     >
-      <KeysSidebar />
+      <KeysSidebar class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200" />
     </Pane>
     <Pane class="flex-1 pb-2 px-4 overflow-hidden rounded-b">
-      <KeyContent class="flex-1 pb-2 px-4 overflow-hidden rounded-b" />
+      <KeyContent class="flex-1 pb-2 px-4 overflow-hidden rounded-b bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200" />
     </Pane>
   </Splitpanes>
 </template>

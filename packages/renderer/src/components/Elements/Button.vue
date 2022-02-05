@@ -1,7 +1,9 @@
 <template>
-  <button @click="emit('click')"
-          :type="type"
-          class="btn transition transition-colors duration-100 ease-in-out p-2 rounded shadow-none hover:underline focus:underline">
+  <button
+    :type="type"
+    class="btn transition transition-colors duration-100 ease-in-out p-2 rounded shadow-none hover:underline focus:underline"
+    @click="emit('click')"
+  >
     <slot />
   </button>
 </template>
@@ -27,7 +29,7 @@ button:hover, button:focus {
   @apply text-gray-900
 }
 
-@screen dark {
+@media (prefers-color-scheme: dark) {
   button:hover, button:focus {
     @apply text-gray-300
   }

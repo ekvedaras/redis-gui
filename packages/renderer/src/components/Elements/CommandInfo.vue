@@ -55,7 +55,7 @@ div.command-info {
   background: rgba(255, 255, 255, .7)
 }
 
-@screen dark {
+@media (prefers-color-scheme: dark) {
   div.command-info {
     background: rgba(0, 0, 0, .4)
   }

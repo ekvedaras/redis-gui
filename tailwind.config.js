@@ -1,6 +1,5 @@
 module.exports = {
   content: ['./packages/**/*.{vue,js,ts,jsx,tsx}'],
-  darkMode: 'media',
   theme: {
     extend: {
       gridTemplateRows: {
@@ -62,9 +61,6 @@ module.exports = {
           '900': '#072F50',
         },
       },
-      screens: {
-        'dark': { raw: '(prefers-color-scheme: dark)' },
-      },
       minHeight: {
         '16': '4rem',
       },
@@ -73,9 +69,6 @@ module.exports = {
         '18': '4.5rem',
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 }

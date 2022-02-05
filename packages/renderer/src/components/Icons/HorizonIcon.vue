@@ -17,7 +17,7 @@ svg {
   padding: 2px;
 }
 
-@screen dark {
+@media (prefers-color-scheme: dark) {
   svg {
     color: theme('colors.gray.200');
   }

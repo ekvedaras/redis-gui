@@ -18,7 +18,7 @@
         @apply p-2 rounded shadow;
     }
 
-    @screen dark {
+    @media (prefers-color-scheme: dark) {
         input, textarea, select {
             @apply bg-gray-700 text-gray-100;
         }
@@ -45,13 +45,17 @@
         @apply border-b border-gray-200;
     }
 
-    @screen dark {
+    @media (prefers-color-scheme: dark) {
         table {
             @apply bg-gray-900;
         }
 
         table th {
             @apply bg-black text-gray-300;
+        }
+
+        table td {
+            @apply text-gray-300;
         }
 
         table > thead > tr, table > tbody > tr:not(:last-child) {
@@ -221,7 +225,7 @@
         background: transparent;
     }
 
-    @screen dark {
+    @media (prefers-color-scheme: dark) {
         ::-webkit-scrollbar {
             background-color: rgba(200, 200, 200, 0);
         }
@@ -247,7 +251,7 @@
         z-index: 20;
     }
 
-    @screen dark {
+    @media (prefers-color-scheme: dark) {
         .vue-universal-modal {
             background-color: rgba(0, 0, 0, 0.8);
         }

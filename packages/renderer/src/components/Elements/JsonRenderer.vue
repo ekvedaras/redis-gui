@@ -2,13 +2,14 @@
   <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col overflow-y-auto justify-center min-h-16">
     <div v-if="!withoutControls" class="sticky right-0 text-right flex justify-end z-10 h-5" :class="[withKeys ? 'controls' : 'top-0']">
       <KeyItemControls
+        without-word-break
+        with-json
+        :without-delete="withoutDelete"
         @edit="emit('edit')"
         @delete="emit('delete')"
         @copy="emit('copy')"
         @toggleJson="emit('toggleJson')"
-        without-word-break
-        with-json
-        :without-delete="withoutDelete" />
+      />
     </div>
     <VueJsonPretty
       :data="JSON.parse(data)"
@@ -21,7 +22,6 @@
       <ValueSize :length="data.length" />
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -54,7 +54,7 @@ const emit = defineEmits<{
   white-space: nowrap;
 }
 
-@screen dark {
+@media (prefers-color-scheme: dark) {
   .vjs-tree.is-mouseover {
     background-color: theme('colors.gray.900');
   }
