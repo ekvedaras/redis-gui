@@ -1,21 +1,27 @@
 <template>
   <div>
-    <SearchBar v-model:value="search"
-               :show-spinner="isLoading"
-               with-add :add-name="name" add-type="hash" />
+    <SearchBar
+      v-model:value="search"
+      :show-spinner="isLoading"
+      with-add :add-name="name" add-type="hash"
+    />
     <div class="overflow-y-auto h-full rounded mt-4">
-      <Value v-for="tuple in value"
-             class="relative"
-             :key="tuple.field" :value="tuple.value" :item-key="tuple.field"
-             @save="save(tuple.field, $event.key, $event.value)"
-             @delete="deleteItem(tuple.field)" />
-      <LoadMoreButton @click="loadMore" v-if="nextCursor" />
+      <Value
+        v-for="tuple in value"
+        :key="tuple.field"
+        class="relative" :value="tuple.value" :item-key="tuple.field"
+        @save="save(tuple.field, $event.key, $event.value)"
+        @delete="deleteItem(tuple.field)"
+      />
+      <LoadMoreButton v-if="nextCursor" @click="loadMore" />
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
-    <ConfirmDeleteDialog v-model:show="showDeleteDialog"
-                         :item="itemToDelete"
-                         :name="name"
-                         using="deleteHashItem" />
+    <ConfirmDeleteDialog
+      v-if="showDeleteDialog" :item="itemToDelete"
+      :name="name"
+      using="deleteHashItem"
+      @close="showDeleteDialog = false"
+    />
   </div>
 </template>
 

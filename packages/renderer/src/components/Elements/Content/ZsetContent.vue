@@ -1,21 +1,28 @@
 <template>
   <div>
-    <SearchBar v-model:value="search"
-               :show-spinner="isLoading"
-               with-add :add-name="name" add-type="zset" />
+    <SearchBar
+      v-model:value="search"
+      :show-spinner="isLoading"
+      with-add :add-name="name" add-type="zset"
+    />
     <div class="overflow-y-auto h-full rounded mt-4">
-      <Value v-for="item in value"
-             class="relative"
-             :key="item.value" :value="item.value" :item-key="String(item.score)"
-             @save="save"
-             @delete="deleteItem(item.value)" />
-      <LoadMoreButton @click="loadMore" v-if="nextCursor" />
+      <Value
+        v-for="item in value"
+        :key="item.value"
+        class="relative" :value="item.value" :item-key="String(item.score)"
+        @save="save"
+        @delete="deleteItem(item.value)"
+      />
+      <LoadMoreButton v-if="nextCursor" @click="loadMore" />
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
-    <ConfirmDeleteDialog v-model:show="showDeleteDialog"
-                         :item="itemToDelete"
-                         :name="name"
-                         using="deleteZsetItem" />
+    <ConfirmDeleteDialog
+      v-if="showDeleteDialog"
+      :item="itemToDelete"
+      :name="name"
+      using="deleteZsetItem"
+      @close="showDeleteDialog = false"
+    />
   </div>
 </template>
 
@@ -24,14 +31,13 @@ import { useCursorScanner } from '/@/use/cursorScanner'
 import { ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
-import { useKeysStore } from '/@/store/keys'
 import SearchBar from '/@/components/Elements/SearchBar.vue'
 import Value from '/@/components/Elements/Value.vue'
 import { useHasItems } from '/@/use/hasItems'
 import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
-import { ZMember } from '../../../../types/models'
+import type { ZMember } from '../../../../types/models'
 
 const props = defineProps<{
   name: string,
@@ -41,7 +47,6 @@ const value = ref<ZMember[]>([])
 
 const redis = useRedis()
 const toaster = useToaster()
-const keysStore = useKeysStore()
 const hasItems = useHasItems(value)
 const {
   search,

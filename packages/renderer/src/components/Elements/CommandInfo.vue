@@ -1,11 +1,13 @@
 <template>
   <div v-if="matchedCommand" class="command-info absolute rounded-t w-full py-4 px-4 bottom-0 text-gray-900 dark:text-gray-400">
-    <span @click="openDocs" v-tooltip="`${upperName} documentation`" :style="{cursor: 'help'}">
+    <span v-tooltip="`${upperName} documentation`" :style="{cursor: 'help'}" @click="openDocs">
       <b>{{ upperName }}</b>
     </span>
     <span class="ml-2">{{ commandInfo.args }}</span>
-    <div class="text-sm mt-2">{{ commandInfo.summary }}</div>
-    <IFrameModal v-model:show="shouldShowDocsModal" :title="docsModalTitle" :url="docsUrl" />
+    <div class="text-sm mt-2">
+      {{ commandInfo.summary }}
+    </div>
+    <IFrameModal v-if="shouldShowDocsModal" :title="docsModalTitle" :url="docsUrl" @close="shouldShowDocsModal = false" />
   </div>
 </template>
 

@@ -1,24 +1,40 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" title="Add new key">
+  <AppModal title="Add new key" @close="emit('close')">
     <div class="flex space-x-4">
-      <input type="text" placeholder="Name" v-model="name" class="flex-1" />
-      <input type="text" placeholder="Hash key name" v-if="type === 'hash'" v-model="hashName" class="flex-1" />
-      <input type="number" placeholder="Index" v-if="type === 'list'" v-model="index" class="flex-1" />
-      <input type="number" placeholder="Score" v-if="type === 'zset'" v-model="score" class="flex-1" />
+      <input v-model="name" type="text" placeholder="Name" class="flex-1" />
+      <input v-if="type === 'hash'" v-model="hashName" type="text" placeholder="Hash key name" class="flex-1" />
+      <input v-if="type === 'list'" v-model="index" type="number" placeholder="Index" class="flex-1" />
+      <input v-if="type === 'zset'" v-model="score" type="number" placeholder="Score" class="flex-1" />
       <select v-model="type">
-        <option value="string">string</option>
-        <option value="hash">hash</option>
-        <option value="list">list</option>
-        <option value="set">set</option>
-        <option value="zset">zset</option>
+        <option value="string">
+          string
+        </option>
+        <option value="hash">
+          hash
+        </option>
+        <option value="list">
+          list
+        </option>
+        <option value="set">
+          set
+        </option>
+        <option value="zset">
+          zset
+        </option>
       </select>
     </div>
-    <textarea v-for="(value, index) in values" :key="index" class="flex-1" placeholder="Value" v-model="values[index]" />
+    <textarea v-for="valIndex in values.keys()" :key="valIndex" v-model="values[valIndex]" class="flex-1" placeholder="Value" />
     <div class="flex justify-end space-x-4">
-      <Button v-if="['list', 'set'].indexOf(type) > -1" @click="values.push('')">Add</Button>
-      <input type="number" class="w-20" v-if="type === 'string'" placeholder="TTL" v-model="ttl" />
-      <Button @click="emit('update:show', false)">Cancel</Button>
-      <PrimaryButton @click="save">Save</PrimaryButton>
+      <Button v-if="['list', 'set'].indexOf(type) > -1" @click="values.push('')">
+        Add
+      </Button>
+      <input v-if="type === 'string'" v-model="ttl" type="number" class="w-20" placeholder="TTL" />
+      <Button @click="emit('close')">
+        Cancel
+      </Button>
+      <PrimaryButton @click="save">
+        Save
+      </PrimaryButton>
     </div>
   </AppModal>
 </template>
@@ -28,21 +44,20 @@ import { onMounted, ref, toRef, watch } from 'vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
-import { StringArray } from '../../../types/models'
+import type { StringArray } from '../../../types/models'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
 import { useKeysStore } from '/@/store/keys'
 import useEmitter from '/@/use/emitter'
 
 const props = withDefaults(defineProps<{
-  show: boolean;
   fill?: StringArray;
 }>(), {
   fill: () => ({}),
 })
 
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
 
 const name = ref('')
@@ -102,7 +117,7 @@ const save = async () => {
       break
   }
 
-  emit('update:show', false)
+  emit('close')
   toaster.success(`Key ${ name.value } added`)
   await keysStore.loadKeys()
   keysStore.selected = name.value

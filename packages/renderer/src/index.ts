@@ -24,8 +24,7 @@ app.mount('#app');
 // TODO: improve split pane UI
 // TODO: add icon to show shortcuts modal
 // TODO: re-style toaster
-// TODO: fix server edit modal not loading values
-// TODO: should modals use v-if? Otherwise they are rendered before use so need to deal with unset values
+// TODO: fix issues with nested modals when child gets closed
 // TODO: fix changing databases
 // TODO: solve lint and vue-tsc issues
 // TODO: should connection test be done in preload?

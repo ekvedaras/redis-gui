@@ -7,9 +7,9 @@
       db{{ databasesStore.selected ?? 0 }}
     </div>
     <div class="mt-4 text-gray-500">
-      Select or <a href="#" @click="showAddKeyModal = true" class="text-red-500 hover:text-redis hover:underline">add</a> a new key.
+      Select or <a href="#" class="text-red-500 hover:text-redis hover:underline" @click="showAddKeyModal = true">add</a> a new key.
     </div>
-    <AddKeyModal v-model:show="showAddKeyModal" />
+    <AddKeyModal v-if="showAddKeyModal" @close="showAddKeyModal = false" />
   </div>
 </template>
 

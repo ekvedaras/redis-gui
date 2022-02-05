@@ -1,11 +1,10 @@
 <template>
   <AppModal
     id="console-modal"
-    :show="show"
     title="Console"
     full-height
     full-width
-    @update:show="emit('update:show', $event)"
+    @close="emit('close')"
   >
     <div class="rounded bg-white dark:bg-black w-full font-mono shadow flex-1 flex flex-col">
       <div class="relative flex-1">
@@ -39,7 +38,7 @@
     </div>
 
     <div class="flex justify-end space-x-4">
-      <Button @click="close">
+      <Button @click="emit('close')">
         Close
       </Button>
     </div>
@@ -59,15 +58,9 @@ import ConsoleLog from '/@/models/ConsoleLog'
 import ErrorResponse from '/@/models/ErrorResponse'
 import SentCommand from '/@/models/SentCommand'
 
-const props = defineProps<{
-  show: boolean;
-}>()
-
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
-
-const close = () => emit('update:show', false)
 
 const log = ref<ConsoleLog[]>([])
 const historyIndex = ref(-1)

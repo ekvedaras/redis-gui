@@ -1,9 +1,5 @@
 <template>
-  <AppModal
-    :show="show"
-    title="Servers"
-    @update:show="emit('update:show', $event)"
-  >
+  <AppModal title="Servers" @close="emit('close')">
     <table class="rounded">
       <tr
         v-for="(server, key) in serversStore.list"
@@ -44,15 +40,17 @@
       </PrimaryButton>
     </div>
     <ConfirmDialog
-      v-model:show="shouldShowDeleteDialog"
+      v-if="shouldShowDeleteDialog"
       danger
       @confirm="deleteServer(serverToDelete)"
+      @close="shouldShowDeleteDialog = false"
     >
       Are you sure you want to delete <b>{{ serverToDelete?.name }}</b>?
     </ConfirmDialog>
     <ServerModal
-      v-model:show="shouldShowServerModal"
+      v-if="shouldShowServerModal"
       :server-key="serverToEdit"
+      @close="shouldShowServerModal = false"
     />
   </AppModal>
 </template>
@@ -71,15 +69,9 @@ import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
 import ServerModal from '/@/components/Elements/ServerModal.vue'
 
-const props = defineProps<{
-  show: boolean;
-}>()
-
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
-
-const close = () => emit('update:show', false)
 
 const serversStore = useServersStore()
 const serverDetails = ({ host, path, port, url }: Server) => {

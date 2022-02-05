@@ -1,5 +1,5 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" title="Keymap">
+  <AppModal title="Keymap" @close="emit('close')">
     <table>
       <tr>
         <th>Focus search</th>
@@ -90,12 +90,8 @@
 import KeyboardKey from '/@/components/Elements/KeyboardKey.vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
 
-const props = defineProps<{
-  show: boolean;
-}>()
-
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
 </script>
 

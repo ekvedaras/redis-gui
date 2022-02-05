@@ -1,18 +1,22 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" title="Settings">
+  <AppModal title="Settings" @close="emit('close')">
     <table>
       <tr v-tooltip="'Applies to key list on the left and key items. However, if key contains not too many items, redis might return more then this, since it is more efficient.'">
         <th><label for="items-per-page" class="font-semibold mr-2">Items per page</label></th>
-        <td><input type="number" step="1" min="1" id="items-per-page" v-model="itemsPerPage" /></td>
+        <td><input id="items-per-page" v-model="itemsPerPage" type="number" step="1" min="1" /></td>
       </tr>
       <tr v-tooltip="'Key containing this symbol will be split into nested folders for easier management.'">
         <th><label for="namespace-separator" class="font-semibold mr-2">Namespace separator</label></th>
-        <td><input type="text" min="1" id="namespace-separator" v-model="namespaceSeparator" /></td>
+        <td><input id="namespace-separator" v-model="namespaceSeparator" type="text" min="1" /></td>
       </tr>
     </table>
     <div class="flex justify-end space-x-4">
-      <Button @click="close">Cancel</Button>
-      <PrimaryButton @click="save">Save</PrimaryButton>
+      <Button @click="emit('close')">
+        Cancel
+      </Button>
+      <PrimaryButton @click="save">
+        Save
+      </PrimaryButton>
     </div>
   </AppModal>
 </template>
@@ -27,15 +31,9 @@ import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
 import { useKeysStore } from '/@/store/keys'
 
-const props = defineProps<{
-  show: boolean;
-}>()
-
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
-
-const close = () => emit('update:show', false)
 
 const itemsPerPage = ref(0)
 const namespaceSeparator = ref('-')
@@ -64,7 +62,7 @@ const save = async () => {
 
   toaster.success('Saved')
   keysStore.loadKeys()
-  close()
+  emit('close')
 }
 </script>
 

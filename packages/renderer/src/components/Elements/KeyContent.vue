@@ -5,30 +5,30 @@
       <div class="flex pt-2 items-center">
         <KeyIcon :redis-key="keysStore.current" class="mr-2" />
         <h2 class="text-xl flex-1">
-          <span ref="keyName" class="break-all" tabindex="0" v-show="!isRenaming" @shortkey="startRename" @keydown.enter="startRename" @click="startRename" v-tooltip="'Click to edit'">{{ keysStore.current.name }}</span>
+          <span v-show="!isRenaming" ref="keyName" v-tooltip="'Click to edit'" class="break-all" tabindex="0" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ keysStore.current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
-          <input ref="renameField" v-show="isRenaming" v-model="newName" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" type="text" placeholder="New name..." class="p-1 text-sm" />
-          <span @click="showDocs = true" class="text-sm ml-2" style="cursor: help">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
+          <input v-show="isRenaming" ref="renameField" v-model="newName" type="text" placeholder="New name..." class="p-1 text-sm" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" />
+          <span class="text-sm ml-2" style="cursor: help" @click="showDocs = true">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
         </h2>
-        <IconButton @click="showDeleteDialog = true" tabindex="0" @shortkey.native="showDeleteDialog = true">
+        <IconButton tabindex="0" @click="showDeleteDialog = true" @shortkey.native="showDeleteDialog = true">
           <DeleteIcon class="w-4 m-1" />
         </IconButton>
         <TTL :redis-key="keysStore.current" />
       </div>
-      <component v-if="currentContent"
-                 :is="currentContent"
-                 :name="keysStore.current.name"
-                 :key="keysStore.current.name"
-                 @shortkey.native="emitUpdate"
-                 class="h-full p-4 pb-24"
+      <component
+        :is="currentContent"
+        v-if="currentContent"
+        :key="keysStore.current.name"
+        :name="keysStore.current.name"
+        class="h-full p-4 pb-24"
       />
       <template v-else>
         Key type {{ keysStore.current.type }} is not supported
       </template>
-      <ConfirmDialog v-model:show="showDeleteDialog" @confirm="deleteKey" danger>
+      <ConfirmDialog v-if="showDeleteDialog" danger @close="showDeleteDialog = false" @confirm="deleteKey">
         Are you sure you want to delete <b>{{ keysStore.selected }}</b> key?
       </ConfirmDialog>
-      <IFrameModal v-model:show="showDocs" :url="typeDocs" :title="docsTitle" />
+      <IFrameModal v-if="showDocs" :url="typeDocs" :title="docsTitle" @close="showDocs = false" />
     </template>
   </div>
 </template>
@@ -38,7 +38,7 @@ import { useKeysStore } from '/@/store/keys'
 import { useDatabasesStore } from '/@/store/databases'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRedis } from '/@/use/redis'
-import { Key } from '../../../types/redis'
+import type { Key } from '../../../types/redis'
 import KeyIcon from '/@/components/Elements/KeyIcon.vue'
 import IconButton from '/@/components/Elements/IconButton.vue'
 import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'

@@ -1,21 +1,27 @@
 <template>
   <div>
-    <SearchBar v-model:value="search"
-               :show-spinner="isLoading"
-               with-add :add-name="name" add-type="set" />
+    <SearchBar
+      v-model:value="search"
+      :show-spinner="isLoading"
+      with-add :add-name="name" add-type="set"
+    />
     <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
-      <Value v-for="(item, i) in value"
-             class="relative"
-             :key="i" :value="item"
-             @save="save(i, $event)"
-             @delete="deleteItem(item)" />
-      <LoadMoreButton @click="loadMore" v-if="nextCursor" />
+      <Value
+        v-for="(item, i) in value"
+        :key="i"
+        class="relative" :value="item"
+        @save="save(i, $event)"
+        @delete="deleteItem(item)"
+      />
+      <LoadMoreButton v-if="nextCursor" @click="loadMore" />
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
-    <ConfirmDeleteDialog v-model:show="showDeleteDialog"
-                         :item="itemToDelete"
-                         :name="name"
-                         using="deleteSetItem" />
+    <ConfirmDeleteDialog
+      v-if="showDeleteDialog" :item="itemToDelete"
+      :name="name"
+      using="deleteSetItem"
+      @close="showDeleteDialog = false"
+    />
   </div>
 </template>
 

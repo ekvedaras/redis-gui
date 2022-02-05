@@ -12,28 +12,28 @@
     </h1>
     <div class="flex-1 space-x-2 flex text-center justify-center items-center">
       <ServerSelect />
-      <IconButton @click="shouldShowServerListModal = true" v-tooltip="'Edit saved redis servers'">
+      <IconButton v-tooltip="'Edit saved redis servers'" @click="shouldShowServerListModal = true">
         <EditIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="refresh" v-tooltip="'Refresh key list and database information'">
+      <IconButton v-tooltip="'Refresh key list and database information'" @click="refresh">
         <RefreshIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="shouldShowConsoleModal = true" v-tooltip="'Redis console'">
+      <IconButton v-tooltip="'Redis console'" @click="shouldShowConsoleModal = true">
         <TerminalIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="shouldShowInfoModal = true" v-tooltip="'Show server info and statistics'">
+      <IconButton v-tooltip="'Show server info and statistics'" @click="shouldShowInfoModal = true">
         <InfoIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton @click="shouldShowSettingsModal = true" v-tooltip="'Settings'">
+      <IconButton v-tooltip="'Settings'" @click="shouldShowSettingsModal = true">
         <CogIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
     </div>
-    <DatabaseSelect class="bg-gray-300 dark:bg-gray-700 rounded p-1" v-tooltip="'Choose redis database'" />
-    <ServerListModal v-model:show="shouldShowServerListModal" />
-    <InfoModal v-model:show="shouldShowInfoModal" />
-    <ConsoleModal v-model:show="shouldShowConsoleModal" />
-    <SettingsModal v-model:show="shouldShowSettingsModal" />
-    <ShortKeyModal v-model:show="shouldShowShortKeysModal" />
+    <DatabaseSelect v-tooltip="'Choose redis database'" class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
+    <ServerListModal v-if="shouldShowServerListModal" @close="shouldShowServerListModal = false" />
+    <InfoModal v-if="shouldShowInfoModal" @close="shouldShowInfoModal = false" />
+    <ConsoleModal v-if="shouldShowConsoleModal" @close="shouldShowConsoleModal = false" />
+    <SettingsModal v-if="shouldShowSettingsModal" @close="shouldShowSettingsModal = false" />
+    <ShortKeyModal v-if="shouldShowShortKeysModal" @close="shouldShowShortKeysModal = false" />
   </div>
 </template>
 

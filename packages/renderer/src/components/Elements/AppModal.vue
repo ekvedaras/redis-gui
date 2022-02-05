@@ -1,8 +1,5 @@
 <template>
-  <Modal
-    v-model="show"
-    :close="() => emit('update:show', false)"
-  >
+  <Modal show :close="() => emit('close')">
     <div
       class="bg-gray-200 dark:bg-gray-800 rounded p-4 flex flex-col space-y-4 overflow-y-auto"
       :class="{'h-screen' : fullHeight, 'w-4/5' : fullWidth}"
@@ -23,7 +20,6 @@
 
 <script setup lang="ts">
 withDefaults(defineProps<{
-  show: boolean;
   title?: string;
   fullWidth?: boolean;
   fullHeight?: boolean;
@@ -34,7 +30,7 @@ withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
 </script>
 

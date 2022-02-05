@@ -1,39 +1,43 @@
 <template>
-  <AppModal :show="show" @update:show="emit('update:show', $event)" :title="title">
-    <input type="text" placeholder="Name" v-model="name" />
+  <AppModal :title="title" @close="emit('close')">
+    <input v-model="name" type="text" placeholder="Name" />
     <div class="flex space-x-4">
-      <input type="text" placeholder="Host / IP" v-model="host" class="flex-1" />
-      <input type="number" placeholder="Port" v-model="port" />
+      <input v-model="host" type="text" placeholder="Host / IP" class="flex-1" />
+      <input v-model="port" type="number" placeholder="Port" />
     </div>
-    <input v-if="!ssh.tunnel" type="text" placeholder="or UNIX socket path" v-model="path" class="flex-1" />
-    <input v-if="!ssh.tunnel" type="text" placeholder="or URL (redis://, rediss://)" v-model="url" class="flex-1" />
-    <input type="password" placeholder="Password (optional)" v-model="password" />
+    <input v-if="!ssh.tunnel" v-model="path" type="text" placeholder="or UNIX socket path" class="flex-1" />
+    <input v-if="!ssh.tunnel" v-model="url" type="text" placeholder="or URL (redis://, rediss://)" class="flex-1" />
+    <input v-model="password" type="password" placeholder="Password (optional)" />
     <div class="flex space-x-4 items-baseline">
-      <input type="checkbox" v-model="ssh.tunnel" id="ssh" />
+      <input id="ssh" v-model="ssh.tunnel" type="checkbox" />
       <label for="ssh">SSH tunnel</label>
     </div>
     <div v-if="ssh.tunnel" class="flex flex-col space-y-4">
       <div class="flex space-x-4">
-        <input type="text" placeholder="SSH host / IP" v-model="ssh.host" class="flex-1" />
-        <input type="number" placeholder="SSH port" v-model="ssh.port" />
+        <input v-model="ssh.host" type="text" placeholder="SSH host / IP" class="flex-1" />
+        <input v-model="ssh.port" type="number" placeholder="SSH port" />
       </div>
       <div class="flex space-x-4">
-        <input type="text" placeholder="SSH user (optional)" v-model="ssh.user" class="flex-1" />
-        <input type="password" placeholder="SSH password (optional)" v-model="ssh.password" class="flex-1" />
+        <input v-model="ssh.user" type="text" placeholder="SSH user (optional)" class="flex-1" />
+        <input v-model="ssh.password" type="password" placeholder="SSH password (optional)" class="flex-1" />
       </div>
       <div class="flex space-x-4">
-        <input type="text" :placeholder="privateKeyPlaceholder" v-model="ssh.privateKey" class="flex-1" />
+        <input v-model="ssh.privateKey" type="text" :placeholder="privateKeyPlaceholder" class="flex-1" />
       </div>
     </div>
     <div class="flex justify-end space-x-4">
       <div v-if="isTesting" class="relative w-10 h-10 flex items-center justify-end">
         <Spinner />
       </div>
-      <Button @click="test" class="relative">
+      <Button class="relative" @click="test">
         Test
       </Button>
-      <Button @click="close">Cancel</Button>
-      <PrimaryButton @click="save">Save</PrimaryButton>
+      <Button @click="emit('close')">
+        Cancel
+      </Button>
+      <PrimaryButton @click="save">
+        Save
+      </PrimaryButton>
     </div>
   </AppModal>
 </template>
@@ -43,7 +47,7 @@ import AppModal from '/@/components/Elements/AppModal.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
-import { SshConfig } from '../../../types/database'
+import type { SshConfig } from '../../../types/database'
 import { useDatabase } from '/@/use/database'
 import { useServersStore } from '/@/store/servers'
 import { useRedis } from '/@/use/redis'
@@ -51,15 +55,12 @@ import { useToaster } from '/@/use/toaster'
 import Spinner from '/@/components/Elements/Spinner.vue'
 
 const props = defineProps<{
-  show: boolean;
   serverKey?: string | undefined;
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
-
-const close = () => emit('update:show', false)
 
 const isTesting = ref(false)
 const name = ref('')
@@ -108,7 +109,7 @@ const save = async () => {
   database.data.history[props.serverKey || name.value] = []
   await database.write()
   serversStore.list = database.data.servers
-  close()
+  emit('close')
 }
 
 const redis = useRedis()

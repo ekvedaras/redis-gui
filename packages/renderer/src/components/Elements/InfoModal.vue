@@ -1,10 +1,9 @@
 <template>
   <AppModal
-    :show="show"
     title="Server info"
     class="overflow-y-hidden"
     full-height
-    @update:show="emit('update:show', $event)"
+    @close="emit('close')"
   >
     <IconButton
       v-tooltip="'Refresh'"
@@ -25,18 +24,12 @@ import Tabs from '/@/components/Elements/Tabs.vue'
 import TableInfo from '/@/components/Elements/TableInfo.vue'
 import KeyspaceInfo from '/@/components/Elements/KeyspaceInfo.vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
-import { markRaw, ref, watch } from 'vue'
+import { markRaw, onBeforeMount, ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 
-const props = defineProps<{
-  show: boolean;
-}>()
-
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
-
-const close = () => emit('update:show', false)
 
 const tableInfo = markRaw(TableInfo)
 const keySpaceInfo = markRaw(KeyspaceInfo)
@@ -110,11 +103,7 @@ const fetch = async () => {
   })
 }
 
-watch(() => props.show, (value: boolean) => {
-  if (value) {
-    fetch()
-  }
-})
+onBeforeMount(fetch)
 </script>
 
 <style scoped>

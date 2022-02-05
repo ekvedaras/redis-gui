@@ -12,7 +12,7 @@
     >
       <AddIcon class="w-10" />
     </IconButton>
-    <AddKeyModal v-model:show="showKeyAddModal" />
+    <AddKeyModal v-if="showKeyAddModal" @close="showKeyAddModal = false" />
   </div>
 </template>
 

@@ -1,11 +1,5 @@
 <template>
-  <AppModal
-    :show="show"
-    :title="title"
-    full-height
-    full-width
-    @update:show="emit('update:show', $event)"
-  >
+  <AppModal :title="title" full-height full-width @close="emit('close')">
     <iframe
       ref="iframe"
       :src="url"
@@ -19,17 +13,14 @@
 import { onMounted, ref } from 'vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
 
-const props = defineProps<{
-  show: boolean;
+defineProps<{
   url: string;
   title: string;
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:show', value: boolean): void;
+  (e: 'close'): void;
 }>()
-
-const close = () => emit('update:show', false)
 
 const iframe = ref<HTMLIFrameElement>()
 
