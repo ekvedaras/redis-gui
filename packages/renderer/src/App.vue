@@ -15,7 +15,7 @@
     >
       <KeysSidebar class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200" />
     </Pane>
-    <Pane class="flex-1 pb-2 px-4 overflow-hidden rounded-b">
+    <Pane class="flex-1 pb-2 px-4 overflow-hidden">
       <KeyContent class="flex-1 pb-2 px-4 overflow-hidden rounded-b bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200" />
     </Pane>
   </Splitpanes>
@@ -43,6 +43,27 @@ const saveLayout = (panes: SplitpaneIndexedType) => {
 onUnmounted(() => redis.disconnect())
 </script>
 
-<style scoped>
+<style>
+.splitpanes.default-theme .splitpanes__pane {
+  @apply bg-gray-100 dark:bg-gray-900
+}
 
+.default-theme.splitpanes--vertical > .splitpanes__splitter,
+.default-theme .splitpanes--vertical > .splitpanes__splitte {
+  @apply border-0
+}
+
+.splitpanes.default-theme .splitpanes__splitter {
+  @apply bg-gray-100 dark:bg-gray-900
+}
+
+.splitpanes.default-theme .splitpanes__splitter:after,
+.splitpanes.default-theme .splitpanes__splitter:before {
+  @apply bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700
+}
+
+.splitpanes.default-theme .splitpanes__splitter:hover:after,
+.splitpanes.default-theme .splitpanes__splitter:hover:before {
+  @apply bg-gray-300 dark:bg-gray-700
+}
 </style>

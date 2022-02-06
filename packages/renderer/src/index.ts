@@ -20,7 +20,6 @@ app.config.globalProperties.emitter = mitt()
 app.mount('#app');
 
 // TODO: fix key content searchbar actually searching keys sidebar
-// TODO: improve split pane UI (and fix dark mode)
 // TODO: re-style toaster
 // TODO: fix issues with nested modals when child gets closed
 // TODO: fix changing databases
