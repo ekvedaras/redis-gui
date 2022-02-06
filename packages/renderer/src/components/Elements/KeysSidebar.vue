@@ -27,7 +27,16 @@
       <IconButton @click="openGitHub">
         <GitHubIcon v-tooltip="{ content: 'Star <b>redis-gui</b> on GitHub', html: true}" />
       </IconButton>
+      <IconButton v-tooltip="'Keymap'" @click="shouldShowShortKeysModal = true">
+        <span class="p-1 font-bold">
+          ?
+        </span>
+      </IconButton>
     </div>
+    <ShortKeyModal
+      v-if="shouldShowShortKeysModal"
+      @close="shouldShowShortKeysModal = false"
+    />
   </div>
 </template>
 
@@ -45,12 +54,14 @@ import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import { useRedis } from '/@/use/redis'
 import SearchBar from '/@/components/Elements/SearchBar.vue'
 import Keys from '/@/components/Elements/Keys.vue'
+import ShortKeyModal from '/@/components/Elements/ShortKeyModal.vue'
 
 const serverStore = useServersStore()
 const keysStore = useKeysStore()
 const toaster = useToaster()
 const redis = useRedis()
 
+const shouldShowShortKeysModal = ref(false)
 const search = ref('')
 const isLoading = ref(false)
 
