@@ -22,7 +22,6 @@ app.mount('#app');
 // TODO: fix key content searchbar actually searching keys sidebar
 // TODO: re-style toaster
 // TODO: fix issues with nested modals when child gets closed
-// TODO: fix changing databases
 // TODO: solve lint and vue-tsc issues
 // TODO: should connection test be done in preload?
 // TODO: port NOPERM workaround

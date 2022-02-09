@@ -1,7 +1,7 @@
 import {useRedis} from '/@/use/redis'
 import {parseInt} from 'lodash'
 import {defineStore} from 'pinia'
-import {Database} from '../../types/models';
+import type {Database} from '../../types/models';
 import {useKeysStore} from '/@/store/keys';
 
 interface State {
@@ -40,15 +40,15 @@ export const useDatabasesStore = defineStore('databases', {
         }),
       ])
     },
-    select(index: number) {
+    async select(index: number) {
       const keysStore = useKeysStore()
       const redis = useRedis()
 
-      return redis.client.select(index).then(() => {
-        this.selected = index
-        keysStore.selected = undefined
-        keysStore.loadKeys()
-      })
+      await redis.client.select(index)
+
+      this.selected = index
+      keysStore.selected = undefined
+      keysStore.loadKeys()
     },
   },
 })

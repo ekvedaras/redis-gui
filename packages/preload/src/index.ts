@@ -33,6 +33,7 @@ const redisApi: RedisApi = {
     isConnectionOpen: () => client.isOpen,
     connect: () => client.connect(),
     disconnect: () => client.disconnect(),
+    select: (db: number) => client.select(db),
     quit: () => client.quit(),
     // @ts-ignore
     on: (...args) => {
