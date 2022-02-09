@@ -1,6 +1,5 @@
-import {MenuItemConstructorOptions, shell} from 'electron'
-
-let isMac = process.platform === 'darwin';
+import type {MenuItemConstructorOptions} from 'electron';
+import {shell} from 'electron'
 
 export default [
   {

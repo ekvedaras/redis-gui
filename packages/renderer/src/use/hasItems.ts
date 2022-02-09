@@ -1,4 +1,5 @@
-import {computed, Ref} from 'vue'
+import type {Ref} from 'vue';
+import {computed} from 'vue'
 
 export function useHasItems(value: Ref) {
   return computed(() => {

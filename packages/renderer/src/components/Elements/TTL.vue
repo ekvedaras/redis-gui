@@ -1,26 +1,27 @@
 <template>
   <div class="flex">
-    <div tabindex="0"
-         class="flex cursor-pointer rounded text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
-         :class="{'text-gray-500': redisKey.ttl < 1}"
-         ref="ttlText"
-         @keydown.enter="startEditing"
-         @click="startEditing"
-         v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
+    <div
+      ref="ttlText"
+      v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
+      tabindex="0"
+      class="flex cursor-pointer rounded text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
+      :class="{'text-gray-500': redisKey.ttl < 1}"
+      @keydown.enter="startEditing"
+      @click="startEditing"
     >
       <TimeIcon class="w-4 m-1" />
       <div v-show="!isEditing" v-if="redisKey.ttl > -1">
-        <span class="ml-2" v-if="seconds < 60">Expires in TODO<!-- {{ [seconds, 'seconds'] | duration('as', 'seconds') }} seconds--></span>
-        <span class="ml-2" v-else>Expires in TODO<!--{{ [seconds, 'seconds'] | duration('humanize') }}--></span>
+        <span v-if="seconds < 60" class="ml-2">Expires in TODO<!-- {{ [seconds, 'seconds'] | duration('as', 'seconds') }} seconds--></span>
+        <span v-else class="ml-2">Expires in TODO<!--{{ [seconds, 'seconds'] | duration('humanize') }}--></span>
       </div>
     </div>
     <!--suppress HtmlFormInputWithoutLabel -->
-    <input ref="ttlField" v-show="isEditing" v-model="newTtl" @keydown.esc="edit(false)" @keydown.enter="edit(true)" @blur="edit(true)" type="text" placeholder="TTL seconds" class="text-sm py-0 px-2" />
+    <input v-show="isEditing" ref="ttlField" v-model="newTtl" type="text" placeholder="TTL seconds" class="text-sm py-0 px-2" @keydown.esc="edit(false)" @keydown.enter="edit(true)" @blur="edit(true)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Key } from '../../../types/redis'
+import type { Key } from '../../../types/redis'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useRedis } from '/@/use/redis'

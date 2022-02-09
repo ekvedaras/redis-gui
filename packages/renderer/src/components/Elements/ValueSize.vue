@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import usePrettyBytes from '/@/use/prettyBytes'
 
-const props = defineProps<{
+defineProps<{
   length: number;
 }>()
 

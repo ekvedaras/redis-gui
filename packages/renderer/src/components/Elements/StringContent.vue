@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-y-auto">
-    <Value class="relative" v-if="!isLoading" :value="value" @save="save" without-delete />
+    <Value v-if="!isLoading" class="relative" :value="value" without-delete @save="save" />
     <CenteredLoader v-if="isLoading" />
   </div>
 </template>

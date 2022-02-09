@@ -26,3 +26,4 @@ app.mount('#app');
 // TODO: should connection test be done in preload?
 // TODO: port NOPERM workaround
 // TODO: shortkeys should be off when inputs are in focus
+// TODO: copy to clipboard

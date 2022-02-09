@@ -1,22 +1,26 @@
 <template>
   <div class="relative group">
-    <JsonRenderer v-if="showJson"
-                  :data="value"
-                  :without-delete="withoutDelete"
-                  :with-keys="withKeys"
-                  @edit="emit('edit')"
-                  @delete="emit('delete')"
-                  @copy="emit('copy')"
-                  @toggleJson="toggleJson" />
-    <PlainRenderer v-else
-                   :data="value"
-                   :without-delete="withoutDelete"
-                   :with-keys="withKeys"
-                   :with-json="isPotentialJson"
-                   @edit="emit('edit')"
-                   @delete="emit('delete')"
-                   @copy="emit('copy')"
-                   @toggleJson="toggleJson" />
+    <JsonRenderer
+      v-if="showJson"
+      :data="value"
+      :without-delete="withoutDelete"
+      :with-keys="withKeys"
+      @edit="emit('edit')"
+      @delete="emit('delete')"
+      @copy="emit('copy')"
+      @toggle-json="toggleJson"
+    />
+    <PlainRenderer
+      v-else
+      :data="value"
+      :without-delete="withoutDelete"
+      :with-keys="withKeys"
+      :with-json="isPotentialJson"
+      @edit="emit('edit')"
+      @delete="emit('delete')"
+      @copy="emit('copy')"
+      @toggle-json="toggleJson"
+    />
   </div>
 </template>
 

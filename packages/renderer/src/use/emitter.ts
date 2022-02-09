@@ -1,5 +1,10 @@
 import {getCurrentInstance} from 'vue'
 
 export default function useEmitter() {
-  return getCurrentInstance()!.appContext.config.globalProperties.emitter;
+  const instance = getCurrentInstance();
+  if (!instance) {
+    throw new Error('[useEmitter] must be called in a Vue component.');
+  }
+
+  return instance.appContext.config.globalProperties.emitter;
 }

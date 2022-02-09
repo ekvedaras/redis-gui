@@ -146,7 +146,7 @@ const send = async (cmd?: string) => {
     log.value.push(new ErrorResponse(e))
     hideInfo.value = true
   } finally {
-    await nextTick(() => logDiv.value!.scrollTop = logDiv.value!.scrollHeight)
+    await nextTick(() => logDiv.value && (logDiv.value.scrollTop = logDiv.value.scrollHeight))
   }
 }
 </script>

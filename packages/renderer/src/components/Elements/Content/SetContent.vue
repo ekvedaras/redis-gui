@@ -30,7 +30,6 @@ import { useCursorScanner } from '/@/use/cursorScanner'
 import { ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
-import { useKeysStore } from '/@/store/keys'
 import SearchBar from '/@/components/Elements/SearchBar.vue'
 import Value from '/@/components/Elements/Value.vue'
 import { useHasItems } from '/@/use/hasItems'
@@ -46,7 +45,6 @@ const value = ref<string[]>([])
 
 const redis = useRedis()
 const toaster = useToaster()
-const keysStore = useKeysStore()
 const hasItems = useHasItems(value)
 
 const {
@@ -59,7 +57,7 @@ const {
   value.value = shouldMerge ? [...value.value, ...(newValue as string[])] : (newValue as string[])
 })
 
-const save = async (key: number, newValue: string) => {
+const save = async ({value: newValue, key}: { key: number, value: string }) => {
   let commands = []
   commands.push(['srem', props.name, value.value[key]])
   commands.push(['sadd', props.name, key, newValue])
@@ -68,7 +66,7 @@ const save = async (key: number, newValue: string) => {
     await redis.client.multi(commands).exec()
     value.value[key] = newValue
     toaster.success('Saved')
-    keysStore.loadKeys()
+    await loadKeys()
   } catch (error) {
     toaster.error(error)
   }

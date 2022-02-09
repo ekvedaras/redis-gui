@@ -1,4 +1,5 @@
-import {computed, Ref, ref} from "vue";
+import type {Ref} from 'vue';
+import {computed, ref} from 'vue';
 
 export function useRegexFilter(value: Ref<string[]>) {
   const search = ref('')
@@ -7,7 +8,7 @@ export function useRegexFilter(value: Ref<string[]>) {
       return value.value;
     }
 
-    let pattern = new RegExp(search.value, 'i');
+    const pattern = new RegExp(search.value, 'i');
     return value.value.filter(item => pattern.test(item));
   })
 

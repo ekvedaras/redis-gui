@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-y-auto">
-    <Value class="relative" v-if="!isLoading" :value="value" @save="save" without-delete />
+    <Value v-if="!isLoading" class="relative" :value="value" without-delete @save="save" />
     <CenteredLoader v-if="isLoading" />
   </div>
 </template>
@@ -22,7 +22,7 @@ const isLoading = ref(true)
 const redis = useRedis()
 const toaster = useToaster()
 
-const save = async (newValue: string) => {
+const save = async ({value: newValue}: { value: string, key: string }) => {
   try {
     await redis.client.set(props.name, newValue)
     value.value = newValue

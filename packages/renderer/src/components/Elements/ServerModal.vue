@@ -138,7 +138,7 @@ const test = async () => {
       window.testRedisApi.client.quit()
     })
 
-    window.testRedisApi.client.on('error', (error: any) => {
+    window.testRedisApi.client.on('error', (error: unknown) => {
       toaster.error(`REDIS ERROR: ${ error }`)
       isTesting.value = false
     })

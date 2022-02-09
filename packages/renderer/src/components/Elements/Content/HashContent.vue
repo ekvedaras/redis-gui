@@ -30,7 +30,6 @@ import { useCursorScanner } from '/@/use/cursorScanner'
 import { ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
-import { useKeysStore } from '/@/store/keys'
 import SearchBar from '/@/components/Elements/SearchBar.vue'
 import Value from '/@/components/Elements/Value.vue'
 import { useHasItems } from '/@/use/hasItems'
@@ -47,7 +46,6 @@ const value = ref<Tuple[]>([])
 
 const redis = useRedis()
 const toaster = useToaster()
-const keysStore = useKeysStore()
 const hasItems = useHasItems(value)
 const {
   search,
@@ -70,7 +68,7 @@ const save = async (key: string, newKey: string, value: string) => {
   try {
     await redis.client.multi(commands).exec()
     toaster.success('Saved')
-    keysStore.loadKeys()
+    await loadKeys()
   } catch (error) {
     toaster.error(error)
   }

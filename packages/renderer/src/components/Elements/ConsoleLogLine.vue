@@ -5,7 +5,7 @@
         <DownIcon v-if="collapsed" class="w-5" />
         <UpIcon v-else class="w-5" />
       </IconButton>
-      <IconButton v-if="log.wasSent" @click="$emit('rerun', log.content)">
+      <IconButton v-if="log.wasSent" @click="emit('rerun', log.content)">
         <RefreshIcon class="w-5" />
       </IconButton>
       <IconButton @click="copy">
@@ -14,7 +14,7 @@
       <IconButton v-if="!log.wasSent && typeof log.content !== 'object' && isJSON" @click="asJson = !asJson">
         <CodeIcon class="w-5" />
       </IconButton>
-      <IconButton v-if="!log.wasSent && !asJson" @click="breakWords = !breakWords" class="z-10">
+      <IconButton v-if="!log.wasSent && !asJson" class="z-10" @click="breakWords = !breakWords">
         <WordBreakIcon class="w-4 m-1" />
       </IconButton>
     </div>
@@ -22,10 +22,14 @@
       <div v-if="typeof log.content === 'object'">
         <table class="compact">
           <tbody>
-          <tr v-for="(entry, index) in log.content" :key="index">
-            <th class="text-right">{{ index }})</th>
-            <td class="text-left">{{ entry }}</td>
-          </tr>
+            <tr v-for="(entry, index) in log.content" :key="index">
+              <th class="text-right">
+                {{ index }})
+              </th>
+              <td class="text-left">
+                {{ entry }}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -39,14 +43,14 @@
         </div>
       </div>
     </div>
-    <div v-if="collapsed" @click="collapsed = false" class="inline cursor-pointer leading-none collapse-indicator rounded text-gray-500 dark:text-gray-600 bg-gray-200 dark:bg-gray-900 px-2">
+    <div v-if="collapsed" class="inline cursor-pointer leading-none collapse-indicator rounded text-gray-500 dark:text-gray-600 bg-gray-200 dark:bg-gray-900 px-2" @click="collapsed = false">
       •••
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ConsoleLog from '/@/models/ConsoleLog'
+import type ConsoleLog from '/@/models/ConsoleLog'
 import { computed, ref } from 'vue'
 import { useJson } from '/@/use/json'
 import { useToaster } from '/@/use/toaster'
@@ -61,6 +65,10 @@ import WordBreakIcon from '/@/components/Icons/WordBreakIcon.vue'
 
 const props = defineProps<{
   log: ConsoleLog,
+}>()
+
+const emit = defineEmits<{
+  (e: 'rerun', command: string | object): void,
 }>()
 
 const shouldAttemptJson = computed(() => typeof props.log.content === 'string' && props.log.content.length < 1024 * 10 && (props.log.content.startsWith('[') || props.log.content.startsWith('{')))

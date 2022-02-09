@@ -2,13 +2,14 @@
   <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col justify-center min-h-16">
     <div class="sticky right-0 text-right justify-end h-5" :class="[withKeys ? 'controls' : 'top-0']">
       <KeyItemControls
-        @toggleWordBreak="toggleWordBreak"
-        @toggleJson="emit('toggleJson')"
+        :without-delete="withoutDelete"
+        :with-json="withJson"
+        @toggle-word-break="toggleWordBreak"
+        @toggle-json="emit('toggleJson')"
         @edit="emit('edit')"
         @delete="emit('delete')"
         @copy="emit('copy')"
-        :without-delete="withoutDelete"
-        :with-json="withJson" />
+      />
     </div>
     <div :class="['overflow-x-auto', breakWords ? 'break-all' : 'whitespace-pre']">
       {{ data }}
@@ -24,7 +25,7 @@ import { ref } from 'vue'
 import ValueSize from '/@/components/Elements/ValueSize.vue'
 import KeyItemControls from '/@/components/Elements/KeyItemControls.vue'
 
-const props = defineProps<{
+defineProps<{
   data: string
   withJson: boolean
   withoutDelete: boolean

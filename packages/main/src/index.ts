@@ -1,4 +1,5 @@
-import {app, BrowserWindow, ipcMain, Menu, MenuItem, shell} from 'electron'
+import type {MenuItem} from 'electron';
+import {app, BrowserWindow, ipcMain, Menu, shell} from 'electron'
 import {join} from 'path'
 import {URL} from 'url'
 import menu from '/@/menu'
@@ -149,7 +150,7 @@ ipcMain.on('menu-event', (event, commandId) => {
 // Parse menu to send it to the title bar
 const parseMenu = () => {
   const menu = new WeakSet();
-  return (key: string, value: any) => {
+  return (key: string, value?: object) => {
     if (key === 'commandsMap') return;
     if (typeof value === 'object' && value !== null) {
       if (menu.has(value)) return;

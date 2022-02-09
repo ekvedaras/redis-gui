@@ -10,7 +10,7 @@
           <input v-show="isRenaming" ref="renameField" v-model="newName" type="text" placeholder="New name..." class="p-1 text-sm" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" />
           <span class="text-sm ml-2" style="cursor: help" @click="showDocs = true">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
         </h2>
-        <IconButton tabindex="0" @click="showDeleteDialog = true" @shortkey.native="showDeleteDialog = true">
+        <IconButton tabindex="0" @click="showDeleteDialog = true">
           <DeleteIcon class="w-4 m-1" />
         </IconButton>
         <TTL :redis-key="keysStore.current" />
@@ -75,7 +75,9 @@ const rename = async (save: boolean) => {
       await redis.client.rename(keysStore.current?.name, newName.value)
       let oldKey = {...keysStore.current} as Key
       let _newName = newName.value
-      keysStore.addKey({...keysStore.current!, name: _newName})
+      if (keysStore.current) {
+        keysStore.addKey({...keysStore.current, name: _newName})
+      }
       keysStore.selected = _newName
       keysStore.removeKey(oldKey)
       keysStore.loadKeyInfo(_newName)
@@ -91,7 +93,7 @@ const rename = async (save: boolean) => {
 
 const showDeleteDialog = ref(false)
 const deleteKey = () => {
-  keysStore.deleteKey(keysStore.selected!)
+  keysStore.selected && keysStore.deleteKey(keysStore.selected)
   databasesStore.load()
   showDeleteDialog.value = false
 }
@@ -100,7 +102,7 @@ const emitter = useEmitter()
 const emitUpdate = () => emitter.emit('key-updated', keysStore.selected)
 
 const showDocs = ref(false)
-const docsTitle = computed(() => `${ keysStore.current!.type.substr(0, 1).toUpperCase() }${ keysStore.current!.type.substr(1) } documentation`)
+const docsTitle = computed(() => `${ keysStore.current?.type.substr(0, 1).toUpperCase() }${ keysStore.current?.type.substr(1) } documentation`)
 const typeDocs = computed(() => {
   switch (keysStore.current?.type) {
     case 'hash':

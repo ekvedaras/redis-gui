@@ -37,44 +37,44 @@ const keySpaceInfo = markRaw(KeyspaceInfo)
 const info = ref<Record<string, Record<string, string>>>({})
 const tabs = ref<Record<string, PropTab>>({
   Server: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Clients: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Memory: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Persistence: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Stats: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Replication: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   CPU: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Errorstats: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Cluster: {
-    component: tableInfo,
-    props: { info: {} },
+    component: new tableInfo,
+    props: {info: {}},
   },
   Keyspace: {
-    component: keySpaceInfo,
-    props: { info: {} },
+    component: new keySpaceInfo,
+    props: {info: {}},
   },
 })
 

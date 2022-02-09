@@ -42,7 +42,7 @@
     <ConfirmDialog
       v-if="shouldShowDeleteDialog"
       danger
-      @confirm="deleteServer(serverToDelete)"
+      @confirm="() => serverToDelete && deleteServer(serverToDelete)"
       @close="shouldShowDeleteDialog = false"
     >
       Are you sure you want to delete <b>{{ serverToDelete?.name }}</b>?

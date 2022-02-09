@@ -25,8 +25,7 @@ import type { Key as KeyType, Keys } from '../../../types/redis'
 import Key from '/@/components/Elements/Key.vue'
 import Namespace from '/@/components/Elements/Namespace.vue'
 
-// eslint-disable-next-line no-unused-vars
-const props = defineProps<{
+defineProps<{
   keys: Keys,
   level: number,
 }>()

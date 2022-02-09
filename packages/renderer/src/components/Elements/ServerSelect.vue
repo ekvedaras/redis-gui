@@ -2,15 +2,15 @@
   <div class="flex items-center">
     <StateIndicator
       :key="connectingTo"
-      :state="connectionState"
       v-tooltip="connectionMessage"
+      :state="connectionState"
     />
     <select
       id="server"
+      v-tooltip="'Choose redis server'"
       class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1"
       :title="connectionMessage"
       @change="connect"
-      v-tooltip="'Choose redis server'"
     >
       <option
         v-for="(storeServer, key) in serversStore.list"

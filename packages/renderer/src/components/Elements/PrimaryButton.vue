@@ -1,7 +1,9 @@
 <template>
-  <Button @click="emit('click')"
-          :type="type"
-          class="shadow hover:bg-redis focus:bg-redis bg-blue-500 text-white hover:text-white focus:text-white hover:no-underline focus:no-underline">
+  <Button
+    :type="type"
+    class="shadow hover:bg-redis focus:bg-redis bg-blue-500 text-white hover:text-white focus:text-white hover:no-underline focus:no-underline"
+    @click="emit('click')"
+  >
     <slot />
   </Button>
 </template>
@@ -9,7 +11,7 @@
 <script setup lang="ts">
 import Button from '/@/components/Elements/Button.vue'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   type?: string
 }>(), {
   type: 'button',

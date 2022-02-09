@@ -7,15 +7,15 @@
     @click="keysStore.selected = redisKey.name"
   >
     <LevelTab :level="level" />
-    <KeyIcon :redis-key="redisKey" v-tooltip="redisKey.type" />
+    <KeyIcon v-tooltip="redisKey.type" :redis-key="redisKey" />
     <div class="ml-2 flex-1">
       {{ nameWithDots }}
     </div>
     <TimeIcon
       v-if="redisKey.ttl > -1"
+      v-tooltip="expiresIn"
       class="w-3 mt-1-5 text-gray-600"
       :style="{minWidth: '0.75rem'}"
-      v-tooltip="expiresIn"
     />
   </div>
 </template>

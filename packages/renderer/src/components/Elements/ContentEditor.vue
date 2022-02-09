@@ -1,12 +1,14 @@
 <template>
   <div>
     <!--suppress HtmlFormInputWithoutLabel -->
-    <textarea ref="editor"
-              :value="value"
-              @input="emit('input', $event.target.value)"
-              @keydown.esc="emit('close')"
-              @keydown.ctrl.enter="emit('save')"
-              class="w-full h-64" />
+    <textarea
+      ref="editor"
+      :value="value"
+      class="w-full h-64"
+      @input="emit('input', $event.target?.value)"
+      @keydown.esc="emit('close')"
+      @keydown.ctrl.enter="emit('save')"
+    />
     <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
   </div>
 </template>
@@ -14,7 +16,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-const props = defineProps<{
+defineProps<{
   value: string
 }>()
 

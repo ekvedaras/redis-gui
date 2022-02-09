@@ -1,7 +1,7 @@
 import type {FsApi} from './fs-api'
 import type {UtilApi} from 'types/util-api'
 import type {RedisApi} from './redis-api'
-import * as prettyBytes from 'pretty-bytes'
+import type * as prettyBytes from 'pretty-bytes'
 
 
 interface ElectronApi {

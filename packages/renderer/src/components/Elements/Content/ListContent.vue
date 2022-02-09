@@ -1,7 +1,7 @@
 <template>
   <div>
     <SearchBar
-      v-model="search"
+      v-model:value="search"
       :show-spinner="isLoading"
       with-add :add-name="name" add-type="list"
     />
@@ -17,7 +17,8 @@
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
     <ConfirmDeleteDialog
-      v-if="showDeleteDialog" :item="itemToDelete"
+      v-if="showDeleteDialog && itemToDelete"
+      :item="itemToDelete"
       :name="name"
       using="deleteListItem"
       @close="showDeleteDialog = false"
@@ -30,7 +31,6 @@
 import { ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
-import { useKeysStore } from '/@/store/keys'
 import { useHasItems } from '/@/use/hasItems'
 import { useReloadOnKeyUpdate } from '/@/use/reloadOnKeyUpdate'
 import SearchBar from '/@/components/Elements/SearchBar.vue'
@@ -49,7 +49,6 @@ const value = ref<string[]>([])
 
 const redis = useRedis()
 const toaster = useToaster()
-const keysStore = useKeysStore()
 const hasItems = useHasItems(value)
 useReloadOnKeyUpdate(props.name, () => resetCursor())
 
@@ -59,7 +58,6 @@ const {
   isLoading,
   pointer,
   size,
-  loadKeys,
   loadMore,
 } = usePointerScanner(props.name, 'lrange', 'llength', value)
 

@@ -1,6 +1,6 @@
-import {onMounted} from "vue";
-import {useKeysStore} from "/@/store/keys";
-import useEmitter from "/@/use/emitter";
+import {onMounted} from 'vue';
+import {useKeysStore} from '/@/store/keys';
+import useEmitter from '/@/use/emitter';
 
 export function useReloadOnKeyUpdate(
   name: string,

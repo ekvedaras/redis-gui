@@ -8,7 +8,7 @@
         @edit="emit('edit')"
         @delete="emit('delete')"
         @copy="emit('copy')"
-        @toggleJson="emit('toggleJson')"
+        @toggle-json="emit('toggleJson')"
       />
     </div>
     <VueJsonPretty
@@ -30,7 +30,7 @@ import KeyItemControls from '/@/components/Elements/KeyItemControls.vue'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   data: string;
   withoutControls?: boolean;
   withoutDelete?: boolean;
