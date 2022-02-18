@@ -1,14 +1,3 @@
-<template>
-  <AppModal :title="title" full-height full-width @close="emit('close')">
-    <iframe
-      ref="iframe"
-      :src="url"
-      :style="{height: '80vh'}"
-      class="shadow rounded mt-4 w-full"
-    />
-  </AppModal>
-</template>
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
@@ -28,6 +17,13 @@ const iframe = ref<HTMLIFrameElement>()
 onMounted(() => setTimeout(() => iframe.value?.blur(), 500))
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <AppModal :title="title" full-height full-width @close="emit('close')">
+    <iframe
+      ref="iframe"
+      :src="url"
+      :style="{height: '80vh'}"
+      class="shadow rounded mt-4 w-full"
+    />
+  </AppModal>
+</template>

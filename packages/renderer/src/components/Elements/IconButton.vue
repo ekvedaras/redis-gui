@@ -1,3 +1,9 @@
+<script setup lang="ts">
+const emit = defineEmits<{
+  (e: 'click'): void;
+}>()
+</script>
+
 <template>
   <button
     :class="[
@@ -12,9 +18,3 @@
     <slot />
   </button>
 </template>
-
-<script setup lang="ts">
-const emit = defineEmits<{
-  (e: 'click') : void;
-}>()
-</script>

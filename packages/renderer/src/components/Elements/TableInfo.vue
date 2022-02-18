@@ -1,3 +1,11 @@
+<script setup lang="ts">
+defineProps<{
+  info: Record<string, string>;
+}>()
+
+const readable = (key: string) => key.substr(0, 1).toUpperCase() + key.substr(1).replace(/_/g, ' ')
+</script>
+
 <template>
   <table class="w-full">
     <tbody>
@@ -12,15 +20,3 @@
     </tbody>
   </table>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  info: Record<string, string>;
-}>()
-
-const readable = (key: string) => key.substr(0, 1).toUpperCase() + key.substr(1).replace(/_/g, ' ')
-</script>
-
-<style scoped>
-
-</style>

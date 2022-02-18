@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import type ConsoleLog from '/@/models/ConsoleLog'
+import { computed, ref } from 'vue'
+import { useJson } from '/@/use/json'
+import { useToaster } from '/@/use/toaster'
+import JsonRenderer from '/@/components/Elements/JsonRenderer.vue'
+import IconButton from '/@/components/Elements/IconButton.vue'
+import DownIcon from '/@/components/Icons/DownIcon.vue'
+import UpIcon from '/@/components/Icons/UpIcon.vue'
+import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
+import DocumentIcon from '/@/components/Icons/DocumentIcon.vue'
+import CodeIcon from '/@/components/Icons/CodeIcon.vue'
+import WordBreakIcon from '/@/components/Icons/WordBreakIcon.vue'
+
+const props = defineProps<{
+  log: ConsoleLog,
+}>()
+
+const emit = defineEmits<{
+  (e: 'rerun', command: string | object): void,
+}>()
+
+const shouldAttemptJson = computed(() => typeof props.log.content === 'string' && props.log.content.length < 1024 * 10 && (props.log.content.startsWith('[') || props.log.content.startsWith('{')))
+const { isJSON: _isJson } = useJson()
+const isJSON = computed(() => typeof props.log.content === 'string' && _isJson(props.log.content))
+
+const collapsed = ref(false)
+const breakWords = ref(false)
+const asJson = ref(shouldAttemptJson.value && isJSON.value)
+
+const toaster = useToaster()
+const copy = () => {
+  // this.$copyText(props.log.content)
+  alert('TODO copy content')
+  toaster.info('Copied')
+}
+</script>
+
 <template>
   <div class="overflow-x-auto relative" :class="{'text-redis': log.isError, 'sent-command rounded-t border-b z-30 border-gray-200 dark:border-gray-800 mb-2 -mx-4 font-bold sticky py-2 px-4 top-0 shadow-sm bg-white dark:bg-black': log.wasSent}">
     <div class="absolute z-20 top-0 right-0 bg-white-80p dark:bg-black-50p rounded flex space-x-2 items-center" :class="{'mt-2 mr-2': log.wasSent}">
@@ -48,44 +86,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import type ConsoleLog from '/@/models/ConsoleLog'
-import { computed, ref } from 'vue'
-import { useJson } from '/@/use/json'
-import { useToaster } from '/@/use/toaster'
-import JsonRenderer from '/@/components/Elements/JsonRenderer.vue'
-import IconButton from '/@/components/Elements/IconButton.vue'
-import DownIcon from '/@/components/Icons/DownIcon.vue'
-import UpIcon from '/@/components/Icons/UpIcon.vue'
-import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
-import DocumentIcon from '/@/components/Icons/DocumentIcon.vue'
-import CodeIcon from '/@/components/Icons/CodeIcon.vue'
-import WordBreakIcon from '/@/components/Icons/WordBreakIcon.vue'
-
-const props = defineProps<{
-  log: ConsoleLog,
-}>()
-
-const emit = defineEmits<{
-  (e: 'rerun', command: string | object): void,
-}>()
-
-const shouldAttemptJson = computed(() => typeof props.log.content === 'string' && props.log.content.length < 1024 * 10 && (props.log.content.startsWith('[') || props.log.content.startsWith('{')))
-const {isJSON: _isJson} = useJson()
-const isJSON = computed(() => typeof props.log.content === 'string' && _isJson(props.log.content))
-
-const collapsed = ref(false)
-const breakWords = ref(false)
-const asJson = ref(shouldAttemptJson.value && isJSON.value)
-
-const toaster = useToaster()
-const copy = () => {
-  // this.$copyText(props.log.content)
-  alert('TODO copy content')
-  toaster.info('Copied')
-}
-</script>
 
 <style scoped>
 div.collapse-indicator {

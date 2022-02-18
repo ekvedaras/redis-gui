@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import type { Key as KeyType, Keys } from '../../../types/redis'
+import Key from '/@/components/Elements/Key.vue'
+import Namespace from '/@/components/Elements/Namespace.vue'
+
+defineProps<{
+  keys: Keys,
+  level: number,
+}>()
+
+const isKey = (key: KeyType) => {
+  return Object.prototype.hasOwnProperty.call(key, 'name')
+}
+</script>
+
 <template>
   <ul>
     <li
@@ -19,22 +34,3 @@
     </li>
   </ul>
 </template>
-
-<script setup lang="ts">
-import type { Key as KeyType, Keys } from '../../../types/redis'
-import Key from '/@/components/Elements/Key.vue'
-import Namespace from '/@/components/Elements/Namespace.vue'
-
-defineProps<{
-  keys: Keys,
-  level: number,
-}>()
-
-const isKey = (key: KeyType) => {
-  return Object.prototype.hasOwnProperty.call(key, 'name')
-}
-</script>
-
-<style scoped>
-
-</style>

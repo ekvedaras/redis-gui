@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import KeyboardKey from '/@/components/Elements/KeyboardKey.vue'
+import AppModal from '/@/components/Elements/AppModal.vue'
+
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>()
+</script>
+
 <template>
   <AppModal title="Keymap" @close="emit('close')">
     <table>
@@ -85,15 +94,6 @@
     </table>
   </AppModal>
 </template>
-
-<script setup lang="ts">
-import KeyboardKey from '/@/components/Elements/KeyboardKey.vue'
-import AppModal from '/@/components/Elements/AppModal.vue'
-
-const emit = defineEmits<{
-  (e: 'close'): void;
-}>()
-</script>
 
 <style scoped>
 table th {

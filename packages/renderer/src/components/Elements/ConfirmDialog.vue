@@ -1,22 +1,3 @@
-<template>
-  <AppModal @close="emit('close')">
-    <div class="mt-2">
-      <slot />
-    </div>
-    <div class="flex justify-end space-x-2 mt-6">
-      <Button @click="close">
-        {{ cancelText }}
-      </Button>
-      <DangerButton v-if="danger" @click="emit('confirm')">
-        {{ confirmText }}
-      </DangerButton>
-      <PrimaryButton v-else @click="emit('confirm')">
-        {{ confirmText }}
-      </PrimaryButton>
-    </div>
-  </AppModal>
-</template>
-
 <script setup lang="ts">
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
@@ -40,6 +21,21 @@ const emit = defineEmits<{
 
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <AppModal @close="emit('close')">
+    <div class="mt-2">
+      <slot />
+    </div>
+    <div class="flex justify-end space-x-2 mt-6">
+      <Button @click="close">
+        {{ cancelText }}
+      </Button>
+      <DangerButton v-if="danger" @click="emit('confirm')">
+        {{ confirmText }}
+      </DangerButton>
+      <PrimaryButton v-else @click="emit('confirm')">
+        {{ confirmText }}
+      </PrimaryButton>
+    </div>
+  </AppModal>
+</template>

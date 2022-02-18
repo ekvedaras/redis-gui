@@ -1,9 +1,3 @@
-<template>
-  <ConfirmDialog danger @close="emit('close')" @confirm="deleteItem">
-    Are you sure you want to delete <b>{{ itemName }}</b> item from {{ name }}?
-  </ConfirmDialog>
-</template>
-
 <script setup lang="ts">
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import { useKeysStore } from '/@/store/keys'
@@ -31,6 +25,8 @@ const deleteItem = async () => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <ConfirmDialog danger @close="emit('close')" @confirm="deleteItem">
+    Are you sure you want to delete <b>{{ itemName }}</b> item from {{ name }}?
+  </ConfirmDialog>
+</template>

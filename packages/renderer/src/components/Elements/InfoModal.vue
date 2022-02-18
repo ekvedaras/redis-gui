@@ -1,21 +1,3 @@
-<template>
-  <AppModal
-    title="Server info"
-    class="overflow-y-hidden"
-    full-height
-    @close="emit('close')"
-  >
-    <IconButton
-      v-tooltip="'Refresh'"
-      class="absolute right-0 mr-3 mt-3 top-0"
-      @click="fetch"
-    >
-      <RefreshIcon class="w-8" />
-    </IconButton>
-    <Tabs :tabs="tabs" />
-  </AppModal>
-</template>
-
 <script setup lang="ts">
 import IconButton from '/@/components/Elements/IconButton.vue'
 import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
@@ -38,43 +20,43 @@ const info = ref<Record<string, Record<string, string>>>({})
 const tabs = ref<Record<string, PropTab>>({
   Server: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Clients: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Memory: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Persistence: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Stats: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Replication: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   CPU: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Errorstats: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Cluster: {
     component: new tableInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
   Keyspace: {
     component: new keySpaceInfo,
-    props: {info: {}},
+    props: { info: {} },
   },
 })
 
@@ -106,6 +88,20 @@ const fetch = async () => {
 onBeforeMount(fetch)
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <AppModal
+    title="Server info"
+    class="overflow-y-hidden"
+    full-height
+    @close="emit('close')"
+  >
+    <IconButton
+      v-tooltip="'Refresh'"
+      class="absolute right-0 mr-3 mt-3 top-0"
+      @click="fetch"
+    >
+      <RefreshIcon class="w-8" />
+    </IconButton>
+    <Tabs :tabs="tabs" />
+  </AppModal>
+</template>

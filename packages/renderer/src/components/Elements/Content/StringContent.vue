@@ -1,10 +1,3 @@
-<template>
-  <div class="overflow-y-auto">
-    <Value v-if="!isLoading" class="relative" :value="value" without-delete @save="save" />
-    <CenteredLoader v-if="isLoading" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRedis } from '/@/use/redis'
@@ -22,7 +15,7 @@ const isLoading = ref(true)
 const redis = useRedis()
 const toaster = useToaster()
 
-const save = async ({value: newValue}: { value: string, key: string }) => {
+const save = async ({ value: newValue }: { value: string, key: string }) => {
   try {
     await redis.client.set(props.name, newValue)
     value.value = newValue
@@ -38,6 +31,9 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div class="overflow-y-auto">
+    <Value v-if="!isLoading" class="relative" :value="value" without-delete @save="save" />
+    <CenteredLoader v-if="isLoading" />
+  </div>
+</template>

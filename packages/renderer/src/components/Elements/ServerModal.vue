@@ -1,53 +1,9 @@
-<template>
-  <AppModal :title="title" @close="emit('close')">
-    <input v-model="name" type="text" placeholder="Name" />
-    <div class="flex space-x-4">
-      <input v-model="host" type="text" placeholder="Host / IP" class="flex-1" />
-      <input v-model="port" type="number" placeholder="Port" />
-    </div>
-    <input v-if="!ssh.tunnel" v-model="path" type="text" placeholder="or UNIX socket path" class="flex-1" />
-    <input v-if="!ssh.tunnel" v-model="url" type="text" placeholder="or URL (redis://, rediss://)" class="flex-1" />
-    <input v-model="password" type="password" placeholder="Password (optional)" />
-    <div class="flex space-x-4 items-baseline">
-      <input id="ssh" v-model="ssh.tunnel" type="checkbox" />
-      <label for="ssh">SSH tunnel</label>
-    </div>
-    <div v-if="ssh.tunnel" class="flex flex-col space-y-4">
-      <div class="flex space-x-4">
-        <input v-model="ssh.host" type="text" placeholder="SSH host / IP" class="flex-1" />
-        <input v-model="ssh.port" type="number" placeholder="SSH port" />
-      </div>
-      <div class="flex space-x-4">
-        <input v-model="ssh.user" type="text" placeholder="SSH user (optional)" class="flex-1" />
-        <input v-model="ssh.password" type="password" placeholder="SSH password (optional)" class="flex-1" />
-      </div>
-      <div class="flex space-x-4">
-        <input v-model="ssh.privateKey" type="text" :placeholder="privateKeyPlaceholder" class="flex-1" />
-      </div>
-    </div>
-    <div class="flex justify-end space-x-4">
-      <div v-if="isTesting" class="relative w-10 h-10 flex items-center justify-end">
-        <Spinner />
-      </div>
-      <Button class="relative" @click="test">
-        Test
-      </Button>
-      <Button @click="emit('close')">
-        Cancel
-      </Button>
-      <PrimaryButton @click="save">
-        Save
-      </PrimaryButton>
-    </div>
-  </AppModal>
-</template>
-
 <script setup lang="ts">
 import AppModal from '/@/components/Elements/AppModal.vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
-import type { SshConfig } from '../../../types/database'
+import type { SshConfig } from 'types/database'
 import { useDatabase } from '/@/use/database'
 import { useServersStore } from '/@/store/servers'
 import { useRedis } from '/@/use/redis'
@@ -150,4 +106,46 @@ const test = async () => {
 }
 </script>
 
-<style scoped></style>
+<template>
+  <AppModal :title="title" @close="emit('close')">
+    <input v-model="name" type="text" placeholder="Name" />
+    <div class="flex space-x-4">
+      <input v-model="host" type="text" placeholder="Host / IP" class="flex-1" />
+      <input v-model="port" type="number" placeholder="Port" />
+    </div>
+    <input v-if="!ssh.tunnel" v-model="path" type="text" placeholder="or UNIX socket path" class="flex-1" />
+    <input v-if="!ssh.tunnel" v-model="url" type="text" placeholder="or URL (redis://, rediss://)" class="flex-1" />
+    <input v-model="password" type="password" placeholder="Password (optional)" />
+    <div class="flex space-x-4 items-baseline">
+      <input id="ssh" v-model="ssh.tunnel" type="checkbox" />
+      <label for="ssh">SSH tunnel</label>
+    </div>
+    <div v-if="ssh.tunnel" class="flex flex-col space-y-4">
+      <div class="flex space-x-4">
+        <input v-model="ssh.host" type="text" placeholder="SSH host / IP" class="flex-1" />
+        <input v-model="ssh.port" type="number" placeholder="SSH port" />
+      </div>
+      <div class="flex space-x-4">
+        <input v-model="ssh.user" type="text" placeholder="SSH user (optional)" class="flex-1" />
+        <input v-model="ssh.password" type="password" placeholder="SSH password (optional)" class="flex-1" />
+      </div>
+      <div class="flex space-x-4">
+        <input v-model="ssh.privateKey" type="text" :placeholder="privateKeyPlaceholder" class="flex-1" />
+      </div>
+    </div>
+    <div class="flex justify-end space-x-4">
+      <div v-if="isTesting" class="relative w-10 h-10 flex items-center justify-end">
+        <Spinner />
+      </div>
+      <Button class="relative" @click="test">
+        Test
+      </Button>
+      <Button @click="emit('close')">
+        Cancel
+      </Button>
+      <PrimaryButton @click="save">
+        Save
+      </PrimaryButton>
+    </div>
+  </AppModal>
+</template>

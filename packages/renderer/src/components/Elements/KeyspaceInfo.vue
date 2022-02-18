@@ -1,24 +1,3 @@
-<template>
-  <table class="w-full">
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>Keys</th>
-      <th>Expires</th>
-      <th>Average TTL</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="(database, id) in databases" :key="database.id">
-      <th>{{ id }}</th>
-      <td>{{ database.keys }}</td>
-      <td>{{ database.expires }}</td>
-      <td>{{ database.avg_ttl }}</td>
-    </tr>
-    </tbody>
-  </table>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue'
 
@@ -41,6 +20,23 @@ const databases = computed(() => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Keys</th>
+        <th>Expires</th>
+        <th>Average TTL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(database, id) in databases" :key="database.id">
+        <th>{{ id }}</th>
+        <td>{{ database.keys }}</td>
+        <td>{{ database.expires }}</td>
+        <td>{{ database.avg_ttl }}</td>
+      </tr>
+    </tbody>
+  </table>
+</template>

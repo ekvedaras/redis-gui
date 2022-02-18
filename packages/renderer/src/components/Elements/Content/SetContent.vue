@@ -1,30 +1,3 @@
-<template>
-  <div>
-    <SearchBar
-      v-model:value="search"
-      :show-spinner="isLoading"
-      with-add :add-name="name" add-type="set"
-    />
-    <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
-      <Value
-        v-for="(item, i) in value"
-        :key="i"
-        class="relative" :value="item"
-        @save="save(i, $event)"
-        @delete="deleteItem(item)"
-      />
-      <LoadMoreButton v-if="nextCursor" @click="loadMore" />
-      <CenteredLoader v-if="isLoading && !hasItems" />
-    </div>
-    <ConfirmDeleteDialog
-      v-if="showDeleteDialog" :item="itemToDelete"
-      :name="name"
-      using="deleteSetItem"
-      @close="showDeleteDialog = false"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useCursorScanner } from '/@/use/cursorScanner'
 import { ref } from 'vue'
@@ -57,7 +30,7 @@ const {
   value.value = shouldMerge ? [...value.value, ...(newValue as string[])] : (newValue as string[])
 })
 
-const save = async ({value: newValue, key}: { key: number, value: string }) => {
+const save = async ({ value: newValue, key }: { key: number, value: string }) => {
   let commands = []
   commands.push(['srem', props.name, value.value[key]])
   commands.push(['sadd', props.name, key, newValue])
@@ -80,6 +53,29 @@ const deleteItem = (item: string) => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div>
+    <SearchBar
+      v-model:value="search"
+      :show-spinner="isLoading"
+      with-add :add-name="name" add-type="set"
+    />
+    <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
+      <Value
+        v-for="(item, i) in value"
+        :key="i"
+        class="relative" :value="item"
+        @save="save(i, $event)"
+        @delete="deleteItem(item)"
+      />
+      <LoadMoreButton v-if="nextCursor" @click="loadMore" />
+      <CenteredLoader v-if="isLoading && !hasItems" />
+    </div>
+    <ConfirmDeleteDialog
+      v-if="showDeleteDialog" :item="itemToDelete"
+      :name="name"
+      using="deleteSetItem"
+      @close="showDeleteDialog = false"
+    />
+  </div>
+</template>

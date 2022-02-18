@@ -1,50 +1,3 @@
-<template>
-  <AppModal
-    id="console-modal"
-    title="Console"
-    full-height
-    full-width
-    @close="emit('close')"
-  >
-    <div class="rounded bg-white dark:bg-black w-full font-mono shadow flex-1 flex flex-col">
-      <div class="relative flex-1">
-        <CommandInfo
-          v-if="!hideInfo"
-          :command="command"
-          class="z-40"
-        />
-        <div
-          ref="logDiv"
-          class="overflow-y-auto pb-4 px-4 relative"
-          :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}"
-        >
-          <ConsoleLogLine
-            v-for="(line, i) in log"
-            :key="i"
-            :log="line"
-            @rerun="send"
-          />
-        </div>
-      </div>
-      <input
-        v-model="command"
-        type="text"
-        :placeholder="placeholder"
-        class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none"
-        @keydown.up.prevent="history(false)"
-        @keydown.down="history(true)"
-        @keydown.enter="send()"
-      >
-    </div>
-
-    <div class="flex justify-end space-x-4">
-      <Button @click="emit('close')">
-        Close
-      </Button>
-    </div>
-  </AppModal>
-</template>
-
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
 import { useDatabase } from '/@/use/database'
@@ -150,6 +103,53 @@ const send = async (cmd?: string) => {
   }
 }
 </script>
+
+<template>
+  <AppModal
+    id="console-modal"
+    title="Console"
+    full-height
+    full-width
+    @close="emit('close')"
+  >
+    <div class="rounded bg-white dark:bg-black w-full font-mono shadow flex-1 flex flex-col">
+      <div class="relative flex-1">
+        <CommandInfo
+          v-if="!hideInfo"
+          :command="command"
+          class="z-40"
+        />
+        <div
+          ref="logDiv"
+          class="overflow-y-auto pb-4 px-4 relative"
+          :style="{maxHeight: '70vh', scrollBehavior: 'smooth'}"
+        >
+          <ConsoleLogLine
+            v-for="(line, i) in log"
+            :key="i"
+            :log="line"
+            @rerun="send"
+          />
+        </div>
+      </div>
+      <input
+        v-model="command"
+        type="text"
+        :placeholder="placeholder"
+        class="border-t border-gray-200 bg-transparent py-2 px-4 w-full font-mono shadow-none rounded-t-none"
+        @keydown.up.prevent="history(false)"
+        @keydown.down="history(true)"
+        @keydown.enter="send()"
+      >
+    </div>
+
+    <div class="flex justify-end space-x-4">
+      <Button @click="emit('close')">
+        Close
+      </Button>
+    </div>
+  </AppModal>
+</template>
 
 <style scoped>
 #console-modal {

@@ -1,32 +1,3 @@
-<template>
-  <div>
-    <SearchBar
-      v-model:value="search"
-      :show-spinner="isLoading"
-      with-add :add-name="name" add-type="list"
-    />
-    <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
-      <Value
-        v-for="(item, i) in filtered"
-        :key="i"
-        class="relative" :value="item"
-        @save="save(i, $event.value)"
-        @delete="deleteItem(item)"
-      />
-      <LoadMoreButton v-if="pointer" @click="loadMore" />
-      <CenteredLoader v-if="isLoading && !hasItems" />
-    </div>
-    <ConfirmDeleteDialog
-      v-if="showDeleteDialog && itemToDelete"
-      :item="itemToDelete"
-      :name="name"
-      using="deleteListItem"
-      @close="showDeleteDialog = false"
-      @confirm="resetCursor"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRedis } from '/@/use/redis'
@@ -52,7 +23,7 @@ const toaster = useToaster()
 const hasItems = useHasItems(value)
 useReloadOnKeyUpdate(props.name, () => resetCursor())
 
-const {search, filtered} = useRegexFilter(value)
+const { search, filtered } = useRegexFilter(value)
 
 const {
   isLoading,
@@ -84,6 +55,31 @@ const deleteItem = (item: string) => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div>
+    <SearchBar
+      v-model:value="search"
+      :show-spinner="isLoading"
+      with-add :add-name="name" add-type="list"
+    />
+    <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
+      <Value
+        v-for="(item, i) in filtered"
+        :key="i"
+        class="relative" :value="item"
+        @save="save(i, $event.value)"
+        @delete="deleteItem(item)"
+      />
+      <LoadMoreButton v-if="pointer" @click="loadMore" />
+      <CenteredLoader v-if="isLoading && !hasItems" />
+    </div>
+    <ConfirmDeleteDialog
+      v-if="showDeleteDialog && itemToDelete"
+      :item="itemToDelete"
+      :name="name"
+      using="deleteListItem"
+      @close="showDeleteDialog = false"
+      @confirm="resetCursor"
+    />
+  </div>
+</template>

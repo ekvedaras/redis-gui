@@ -1,3 +1,57 @@
+<script setup lang="ts">
+import AppModal from '/@/components/Elements/AppModal.vue'
+import { useServersStore } from '/@/store/servers'
+import type { Server } from 'types/database'
+import { ref } from 'vue'
+import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
+import { useDatabase } from '/@/use/database'
+import Button from '/@/components/Elements/Button.vue'
+import IconButton from '/@/components/Elements/IconButton.vue'
+import EditIcon from '/@/components/Icons/EditIcon.vue'
+import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'
+import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
+import ServerModal from '/@/components/Elements/ServerModal.vue'
+
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>()
+
+const serversStore = useServersStore()
+const serverDetails = ({ host, path, port, url }: Server) => {
+  if (path) {
+    return path
+  }
+
+  if (url) {
+    return url
+  }
+
+  return `${ host }:${ port }`
+}
+
+const shouldShowServerModal = ref(false)
+const serverToEdit = ref<string | undefined>(undefined)
+const edit = (key?: string) => {
+  serverToEdit.value = key
+  shouldShowServerModal.value = true
+}
+
+const shouldShowDeleteDialog = ref(false)
+const serverToDelete = ref<Server | null>(null)
+const database = useDatabase()
+const confirmDelete = (server: Server) => {
+  serverToDelete.value = server
+  shouldShowDeleteDialog.value = true
+}
+const deleteServer = (server: Server) => {
+  delete database.data.servers[server.name]
+  delete database.data.history[server.name]
+  database.write()
+  serversStore.list = database.data.servers
+  shouldShowDeleteDialog.value = false
+}
+</script>
+
 <template>
   <AppModal title="Servers" @close="emit('close')">
     <table class="rounded">
@@ -54,61 +108,3 @@
     />
   </AppModal>
 </template>
-
-<script setup lang="ts">
-import AppModal from '/@/components/Elements/AppModal.vue'
-import { useServersStore } from '/@/store/servers'
-import type { Server } from '../../../types/database'
-import { ref } from 'vue'
-import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
-import { useDatabase } from '/@/use/database'
-import Button from '/@/components/Elements/Button.vue'
-import IconButton from '/@/components/Elements/IconButton.vue'
-import EditIcon from '/@/components/Icons/EditIcon.vue'
-import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'
-import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
-import ServerModal from '/@/components/Elements/ServerModal.vue'
-
-const emit = defineEmits<{
-  (e: 'close'): void;
-}>()
-
-const serversStore = useServersStore()
-const serverDetails = ({ host, path, port, url }: Server) => {
-  if (path) {
-    return path
-  }
-
-  if (url) {
-    return url
-  }
-
-  return `${ host }:${ port }`
-}
-
-const shouldShowServerModal = ref(false)
-const serverToEdit = ref<string | undefined>(undefined)
-const edit = (key?: string) => {
-  serverToEdit.value = key
-  shouldShowServerModal.value = true
-}
-
-const shouldShowDeleteDialog = ref(false)
-const serverToDelete = ref<Server | null>(null)
-const database = useDatabase()
-const confirmDelete = (server: Server) => {
-  serverToDelete.value = server
-  shouldShowDeleteDialog.value = true
-}
-const deleteServer = (server: Server) => {
-  delete database.data.servers[server.name]
-  delete database.data.history[server.name]
-  database.write()
-  serversStore.list = database.data.servers
-  shouldShowDeleteDialog.value = false
-}
-</script>
-
-<style scoped>
-
-</style>

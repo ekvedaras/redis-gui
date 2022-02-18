@@ -1,7 +1,3 @@
-<template>
-  <div :style="style" />
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue'
 
@@ -14,6 +10,6 @@ const style = computed(() => ({
 }))
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div :style="style" />
+</template>

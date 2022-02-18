@@ -1,30 +1,3 @@
-<template>
-  <div>
-    <SearchBar
-      v-model:value="search"
-      :show-spinner="isLoading"
-      with-add :add-name="name" add-type="hash"
-    />
-    <div class="overflow-y-auto h-full rounded mt-4">
-      <Value
-        v-for="tuple in value"
-        :key="tuple.field"
-        class="relative" :value="tuple.value" :item-key="tuple.field"
-        @save="save(tuple.field, $event.key, $event.value)"
-        @delete="deleteItem(tuple.field)"
-      />
-      <LoadMoreButton v-if="nextCursor" @click="loadMore" />
-      <CenteredLoader v-if="isLoading && !hasItems" />
-    </div>
-    <ConfirmDeleteDialog
-      v-if="showDeleteDialog" :item="itemToDelete"
-      :name="name"
-      using="deleteHashItem"
-      @close="showDeleteDialog = false"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useCursorScanner } from '/@/use/cursorScanner'
 import { ref } from 'vue'
@@ -36,7 +9,7 @@ import { useHasItems } from '/@/use/hasItems'
 import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
-import type { Tuple } from '../../../../types/models'
+import type { Tuple } from 'types/models'
 
 const props = defineProps<{
   name: string,
@@ -54,7 +27,7 @@ const {
   loadKeys,
   loadMore,
 } = useCursorScanner(props.name, 'hScan', (newValue, shouldMerge) => {
-  value.value = shouldMerge ? {...value.value, ...(newValue as Tuple[])} : (newValue as Tuple[])
+  value.value = shouldMerge ? { ...value.value, ...(newValue as Tuple[]) } : (newValue as Tuple[])
 })
 
 const save = async (key: string, newKey: string, value: string) => {
@@ -82,6 +55,29 @@ const deleteItem = (item: string) => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div>
+    <SearchBar
+      v-model:value="search"
+      :show-spinner="isLoading"
+      with-add :add-name="name" add-type="hash"
+    />
+    <div class="overflow-y-auto h-full rounded mt-4">
+      <Value
+        v-for="tuple in value"
+        :key="tuple.field"
+        class="relative" :value="tuple.value" :item-key="tuple.field"
+        @save="save(tuple.field, $event.key, $event.value)"
+        @delete="deleteItem(tuple.field)"
+      />
+      <LoadMoreButton v-if="nextCursor" @click="loadMore" />
+      <CenteredLoader v-if="isLoading && !hasItems" />
+    </div>
+    <ConfirmDeleteDialog
+      v-if="showDeleteDialog" :item="itemToDelete"
+      :name="name"
+      using="deleteHashItem"
+      @close="showDeleteDialog = false"
+    />
+  </div>
+</template>

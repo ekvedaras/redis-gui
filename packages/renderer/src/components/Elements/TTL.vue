@@ -1,27 +1,5 @@
-<template>
-  <div class="flex">
-    <div
-      ref="ttlText"
-      v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
-      tabindex="0"
-      class="flex cursor-pointer rounded text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
-      :class="{'text-gray-500': redisKey.ttl < 1}"
-      @keydown.enter="startEditing"
-      @click="startEditing"
-    >
-      <TimeIcon class="w-4 m-1" />
-      <div v-show="!isEditing" v-if="redisKey.ttl > -1">
-        <span v-if="seconds < 60" class="ml-2">Expires in TODO<!-- {{ [seconds, 'seconds'] | duration('as', 'seconds') }} seconds--></span>
-        <span v-else class="ml-2">Expires in TODO<!--{{ [seconds, 'seconds'] | duration('humanize') }}--></span>
-      </div>
-    </div>
-    <!--suppress HtmlFormInputWithoutLabel -->
-    <input v-show="isEditing" ref="ttlField" v-model="newTtl" type="text" placeholder="TTL seconds" class="text-sm py-0 px-2" @keydown.esc="edit(false)" @keydown.enter="edit(true)" @blur="edit(true)" />
-  </div>
-</template>
-
 <script setup lang="ts">
-import type { Key } from '../../../types/redis'
+import type { Key } from 'types/redis'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useRedis } from '/@/use/redis'
@@ -52,7 +30,7 @@ const edit = async (save: boolean) => {
     if (newTtl.value < 1) {
       try {
         await redis.client.persist(props.redisKey.name)
-        keysStore.list[props.redisKey.name] = {...props.redisKey, ttl: -1}
+        keysStore.list[props.redisKey.name] = { ...props.redisKey, ttl: -1 }
       } finally {
         isEditing.value = false
         nextTick(() => ttlText.value?.focus())
@@ -60,7 +38,7 @@ const edit = async (save: boolean) => {
     } else {
       try {
         await redis.client.expireAt(props.redisKey.name, newTtl.value)
-        keysStore.list[props.redisKey.name] = {...props.redisKey, ttl: newTtl.value}
+        keysStore.list[props.redisKey.name] = { ...props.redisKey, ttl: newTtl.value }
       } finally {
         isEditing.value = false
         nextTick(() => ttlText.value?.focus())
@@ -81,6 +59,24 @@ onMounted(() => useHotKey([
 ]))
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div class="flex">
+    <div
+      ref="ttlText"
+      v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
+      tabindex="0"
+      class="flex cursor-pointer rounded text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
+      :class="{'text-gray-500': redisKey.ttl < 1}"
+      @keydown.enter="startEditing"
+      @click="startEditing"
+    >
+      <TimeIcon class="w-4 m-1" />
+      <div v-show="!isEditing" v-if="redisKey.ttl > -1">
+        <span v-if="seconds < 60" class="ml-2">Expires in TODO<!-- {{ [seconds, 'seconds'] | duration('as', 'seconds') }} seconds--></span>
+        <span v-else class="ml-2">Expires in TODO<!--{{ [seconds, 'seconds'] | duration('humanize') }}--></span>
+      </div>
+    </div>
+    <!--suppress HtmlFormInputWithoutLabel -->
+    <input v-show="isEditing" ref="ttlField" v-model="newTtl" type="text" placeholder="TTL seconds" class="text-sm py-0 px-2" @keydown.esc="edit(false)" @keydown.enter="edit(true)" @blur="edit(true)" />
+  </div>
+</template>

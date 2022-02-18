@@ -1,42 +1,3 @@
-<template>
-  <div class="w-full flex justify-between items-center space-x-2 px-2 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-    <div class="py-2 h-full">
-      <img
-        src="/@/../assets/redis.svg"
-        alt="Redis logo"
-        class="h-full"
-      >
-    </div>
-    <h1 class="text-left text-xl font-semibold tracking-widest">
-      Redis GUI
-    </h1>
-    <div class="flex-1 space-x-2 flex text-center justify-center items-center">
-      <ServerSelect />
-      <IconButton v-tooltip="'Edit saved redis servers'" @click="shouldShowServerListModal = true">
-        <EditIcon class="w-6 m-1 cursor-pointer" />
-      </IconButton>
-      <IconButton v-tooltip="'Refresh key list and database information'" @click="refresh">
-        <RefreshIcon class="w-6 m-1 cursor-pointer" />
-      </IconButton>
-      <IconButton v-tooltip="'Redis console'" @click="shouldShowConsoleModal = true">
-        <TerminalIcon class="w-6 m-1 cursor-pointer" />
-      </IconButton>
-      <IconButton v-tooltip="'Show server info and statistics'" @click="shouldShowInfoModal = true">
-        <InfoIcon class="w-6 m-1 cursor-pointer" />
-      </IconButton>
-      <IconButton v-tooltip="'Settings'" @click="shouldShowSettingsModal = true">
-        <CogIcon class="w-6 m-1 cursor-pointer" />
-      </IconButton>
-    </div>
-    <DatabaseSelect v-tooltip="'Choose redis database'" class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
-    <ServerListModal v-if="shouldShowServerListModal" @close="shouldShowServerListModal = false" />
-    <InfoModal v-if="shouldShowInfoModal" @close="shouldShowInfoModal = false" />
-    <ConsoleModal v-if="shouldShowConsoleModal" @close="shouldShowConsoleModal = false" />
-    <SettingsModal v-if="shouldShowSettingsModal" @close="shouldShowSettingsModal = false" />
-    <ShortKeyModal v-if="shouldShowShortKeysModal" @close="shouldShowShortKeysModal = false" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import EditIcon from '/@/components/Icons/EditIcon.vue'
 import InfoIcon from '/@/components/Icons/InfoIcon.vue'
@@ -99,3 +60,42 @@ onMounted(() => useHotKey([
   },
 ]))
 </script>
+
+<template>
+  <div class="w-full flex justify-between items-center space-x-2 px-2 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div class="py-2 h-full">
+      <img
+        src="/@/../assets/redis.svg"
+        alt="Redis logo"
+        class="h-full"
+      >
+    </div>
+    <h1 class="text-left text-xl font-semibold tracking-widest">
+      Redis GUI
+    </h1>
+    <div class="flex-1 space-x-2 flex text-center justify-center items-center">
+      <ServerSelect />
+      <IconButton v-tooltip="'Edit saved redis servers'" @click="shouldShowServerListModal = true">
+        <EditIcon class="w-6 m-1 cursor-pointer" />
+      </IconButton>
+      <IconButton v-tooltip="'Refresh key list and database information'" @click="refresh">
+        <RefreshIcon class="w-6 m-1 cursor-pointer" />
+      </IconButton>
+      <IconButton v-tooltip="'Redis console'" @click="shouldShowConsoleModal = true">
+        <TerminalIcon class="w-6 m-1 cursor-pointer" />
+      </IconButton>
+      <IconButton v-tooltip="'Show server info and statistics'" @click="shouldShowInfoModal = true">
+        <InfoIcon class="w-6 m-1 cursor-pointer" />
+      </IconButton>
+      <IconButton v-tooltip="'Settings'" @click="shouldShowSettingsModal = true">
+        <CogIcon class="w-6 m-1 cursor-pointer" />
+      </IconButton>
+    </div>
+    <DatabaseSelect v-tooltip="'Choose redis database'" class="bg-gray-300 dark:bg-gray-700 rounded p-1" />
+    <ServerListModal v-if="shouldShowServerListModal" @close="shouldShowServerListModal = false" />
+    <InfoModal v-if="shouldShowInfoModal" @close="shouldShowInfoModal = false" />
+    <ConsoleModal v-if="shouldShowConsoleModal" @close="shouldShowConsoleModal = false" />
+    <SettingsModal v-if="shouldShowSettingsModal" @close="shouldShowSettingsModal = false" />
+    <ShortKeyModal v-if="shouldShowShortKeysModal" @close="shouldShowShortKeysModal = false" />
+  </div>
+</template>

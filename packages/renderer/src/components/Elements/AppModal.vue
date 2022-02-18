@@ -1,3 +1,19 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  title?: string;
+  fullWidth?: boolean;
+  fullHeight?: boolean;
+}>(), {
+  title: undefined,
+  fullWidth: false,
+  fullHeight: false,
+})
+
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>()
+</script>
+
 <template>
   <Modal show :close="() => emit('close')">
     <div
@@ -17,23 +33,3 @@
     </div>
   </Modal>
 </template>
-
-<script setup lang="ts">
-withDefaults(defineProps<{
-  title?: string;
-  fullWidth?: boolean;
-  fullHeight?: boolean;
-}>(), {
-  title: undefined,
-  fullWidth: false,
-  fullHeight: false,
-})
-
-const emit = defineEmits<{
-  (e: 'close'): void;
-}>()
-</script>
-
-<style scoped>
-
-</style>

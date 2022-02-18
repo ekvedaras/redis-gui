@@ -1,29 +1,3 @@
-<template>
-  <div class="relative group">
-    <JsonRenderer
-      v-if="showJson"
-      :data="value"
-      :without-delete="withoutDelete"
-      :with-keys="withKeys"
-      @edit="emit('edit')"
-      @delete="emit('delete')"
-      @copy="emit('copy')"
-      @toggle-json="toggleJson"
-    />
-    <PlainRenderer
-      v-else
-      :data="value"
-      :without-delete="withoutDelete"
-      :with-keys="withKeys"
-      :with-json="isPotentialJson"
-      @edit="emit('edit')"
-      @delete="emit('delete')"
-      @copy="emit('copy')"
-      @toggle-json="toggleJson"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useJson } from '/@/use/json'
 import { computed, onBeforeMount, ref } from 'vue'
@@ -44,7 +18,7 @@ const emit = defineEmits<{
 }>()
 
 const toaster = useToaster()
-const {isJSON} = useJson()
+const { isJSON } = useJson()
 const showJson = ref(false)
 
 const isPotentialJson = computed(
@@ -74,6 +48,28 @@ onBeforeMount(() => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div class="relative group">
+    <JsonRenderer
+      v-if="showJson"
+      :data="value"
+      :without-delete="withoutDelete"
+      :with-keys="withKeys"
+      @edit="emit('edit')"
+      @delete="emit('delete')"
+      @copy="emit('copy')"
+      @toggle-json="toggleJson"
+    />
+    <PlainRenderer
+      v-else
+      :data="value"
+      :without-delete="withoutDelete"
+      :with-keys="withKeys"
+      :with-json="isPotentialJson"
+      @edit="emit('edit')"
+      @delete="emit('delete')"
+      @copy="emit('copy')"
+      @toggle-json="toggleJson"
+    />
+  </div>
+</template>

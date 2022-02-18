@@ -1,45 +1,3 @@
-<template>
-  <div class="flex flex-col h-full">
-    <SearchBar
-      v-model:value="search"
-      :show-spinner="isLoading"
-      with-add
-      :focus-keys="{main: ['/'], forced: ['ctrl', '/']}"
-      :add-keys="{main: ['a'], forced: ['ctrl', 'a']}"
-      class="px-2"
-    />
-    <div class="overflow-y-auto mt-2 h-full px-1">
-      <Keys
-        :keys="groupedKeys"
-        :level="0"
-        class="mt-2"
-      />
-    </div>
-    <LoadMoreButton
-      v-if="keysStore.cursor"
-      tabindex="2"
-      @click="loadMore"
-    />
-    <div class="flex space-x-2 p-2 justify-start">
-      <IconButton @click="openTwitter">
-        <TwitterIcon v-tooltip="{ content: 'Follow <b>@ekvedaras</b> on twitter', html: true}" />
-      </IconButton>
-      <IconButton @click="openGitHub">
-        <GitHubIcon v-tooltip="{ content: 'Star <b>redis-gui</b> on GitHub', html: true}" />
-      </IconButton>
-      <IconButton v-tooltip="'Keymap'" @click="shouldShowShortKeysModal = true">
-        <span class="p-1 font-bold">
-          ?
-        </span>
-      </IconButton>
-    </div>
-    <ShortKeyModal
-      v-if="shouldShowShortKeysModal"
-      @close="shouldShowShortKeysModal = false"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import _ from 'lodash'
 import { computed, ref, watch } from 'vue'
@@ -138,6 +96,44 @@ const groupedKeys = computed(() => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div class="flex flex-col h-full">
+    <SearchBar
+      v-model:value="search"
+      :show-spinner="isLoading"
+      with-add
+      :focus-keys="{main: ['/'], forced: ['ctrl', '/']}"
+      :add-keys="{main: ['a'], forced: ['ctrl', 'a']}"
+      class="px-2"
+    />
+    <div class="overflow-y-auto mt-2 h-full px-1">
+      <Keys
+        :keys="groupedKeys"
+        :level="0"
+        class="mt-2"
+      />
+    </div>
+    <LoadMoreButton
+      v-if="keysStore.cursor"
+      tabindex="2"
+      @click="loadMore"
+    />
+    <div class="flex space-x-2 p-2 justify-start">
+      <IconButton @click="openTwitter">
+        <TwitterIcon v-tooltip="{ content: 'Follow <b>@ekvedaras</b> on twitter', html: true}" />
+      </IconButton>
+      <IconButton @click="openGitHub">
+        <GitHubIcon v-tooltip="{ content: 'Star <b>redis-gui</b> on GitHub', html: true}" />
+      </IconButton>
+      <IconButton v-tooltip="'Keymap'" @click="shouldShowShortKeysModal = true">
+        <span class="p-1 font-bold">
+          ?
+        </span>
+      </IconButton>
+    </div>
+    <ShortKeyModal
+      v-if="shouldShowShortKeysModal"
+      @close="shouldShowShortKeysModal = false"
+    />
+  </div>
+</template>

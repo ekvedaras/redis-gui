@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { onUnmounted } from 'vue'
+import { useRedis } from '/@/use/redis'
+import { useDatabase } from '/@/use/database'
+import type { SplitpaneIndexedType } from 'splitpanes'
+import { Pane, Splitpanes } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
+import Header from '/@/components/Elements/Header.vue'
+import KeysSidebar from '/@/components/Elements/KeysSidebar.vue'
+import KeyContent from '/@/components/Elements/KeyContent.vue'
+
+const redis = useRedis()
+const database = useDatabase()
+
+const saveLayout = (panes: SplitpaneIndexedType) => {
+  database.data.settings.leftPaneSize = `${ panes[0].size }%`
+  database.write()
+}
+
+onUnmounted(() => redis.disconnect())
+</script>
+
 <template>
   <Header class="h-12 z-20" />
   <Splitpanes
@@ -20,28 +42,6 @@
     </Pane>
   </Splitpanes>
 </template>
-
-<script setup lang="ts">
-import { onUnmounted } from 'vue'
-import { useRedis } from '/@/use/redis'
-import { useDatabase } from '/@/use/database'
-import type { SplitpaneIndexedType } from 'splitpanes'
-import { Pane, Splitpanes } from 'splitpanes'
-import 'splitpanes/dist/splitpanes.css'
-import Header from '/@/components/Elements/Header.vue'
-import KeysSidebar from '/@/components/Elements/KeysSidebar.vue'
-import KeyContent from '/@/components/Elements/KeyContent.vue'
-
-const redis = useRedis()
-const database = useDatabase()
-
-const saveLayout = (panes: SplitpaneIndexedType) => {
-  database.data.settings.leftPaneSize = `${ panes[0].size }%`
-  database.write()
-}
-
-onUnmounted(() => redis.disconnect())
-</script>
 
 <style>
 .splitpanes.default-theme .splitpanes__pane {

@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { useDatabasesStore } from '/@/store/databases'
+import { useServersStore } from '/@/store/servers'
+import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
+import { ref } from 'vue'
+
+const databasesStore = useDatabasesStore()
+const serversStore = useServersStore()
+
+const showAddKeyModal = ref(false)
+</script>
+
 <template>
   <div class="flex flex-col items-center justify-center h-full text-center">
     <div class="text-5xl font-medium text-gray-500">
@@ -12,19 +24,3 @@
     <AddKeyModal v-if="showAddKeyModal" @close="showAddKeyModal = false" />
   </div>
 </template>
-
-<script setup lang="ts">
-import { useDatabasesStore } from '/@/store/databases'
-import { useServersStore } from '/@/store/servers'
-import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
-import { ref } from 'vue'
-
-const databasesStore = useDatabasesStore()
-const serversStore = useServersStore()
-
-const showAddKeyModal = ref(false)
-</script>
-
-<style scoped>
-
-</style>

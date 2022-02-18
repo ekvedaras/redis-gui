@@ -1,29 +1,3 @@
-<template>
-  <div class="flex items-center">
-    <StateIndicator
-      :key="connectingTo"
-      v-tooltip="connectionMessage"
-      :state="connectionState"
-    />
-    <select
-      id="server"
-      v-tooltip="'Choose redis server'"
-      class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1"
-      :title="connectionMessage"
-      @change="connect"
-    >
-      <option
-        v-for="(storeServer, key) in serversStore.list"
-        :key="key"
-        :selected="storeServer.name === serversStore.selected"
-        :value="key"
-      >
-        {{ storeServer.name }}
-      </option>
-    </select>
-  </div>
-</template>
-
 <script setup lang="ts">
 import StateIndicator from './StateIndicator.vue'
 import { useRedis } from '/@/use/redis'
@@ -61,7 +35,7 @@ const connectionMessage = computed<string>(() => {
   }
 })
 
-const connect = async ({target}: Event) => {
+const connect = async ({ target }: Event) => {
   const select = target as HTMLSelectElement
 
   if (select.value === serversStore.selected) {
@@ -95,6 +69,28 @@ onMounted(() => setTimeout(async () => {
 }, 1000))
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div class="flex items-center">
+    <StateIndicator
+      :key="connectingTo"
+      v-tooltip="connectionMessage"
+      :state="connectionState"
+    />
+    <select
+      id="server"
+      v-tooltip="'Choose redis server'"
+      class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1"
+      :title="connectionMessage"
+      @change="connect"
+    >
+      <option
+        v-for="(storeServer, key) in serversStore.list"
+        :key="key"
+        :selected="storeServer.name === serversStore.selected"
+        :value="key"
+      >
+        {{ storeServer.name }}
+      </option>
+    </select>
+  </div>
+</template>

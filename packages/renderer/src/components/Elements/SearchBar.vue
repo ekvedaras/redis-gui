@@ -1,26 +1,8 @@
-<template>
-  <div class="flex justify-center items-center space-x-2">
-    <Search
-      :value="props.value"
-      :focus-keys="props.focusKeys"
-      :show-spinner="props.showSpinner"
-      @update:value="emit('update:value', $event)"
-    />
-    <IconButton
-      v-if="props.withAdd"
-      @click="showKeyAddModal = true"
-    >
-      <AddIcon class="w-10" />
-    </IconButton>
-    <AddKeyModal v-if="showKeyAddModal" @close="showKeyAddModal = false" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import IconButton from '/@/components/Elements/IconButton.vue'
 import AddIcon from '/@/components/Icons/AddIcon.vue'
 import Search from '/@/components/Elements/Search.vue'
-import type { ClickKeys } from '../../../types/models'
+import type { ClickKeys } from 'types/models'
 import { onMounted, ref } from 'vue'
 import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
 import useHotKey from 'vue3-hotkey'
@@ -38,8 +20,8 @@ const props = withDefaults(defineProps<{
   withAdd: false,
   addName: undefined,
   addType: undefined,
-  focusKeys: () => ({main: ['/']}) as ClickKeys,
-  addKeys: () => ({main: ['a']}) as ClickKeys,
+  focusKeys: () => ({ main: ['/'] }) as ClickKeys,
+  addKeys: () => ({ main: ['a'] }) as ClickKeys,
 })
 
 const emit = defineEmits<{
@@ -57,6 +39,20 @@ onMounted(() => useHotKey([
 ]))
 </script>
 
-<style scoped>
-
-</style>
+<template>
+  <div class="flex justify-center items-center space-x-2">
+    <Search
+      :value="props.value"
+      :focus-keys="props.focusKeys"
+      :show-spinner="props.showSpinner"
+      @update:value="emit('update:value', $event)"
+    />
+    <IconButton
+      v-if="props.withAdd"
+      @click="showKeyAddModal = true"
+    >
+      <AddIcon class="w-10" />
+    </IconButton>
+    <AddKeyModal v-if="showKeyAddModal" @close="showKeyAddModal = false" />
+  </div>
+</template>
