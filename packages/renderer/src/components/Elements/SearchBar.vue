@@ -3,9 +3,8 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import AddIcon from '/@/components/Icons/AddIcon.vue'
 import Search from '/@/components/Elements/Search.vue'
 import type { ClickKeys } from 'types/models'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
-import useHotKey from 'vue3-hotkey'
 
 const props = withDefaults(defineProps<{
   value: string,
@@ -29,14 +28,6 @@ const emit = defineEmits<{
 }>()
 
 const showKeyAddModal = ref(false)
-
-onMounted(() => useHotKey([
-  {
-    keys: props.addKeys.main,
-    preventDefault: true,
-    handler: () => showKeyAddModal.value = true,
-  },
-]))
 </script>
 
 <template>
@@ -49,7 +40,9 @@ onMounted(() => useHotKey([
     />
     <IconButton
       v-if="props.withAdd"
+      v-shortkey="addKeys.main"
       @click="showKeyAddModal = true"
+      @shortkey="showKeyAddModal = true"
     >
       <AddIcon class="w-10" />
     </IconButton>

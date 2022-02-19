@@ -3,6 +3,7 @@ import App from '/@/App.vue'
 import VueUniversalModal from 'vue-universal-modal'
 import 'vue-universal-modal/dist/index.css'
 import FloatingVue from 'floating-vue'
+import Shortkey from 'vue3-shortkey'
 import 'floating-vue/dist/style.css'
 import '../assets/index.css'
 import {createPinia} from 'pinia'
@@ -14,6 +15,9 @@ const app = createApp(App)
   .use(VueUniversalModal, {
     teleportTarget: '#modals',
   })
+  .use(Shortkey, {
+    prevent: ['input', 'textarea'],
+  })
 
 app.config.globalProperties.emitter = mitt()
 
@@ -24,4 +28,4 @@ app.mount('#app');
 // TODO: fix issues with nested modals when child gets closed
 // TODO: should connection test be done in preload?
 // TODO: port NOPERM workaround
-// TODO: shortkeys should be off when inputs are in focus
+// TODO: fix updating values

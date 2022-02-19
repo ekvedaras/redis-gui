@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import Spinner from '/@/components/Elements/Spinner.vue'
 import type { ClickKeys } from 'types/models'
-import useHotKey from 'vue3-hotkey'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   value: string
@@ -18,19 +17,11 @@ const emit = defineEmits<{
 
 const input = ref<HTMLInputElement>()
 
-onMounted(() => useHotKey([
-  {
-    keys: props.focusKeys.main,
-    preventDefault: true,
-    handler: () => input.value?.focus(),
-  },
-]))
-
 const emitInput = () => input.value && emit('update:value', input.value.value)
 </script>
 
 <template>
-  <div class="relative flex flex-1 justify-center items-center">
+  <div v-shortkey="focusKeys.main" class="relative flex flex-1 justify-center items-center" @shortkey="input?.focus()">
     <!--suppress HtmlFormInputWithoutLabel -->
     <input
       ref="input"

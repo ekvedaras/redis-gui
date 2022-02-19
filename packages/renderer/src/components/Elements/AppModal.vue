@@ -21,12 +21,16 @@ const emit = defineEmits<{
       :class="{'h-screen' : fullHeight, 'w-4/5' : fullWidth}"
       :style="{maxHeight: '92vh'}"
     >
-      <h2
-        v-if="title"
-        class="text-xl font-semibold tracking-wider text-gray-800 dark:text-gray-200"
-      >
-        {{ title }}
-      </h2>
+      <div class="flex">
+        <h2
+          v-if="title"
+          class="flex-1 text-xl font-semibold tracking-wider text-gray-800 dark:text-gray-200"
+        >
+          {{ title }}
+        </h2>
+        <slot name="header" />
+      </div>
+
       <div class="flex-1 flex flex-col space-y-4 h-full">
         <slot />
       </div>

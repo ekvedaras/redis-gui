@@ -5,7 +5,7 @@ import type KeyspaceInfo from '/@/components/Elements/KeyspaceInfo.vue'
 
 export interface PropTab {
   props: { info: Record<string, string> },
-  component: InstanceType<typeof TableInfo | typeof KeyspaceInfo>,
+  component: typeof TableInfo | typeof KeyspaceInfo,
 }
 
 interface PropTabs {

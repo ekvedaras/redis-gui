@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useKeysStore } from '/@/store/keys'
 import { useDatabasesStore } from '/@/store/databases'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import type { Key } from 'types/redis'
 import KeyIcon from '/@/components/Elements/KeyIcon.vue'
@@ -17,7 +17,6 @@ import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import IFrameModal from '/@/components/Elements/IFrameModal.vue'
 import useEmitter from '/@/use/emitter'
-import useHotKey from 'vue3-hotkey'
 
 const redis = useRedis()
 const keysStore = useKeysStore()
@@ -67,7 +66,7 @@ const emitter = useEmitter()
 const emitUpdate = () => emitter.emit('key-updated', keysStore.selected)
 
 const showDocs = ref(false)
-const docsTitle = computed(() => `${ keysStore.current?.type.substr(0, 1).toUpperCase() }${ keysStore.current?.type.substr(1) } documentation`)
+const docsTitle = computed(() => `${ keysStore.current?.type.substring(0, 1).toUpperCase() }${ keysStore.current?.type.substr(1) } documentation`)
 const typeDocs = computed(() => {
   switch (keysStore.current?.type) {
     case 'hash':
@@ -103,39 +102,21 @@ const currentContent = computed(() => {
       return StringContent
   }
 })
-
-onMounted(() => useHotKey([
-  {
-    keys: ['e'],
-    preventDefault: true,
-    handler: () => startRename(),
-  },
-  {
-    keys: ['d'],
-    preventDefault: true,
-    handler: () => showDeleteDialog.value = true,
-  },
-  {
-    keys: ['r'],
-    preventDefault: true,
-    handler: () => emitUpdate(),
-  },
-]))
 </script>
 
 <template>
   <div>
     <NoKeySelected v-if="!keysStore.current" />
     <template v-else>
-      <div class="flex pt-2 items-center">
+      <div v-shortkey="['r']" class="flex pt-2 items-center" @shortkey="emitUpdate">
         <KeyIcon :redis-key="keysStore.current" class="mr-2" />
         <h2 class="text-xl flex-1">
-          <span v-show="!isRenaming" ref="keyName" v-tooltip="'Click to edit'" class="break-all" tabindex="0" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ keysStore.current.name }}</span>
+          <span v-show="!isRenaming" ref="keyName" v-tooltip="'Click to edit'" v-shortkey="['e']" class="break-all" tabindex="0" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ keysStore.current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
           <input v-show="isRenaming" ref="renameField" v-model="newName" type="text" placeholder="New name..." class="p-1 text-sm" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" />
           <span class="text-sm ml-2" style="cursor: help" @click="showDocs = true">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
         </h2>
-        <IconButton tabindex="0" @click="showDeleteDialog = true">
+        <IconButton v-shortkey="['d']" tabindex="0" @shortkey="showDeleteDialog = true" @click="showDeleteDialog = true">
           <DeleteIcon class="w-4 m-1" />
         </IconButton>
         <TTL :redis-key="keysStore.current" />

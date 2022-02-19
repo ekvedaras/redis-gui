@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { Key } from 'types/redis'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useRedis } from '/@/use/redis'
 import TimeIcon from '/@/components/Icons/TimeIcon.vue'
-import useHotKey from 'vue3-hotkey'
 
 const props = defineProps<{
   redisKey: Key,
@@ -49,14 +48,6 @@ const edit = async (save: boolean) => {
     nextTick(() => ttlText.value?.focus())
   }
 }
-
-onMounted(() => useHotKey([
-  {
-    keys: ['t'],
-    preventDefault: true,
-    handler: () => startEditing(),
-  },
-]))
 </script>
 
 <template>
@@ -64,9 +55,11 @@ onMounted(() => useHotKey([
     <div
       ref="ttlText"
       v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
+      v-shortkey="['t']"
       tabindex="0"
       class="flex cursor-pointer rounded text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
       :class="{'text-gray-500': redisKey.ttl < 1}"
+      @shortkey="startEditing"
       @keydown.enter="startEditing"
       @click="startEditing"
     >

@@ -7,13 +7,12 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
 import ServerSelect from '/@/components/Elements/ServerSelect.vue'
 import DatabaseSelect from '/@/components/Elements/DatabaseSelect.vue'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import SettingsModal from '/@/components/Elements/SettingsModal.vue'
 import InfoModal from '/@/components/Elements/InfoModal.vue'
 import { useDatabasesStore } from '/@/store/databases'
 import { useKeysStore } from '/@/store/keys'
 import { useToaster } from '/@/use/toaster'
-import useHotKey from 'vue3-hotkey'
 import ServerListModal from '/@/components/Elements/ServerListModal.vue'
 import ConsoleModal from '/@/components/Elements/ConsoleModal.vue'
 import ShortKeyModal from '/@/components/Elements/ShortKeyModal.vue'
@@ -31,34 +30,6 @@ const refresh = async () => {
   await Promise.all([databasesStore.load(), keysStore.loadKeys()])
   toaster.info('Keys refreshed')
 }
-
-onMounted(() => useHotKey([
-  {
-    keys: ['shift', '?'],
-    preventDefault: true,
-    handler: () => shouldShowShortKeysModal.value = true,
-  },
-  {
-    keys: ['ctrl', 'r'],
-    preventDefault: true,
-    handler: () => refresh(),
-  },
-  {
-    keys: ['c'],
-    preventDefault: true,
-    handler: () => shouldShowConsoleModal.value = true,
-  },
-  {
-    keys: ['i'],
-    preventDefault: true,
-    handler: () => shouldShowInfoModal.value = true,
-  },
-  {
-    keys: ['s'],
-    preventDefault: true,
-    handler: () => shouldShowSettingsModal.value = true,
-  },
-]))
 </script>
 
 <template>
@@ -73,21 +44,21 @@ onMounted(() => useHotKey([
     <h1 class="text-left text-xl font-semibold tracking-widest">
       Redis GUI
     </h1>
-    <div class="flex-1 space-x-2 flex text-center justify-center items-center">
+    <div v-shortkey="['shift', '?']" class="flex-1 space-x-2 flex text-center justify-center items-center" @shortkey="shouldShowShortKeysModal = true">
       <ServerSelect />
       <IconButton v-tooltip="'Edit saved redis servers'" @click="shouldShowServerListModal = true">
         <EditIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton v-tooltip="'Refresh key list and database information'" @click="refresh">
+      <IconButton v-tooltip="'Refresh key list and database information'" v-shortkey="['ctrl', 'r']" @click="refresh" @shortkey="refresh">
         <RefreshIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton v-tooltip="'Redis console'" @click="shouldShowConsoleModal = true">
+      <IconButton v-tooltip="'Redis console'" v-shortkey="['c']" @click="shouldShowConsoleModal = true" @shortkey="shouldShowConsoleModal = true">
         <TerminalIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton v-tooltip="'Show server info and statistics'" @click="shouldShowInfoModal = true">
+      <IconButton v-tooltip="'Show server info and statistics'" v-shortkey="['i']" @click="shouldShowInfoModal = true" @shortkey="shouldShowInfoModal = true">
         <InfoIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
-      <IconButton v-tooltip="'Settings'" @click="shouldShowSettingsModal = true">
+      <IconButton v-tooltip="'Settings'" v-shortkey="['s']" @click="shouldShowSettingsModal = true" @shortkey="shouldShowSettingsModal = true">
         <CogIcon class="w-6 m-1 cursor-pointer" />
       </IconButton>
     </div>

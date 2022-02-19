@@ -13,50 +13,47 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>()
 
-const tableInfo = markRaw(TableInfo)
-const keySpaceInfo = markRaw(KeyspaceInfo)
-
 const info = ref<Record<string, Record<string, string>>>({})
 const tabs = ref<Record<string, PropTab>>({
   Server: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Clients: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Memory: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Persistence: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Stats: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Replication: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   CPU: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Errorstats: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Cluster: {
-    component: new tableInfo,
-    props: { info: {} },
+    component: markRaw(TableInfo),
+    props: {info: {}},
   },
   Keyspace: {
-    component: new keySpaceInfo,
-    props: { info: {} },
+    component: markRaw(KeyspaceInfo),
+    props: {info: {}},
   },
 })
 
@@ -71,8 +68,8 @@ const fetch = async () => {
       return true
     }
 
-    if (line.substr(0, 1) === '#') {
-      scope = line.substr(2).trim()
+    if (line.substring(0, 1) === '#') {
+      scope = line.substring(2).trim()
 
       info.value[scope] = {}
       return true
@@ -95,13 +92,11 @@ onBeforeMount(fetch)
     full-height
     @close="emit('close')"
   >
-    <IconButton
-      v-tooltip="'Refresh'"
-      class="absolute right-0 mr-3 mt-3 top-0"
-      @click="fetch"
-    >
-      <RefreshIcon class="w-8" />
-    </IconButton>
+    <template #header>
+      <IconButton v-tooltip.bottom="'Refresh'" v-shortkey="['r']" @click="fetch" @shortkey="fetch">
+        <RefreshIcon class="w-8" />
+      </IconButton>
+    </template>
     <Tabs :tabs="tabs" />
   </AppModal>
 </template>
