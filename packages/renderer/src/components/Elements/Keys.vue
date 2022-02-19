@@ -5,7 +5,8 @@ import type { DefineComponent } from 'vue'
 import { defineAsyncComponent } from 'vue'
 import type { NamespaceProps } from '/@/components/Elements/Namespace.vue'
 
-// We need to load Namespace component asynchronously because otherwise, vue-tsc gets confused
+// We need to load Namespace component asynchronously because otherwise,
+// vue-tsc gets confused due to circular dependency.
 const Namespace = defineAsyncComponent<DefineComponent<NamespaceProps>>(
   () => import('/@/components/Elements/Namespace.vue') as never,
 )

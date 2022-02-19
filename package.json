@@ -72,6 +72,7 @@
     "redis": "^4.0.1",
     "splitpanes": "^3.0.6",
     "vue": "^3.2.26",
+    "vue-clipboard3": "^1.0.1",
     "vue-json-pretty": "^2.0.6",
     "vue-universal-modal": "^1.1.3",
     "vue3-hotkey": "^1.0.0"

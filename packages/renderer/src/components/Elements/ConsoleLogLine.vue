@@ -11,6 +11,7 @@ import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
 import DocumentIcon from '/@/components/Icons/DocumentIcon.vue'
 import CodeIcon from '/@/components/Icons/CodeIcon.vue'
 import WordBreakIcon from '/@/components/Icons/WordBreakIcon.vue'
+import useClipboard from 'vue-clipboard3'
 
 const props = defineProps<{
   log: ConsoleLog,
@@ -21,7 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const shouldAttemptJson = computed(() => typeof props.log.content === 'string' && props.log.content.length < 1024 * 10 && (props.log.content.startsWith('[') || props.log.content.startsWith('{')))
-const { isJSON: _isJson } = useJson()
+const {isJSON: _isJson} = useJson()
 const isJSON = computed(() => typeof props.log.content === 'string' && _isJson(props.log.content))
 
 const collapsed = ref(false)
@@ -29,9 +30,9 @@ const breakWords = ref(false)
 const asJson = ref(shouldAttemptJson.value && isJSON.value)
 
 const toaster = useToaster()
-const copy = () => {
-  // this.$copyText(props.log.content)
-  alert('TODO copy content')
+const {toClipboard} = useClipboard()
+const copy = async () => {
+  await toClipboard(String(props.log.content))
   toaster.info('Copied')
 }
 </script>

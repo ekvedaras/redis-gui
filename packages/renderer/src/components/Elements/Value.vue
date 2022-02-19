@@ -3,6 +3,7 @@ import { ref, toRef } from 'vue'
 import ContentEditor from '/@/components/Elements/ContentEditor.vue'
 import ValueRenderer from '/@/components/Elements/ValueRenderer.vue'
 import { useToaster } from '/@/use/toaster'
+import useClipboard from 'vue-clipboard3'
 
 const props = withDefaults(defineProps<{
   value: string,
@@ -26,12 +27,13 @@ const isEditing = ref(false)
 
 const save = () => {
   isEditing.value = false
-  emit('save', { key: editKey.value, value: editValue.value })
+  emit('save', {key: editKey.value, value: editValue.value})
 }
 
-const copy = () => {
-  // this.$copyText(value.value)
-  toaster.info('Copied (TODO)')
+const {toClipboard} = useClipboard()
+const copy = async () => {
+  await toClipboard(props.value)
+  toaster.info('Copied')
 }
 </script>
 
