@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { ButtonType } from '/@/components/Elements/Button.vue'
 import Button from '/@/components/Elements/Button.vue'
 
 withDefaults(defineProps<{
-  type?: 'button' | 'submit' | 'reset'
+  type?: ButtonType
 }>(), {
   type: 'button',
 })

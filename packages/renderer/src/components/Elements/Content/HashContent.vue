@@ -30,7 +30,7 @@ const {
   value.value = shouldMerge ? { ...value.value, ...(newValue as Tuple[]) } : (newValue as Tuple[])
 })
 
-const save = async (key: string, newKey: string, value: string) => {
+const save = async (key: string, newKey: string | number, value: string) => {
   let commands = []
   if (key !== newKey) {
     commands.push(['hdel', props.name, key])

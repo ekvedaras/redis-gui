@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useServersStore } from '/@/store/servers'
 import { useToaster } from '/@/use/toaster'
-import type { Keys as KeysList } from '../../../types/redis'
+import type { Key } from '../../../types/redis'
 import IconButton from '/@/components/Elements/IconButton.vue'
 import TwitterIcon from '/@/components/Icons/TwitterIcon.vue'
 import GitHubIcon from '/@/components/Icons/GitHubIcon.vue'
@@ -64,7 +64,7 @@ const nestKey = (grouped: object, path: string) => {
   return [key, keyPath]
 }
 const groupedKeys = computed(() => {
-  const grouped: KeysList = {}
+  const grouped: Record<string, Key> = {}
 
   Object.entries(keysStore.list).forEach(([name, key]) => {
     if (Object.prototype.hasOwnProperty.call(key, 'name')) {

@@ -17,7 +17,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'rerun', command: string | object): void,
+  (e: 'rerun', command: string): void,
 }>()
 
 const shouldAttemptJson = computed(() => typeof props.log.content === 'string' && props.log.content.length < 1024 * 10 && (props.log.content.startsWith('[') || props.log.content.startsWith('{')))
@@ -43,7 +43,7 @@ const copy = () => {
         <DownIcon v-if="collapsed" class="w-5" />
         <UpIcon v-else class="w-5" />
       </IconButton>
-      <IconButton v-if="log.wasSent" @click="emit('rerun', log.content)">
+      <IconButton v-if="log.wasSent" @click="emit('rerun', String(log.content))">
         <RefreshIcon class="w-5" />
       </IconButton>
       <IconButton @click="copy">

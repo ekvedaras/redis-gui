@@ -6,7 +6,7 @@ import { useToaster } from '/@/use/toaster'
 
 const props = withDefaults(defineProps<{
   value: string,
-  itemKey?: string,
+  itemKey?: string | number,
   withoutDelete?: boolean,
 }>(), {
   itemKey: '',
@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  (e: 'save', value: { value: string, key: string }): void,
+  (e: 'save', value: { value: string, key: typeof props.itemKey }): void,
   (e: 'delete'): void,
 }>()
 

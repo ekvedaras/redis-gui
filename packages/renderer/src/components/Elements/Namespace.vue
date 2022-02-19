@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Keys from './Keys.vue'
-import type { Keys as KeysType } from '../../../types/redis'
+import type { Key } from '../../../types/redis'
 import { computed, ref } from 'vue'
 import { useRedis } from '/@/use/redis'
 import OpenFolderIcon from '/@/components/Icons/OpenFolderIcon.vue'
@@ -9,13 +9,15 @@ import LaravelIcon from '/@/components/Icons/LaravelIcon.vue'
 import HorizonIcon from '/@/components/Icons/HorizonIcon.vue'
 import LevelTab from '/@/components/Elements/LevelTab.vue'
 
-const redis = useRedis()
-
-const props = defineProps<{
+export type NamespaceProps = {
   namespace: string;
-  keys: KeysType;
+  keys: Record<string, Key>;
   level: number;
-}>()
+}
+
+const props = defineProps<NamespaceProps>()
+
+const redis = useRedis()
 
 const expanded = ref(false)
 const toggle = () => expanded.value = !expanded.value

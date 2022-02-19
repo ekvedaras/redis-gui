@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import {defineStore} from 'pinia'
-import type {Key, Keys, KeysResult} from '../../types/redis'
+import type {Key, KeysResult} from '../../types/redis'
 import {useRedis} from '/@/use/redis'
 import {useToaster} from '/@/use/toaster'
 
@@ -15,7 +15,7 @@ interface KeysLoadResult {
 }
 
 interface State {
-  list: Keys,
+  list: Record<string, Key>,
   cursor: number,
   selected: string | undefined,
   pattern: string,
@@ -39,7 +39,7 @@ export const useKeysStore = defineStore('keys', {
     },
   },
   actions: {
-    setKeys(keys: Keys) {
+    setKeys(keys: Record<string, Key>) {
       this.list = _(keys).toPairs().sortBy(0).fromPairs().value()
     },
     addKey(key: Key) {

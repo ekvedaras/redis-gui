@@ -25,6 +25,8 @@ onMounted(() => useHotKey([
     handler: () => input.value?.focus(),
   },
 ]))
+
+const emitInput = () => input.value && emit('update:value', input.value.value)
 </script>
 
 <template>
@@ -36,8 +38,8 @@ onMounted(() => useHotKey([
       placeholder="Search..."
       :value="props.value"
       class="py-2 px-3 w-full"
-      @input="event => emit('update:value', event.target?.value)"
-      @keydown.esc="event => event.target?.blur()"
+      @input="emitInput"
+      @keydown.esc="blur"
     >
     <Spinner :class="[showSpinner ? 'opacity-100' : 'opacity-0']" />
   </div>

@@ -15,7 +15,7 @@ const isLoading = ref(true)
 const redis = useRedis()
 const toaster = useToaster()
 
-const save = async ({ value: newValue }: { value: string, key: string }) => {
+const save = async ({value: newValue}: { value: string }) => {
   try {
     await redis.client.set(props.name, newValue)
     value.value = newValue

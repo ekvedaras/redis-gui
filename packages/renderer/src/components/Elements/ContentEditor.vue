@@ -13,6 +13,8 @@ const emit = defineEmits<{
 
 const editor = ref<HTMLTextAreaElement>()
 onMounted(() => editor.value?.focus())
+
+const emitInput = () => editor.value && emit('input', editor.value.value)
 </script>
 
 <template>
@@ -22,7 +24,7 @@ onMounted(() => editor.value?.focus())
       ref="editor"
       :value="value"
       class="w-full h-64"
-      @input="emit('input', $event.target?.value)"
+      @input="emitInput"
       @keydown.esc="emit('close')"
       @keydown.ctrl.enter="emit('save')"
     />

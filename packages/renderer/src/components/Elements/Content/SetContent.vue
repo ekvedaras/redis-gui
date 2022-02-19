@@ -30,14 +30,14 @@ const {
   value.value = shouldMerge ? [...value.value, ...(newValue as string[])] : (newValue as string[])
 })
 
-const save = async ({ value: newValue, key }: { key: number, value: string }) => {
+const save = async ({value: newValue, key}: { key: number | string, value: string }) => {
   let commands = []
-  commands.push(['srem', props.name, value.value[key]])
+  commands.push(['srem', props.name, value.value[key as number]])
   commands.push(['sadd', props.name, key, newValue])
 
   try {
     await redis.client.multi(commands).exec()
-    value.value[key] = newValue
+    value.value[key as number] = newValue
     toaster.success('Saved')
     await loadKeys()
   } catch (error) {
@@ -64,8 +64,8 @@ const deleteItem = (item: string) => {
       <Value
         v-for="(item, i) in value"
         :key="i"
-        class="relative" :value="item"
-        @save="save(i, $event)"
+        class="relative" :value="item" :item-key="i"
+        @save="save($event)"
         @delete="deleteItem(item)"
       />
       <LoadMoreButton v-if="nextCursor" @click="loadMore" />

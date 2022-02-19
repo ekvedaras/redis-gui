@@ -1,4 +1,4 @@
-import type {ServerArray} from '../../types/database'
+import type {Server} from '../../types/database'
 import {defineStore} from 'pinia'
 import {useDatabase} from '/@/use/database';
 
@@ -6,7 +6,7 @@ const database = useDatabase()
 
 interface State {
   selected: string,
-  list: ServerArray
+  list: Record<string, Server>
 }
 
 export const useServersStore = defineStore('servers', {
@@ -21,7 +21,7 @@ export const useServersStore = defineStore('servers', {
     select(server: string) {
       this.selected = server
     },
-    setServers(servers: ServerArray) {
+    setServers(servers: Record<string, Server>) {
       this.list = servers
     },
   },

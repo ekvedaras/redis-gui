@@ -4,7 +4,7 @@ import { useKeysStore } from '/@/store/keys'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  item: { label: string } | string;
+  item: string;
   name: string;
   using: 'deleteListItem' | 'deleteSetItem' | 'deleteZsetItem' | 'deleteHashItem';
 }>()
@@ -14,11 +14,28 @@ const emit = defineEmits<{
   (e: 'deleted'): void
 }>()
 
-const itemName = computed(() => (typeof props.item === 'object' ? props.item.label : props.item).substr(0, 50))
+const itemName = computed(() => props.item.substring(0, 50))
 
 const keysStore = useKeysStore()
 const deleteItem = async () => {
-  await keysStore[props.using](props.name, props.item)
+  switch (props.using) {
+    case 'deleteHashItem': {
+      await keysStore.deleteHashItem(props.name, props.item as string)
+      break
+    }
+    case 'deleteListItem': {
+      await keysStore.deleteListItem(props.name, props.item as unknown as number)
+      break
+    }
+    case 'deleteSetItem': {
+      await keysStore.deleteSetItem(props.name, props.item as string)
+      break
+    }
+    case 'deleteZsetItem': {
+      await keysStore.deleteZsetItem(props.name, props.item as string)
+      break
+    }
+  }
   emit('deleted')
   keysStore.loadKeys()
   emit('close')

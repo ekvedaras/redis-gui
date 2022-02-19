@@ -17,14 +17,6 @@ export type Server = {
   ssh: SshConfig,
 }
 
-type ServerArray = {
-  [key: string]: Server
-}
-
-type ArrayOfArrays = {
-  [key: string]: Array<string>
-}
-
 export type Settings = {
   itemsPerPage: number,
   namespaceSeparator: string,
@@ -32,7 +24,7 @@ export type Settings = {
 }
 
 export type DatabaseSettings = {
-  servers: ServerArray,
-  history: ArrayOfArrays,
+  servers: Record<string, Server>,
+  history: Record<string, Array<string>>,
   settings: Settings,
 }

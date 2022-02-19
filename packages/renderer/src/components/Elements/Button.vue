@@ -1,4 +1,6 @@
 <script setup lang="ts">
+export type ButtonType = 'button' | 'submit' | 'reset'
+
 withDefaults(defineProps<{
   type?: 'button' | 'submit' | 'reset'
 }>(), {

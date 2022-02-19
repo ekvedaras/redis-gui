@@ -30,9 +30,9 @@ const {
   value.value = shouldMerge ? [...value.value, ...(newValue as ZMember[])] : (newValue as ZMember[])
 })
 
-const save = async ({ value: newValue, key: score }: { key: string, value: string }) => {
+const save = async ({value: newValue, key: score}: { key: string | number, value: string }) => {
   try {
-    await redis.client.zAdd(props.name, { score, value: newValue })
+    await redis.client.zAdd(props.name, {score, value: newValue})
     toaster.success('Saved')
     await loadKeys()
   } catch (error) {
