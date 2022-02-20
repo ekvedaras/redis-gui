@@ -6,15 +6,14 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'input', value: string): void,
   (e: 'close'): void,
-  (e: 'save'): void,
+  (e: 'save', value: string): void,
 }>()
 
 const editor = ref<HTMLTextAreaElement>()
 onMounted(() => editor.value?.focus())
 
-const emitInput = () => editor.value && emit('input', editor.value.value)
+const emitSave = () => editor.value && emit('save', editor.value.value)
 </script>
 
 <template>
@@ -24,9 +23,8 @@ const emitInput = () => editor.value && emit('input', editor.value.value)
       ref="editor"
       :value="value"
       class="w-full h-64"
-      @input="emitInput"
       @keydown.esc="emit('close')"
-      @keydown.ctrl.enter="emit('save')"
+      @keydown.ctrl.enter="emitSave"
     />
     <span class="text-xs text-gray-500">CTRL + Enter to save, Esc to cancel</span>
   </div>

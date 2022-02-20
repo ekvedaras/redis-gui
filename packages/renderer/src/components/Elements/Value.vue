@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toRef } from 'vue'
+import { ref } from 'vue'
 import ContentEditor from '/@/components/Elements/ContentEditor.vue'
 import ValueRenderer from '/@/components/Elements/ValueRenderer.vue'
 import { useToaster } from '/@/use/toaster'
@@ -21,13 +21,12 @@ const emit = defineEmits<{
 
 const toaster = useToaster()
 
-const editValue = toRef(props, 'value')
-const editKey = toRef(props, 'itemKey')
+const editKey = ref(props.itemKey)
 const isEditing = ref(false)
 
-const save = () => {
+const save = (newValue?: string) => {
+  emit('save', {key: editKey.value, value: newValue ?? props.value})
   isEditing.value = false
-  emit('save', {key: editKey.value, value: editValue.value})
 }
 
 const {toClipboard} = useClipboard()
@@ -43,10 +42,10 @@ const copy = async () => {
       {{ itemKey }}
     </div>
     <!--suppress HtmlFormInputWithoutLabel -->
-    <input v-if="isEditing && itemKey" v-model="editKey" type="text" class="my-1 mx-1 text-sm" @keydown.esc="isEditing = false" @keydown.ctrl.enter="save" />
+    <input v-if="isEditing && itemKey" v-model="editKey" type="text" class="my-1 mx-1 text-sm" @keydown.esc="isEditing = false" @keydown.ctrl.enter="save()" />
     <div v-if="!isEditing">
       <ValueRenderer :value="value" class="mb-4" :without-delete="withoutDelete" :with-keys="!!itemKey" @edit="isEditing = true" @delete="emit('delete')" @copy="copy" />
     </div>
-    <ContentEditor v-else v-model:value="editValue" class="mx-1" @close="isEditing = false" @save="save" />
+    <ContentEditor v-else :value="value" class="mx-1" @close="isEditing = false" @save="save" />
   </div>
 </template>
