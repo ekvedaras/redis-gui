@@ -4,6 +4,7 @@ import { computed, nextTick, ref } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useRedis } from '/@/use/redis'
 import TimeIcon from '/@/components/Icons/TimeIcon.vue'
+import { useTime } from '/@/use/time'
 
 const props = defineProps<{
   redisKey: Key,
@@ -17,6 +18,9 @@ const newTtl = ref(0)
 const ttlField = ref<HTMLInputElement>()
 const ttlText = ref<HTMLDivElement>()
 const seconds = computed(() => props.redisKey.ttl || 0)
+
+const time = useTime()
+const expiresIn = computed(() => time().add(seconds.value, 's').fromNow())
 
 const startEditing = () => {
   isEditing.value = true
@@ -36,8 +40,8 @@ const edit = async (save: boolean) => {
       }
     } else {
       try {
-        await redis.client.expireAt(props.redisKey.name, newTtl.value)
-        keysStore.list[props.redisKey.name] = { ...props.redisKey, ttl: newTtl.value }
+        await redis.client.expireAt(props.redisKey.name, time().add(newTtl.value, 's').toDate())
+        keysStore.list[props.redisKey.name] = {...props.redisKey, ttl: newTtl.value}
       } finally {
         isEditing.value = false
         nextTick(() => ttlText.value?.focus())
@@ -65,8 +69,8 @@ const edit = async (save: boolean) => {
     >
       <TimeIcon class="w-4 m-1" />
       <div v-show="!isEditing" v-if="redisKey.ttl > -1">
-        <span v-if="seconds < 60" class="ml-2">Expires in TODO<!-- {{ [seconds, 'seconds'] | duration('as', 'seconds') }} seconds--></span>
-        <span v-else class="ml-2">Expires in TODO<!--{{ [seconds, 'seconds'] | duration('humanize') }}--></span>
+        <span v-if="seconds < 60" class="ml-2">Expires in {{ expiresIn }}</span>
+        <span v-else class="ml-2">Expires in {{ expiresIn }}</span>
       </div>
     </div>
     <!--suppress HtmlFormInputWithoutLabel -->

@@ -30,8 +30,6 @@ app.mount('#app');
 // TODO: port NOPERM workaround
 // TODO: fix saving hash keys
 // TODO: fix randomly failing first load (the works after clicking cmd + r)
-// TODO: Expires in ( calculate duration ) TTL.vue
-// TODO: Expires in Key.vue
 // TODO: Implement retry strategy (ServerModal.vue)
 // TODO: deleteListItem (keys store)
 // TODO: support ssh tunnel (redis.ts)

@@ -6,6 +6,7 @@ import { useRedis } from '/@/use/redis'
 import TimeIcon from '/@/components/Icons/TimeIcon.vue'
 import KeyIcon from '/@/components/Elements/KeyIcon.vue'
 import LevelTab from '/@/components/Elements/LevelTab.vue'
+import { useTime } from '/@/use/time'
 
 const props = defineProps<{
   redisKey: Key,
@@ -27,8 +28,9 @@ const isSelected = computed(() => {
   return keysStore.current && props.redisKey.name === keysStore.current.name
 })
 
+const time = useTime()
 const expiresIn = computed(() => {
-  return 'Expires in TODO'//${this.$options.filters.duration([props.redisKey.ttl, 'seconds'], 'humanize')}`
+  return `Expires in ${ time().add(props.redisKey.ttl, 's').fromNow() }`
 })
 </script>
 
