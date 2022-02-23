@@ -21,9 +21,9 @@ export function useCursorScanner(name: string, scanUsing: ScanType, setValueUsin
   const keysStore = useKeysStore()
   const redis = useRedis()
 
-  watch(() => search.value, () => {
+  watch(() => search.value, async () => {
     const wildcard = search.value.indexOf('*') > -1 ? '' : '*'
-    keysStore.loadKeys(`${wildcard}${search.value}${wildcard}`)
+    await loadKeys(`${wildcard}${search.value}${wildcard}`)
   })
 
   const loadKeys = async (pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0): Promise<Result | null> => {
