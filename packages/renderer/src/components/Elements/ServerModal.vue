@@ -83,9 +83,7 @@ const test = async () => {
         password: password.value,
         ssh: ssh.value,
       }),
-      retry_strategy: () => {
-        return undefined // TODO
-      },
+      retry_strategy: () => undefined, // Don't retry as we are only testing the connection.
     })
 
     window.testRedisApi.client.on('ready', () => {
