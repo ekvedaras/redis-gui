@@ -38,7 +38,7 @@ onUnmounted(() => redis.disconnect())
       <KeysSidebar class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200" />
     </Pane>
     <Pane class="flex-1 pb-2 px-4 overflow-hidden">
-      <KeyContent class="flex-1 pb-2 px-4 overflow-hidden rounded-b bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200" />
+      <KeyContent class="flex-1 pb-2 px-4 h-full overflow-hidden rounded-b bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200" />
     </Pane>
   </Splitpanes>
 </template>

@@ -7,6 +7,8 @@ import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
 import { useKeysStore } from '/@/store/keys'
 import useEmitter from '/@/use/emitter'
+import TimeIcon from '/@/components/Icons/TimeIcon.vue'
+import KeyItemControls from '/@/components/Elements/KeyItemControls.vue'
 
 export type AddModalFillOptions = {
   name?: string,
@@ -58,7 +60,7 @@ const save = async () => {
       if (index.value !== '' && values.value.length === 1) {
         await redis.client.lSet(name.value, index.value, values.value[0])
       } else {
-        await redis.client.lPush(name.value, Object.values(values.value))
+        await redis.client.lPush(name.value, Object.values(values.value).reverse())
       }
       break
     case 'set':
@@ -83,7 +85,7 @@ const save = async () => {
     <div class="flex space-x-4">
       <input v-model="name" type="text" placeholder="Name" class="flex-1" />
       <input v-if="type === 'hash'" v-model="hashName" type="text" placeholder="Hash key name" class="flex-1" />
-      <input v-if="type === 'list'" v-model="index" type="number" placeholder="Index" class="flex-1" />
+      <input v-if="type === 'list' && values.length === 1" v-model="index" type="number" placeholder="Index" class="flex-1" />
       <input v-if="type === 'zset'" v-model="score" type="number" placeholder="Score" class="flex-1" />
       <select v-model="type">
         <option value="string">
@@ -103,12 +105,20 @@ const save = async () => {
         </option>
       </select>
     </div>
-    <textarea v-for="valIndex in values.keys()" :key="valIndex" v-model="values[valIndex]" class="flex-1" placeholder="Value" />
-    <div class="flex justify-end space-x-4">
+    <div v-for="valIndex in values.keys()" :key="valIndex" class="relative">
+      <textarea v-model="values[valIndex]" class="w-full" placeholder="Value" />
+      <KeyItemControls v-if="valIndex !== 0" class="p-0" delete-only @delete="values.splice(valIndex, 1)" />
+    </div>
+    <div class="flex justify-end space-x-4 items-center">
       <Button v-if="['list', 'set'].indexOf(type) > -1" @click="values.push('')">
         Add
       </Button>
-      <input v-if="type === 'string'" v-model="ttl" type="number" class="w-20" placeholder="TTL" />
+      <div v-if="type === 'string'" class="flex items-center flex-1">
+        <input id="ttl" v-model="ttl" type="number" class="w-20" placeholder="TTL" />
+        <label for="ttl" class="ml-2 font-semibold">
+          <TimeIcon v-tooltip.right="'TTL in seconds'" class="w-4 h-4" />
+        </label>
+      </div>
       <Button @click="emit('close')">
         Cancel
       </Button>
