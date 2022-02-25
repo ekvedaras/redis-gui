@@ -85,7 +85,7 @@ const deleteServer = (server: Server) => {
     <div class="flex justify-end">
       <Button
         class="mr-5"
-        @click="close"
+        @click="emit('close')"
       >
         Cancel
       </Button>

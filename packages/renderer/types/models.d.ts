@@ -11,10 +11,6 @@ export interface ClickKeys {
   forced?: string[],
 }
 
-export type StringArray = {
-  [key: string]: string,
-}
-
 export interface Tuple {
   field: string,
   value: string,

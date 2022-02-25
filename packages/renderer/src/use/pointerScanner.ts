@@ -2,8 +2,8 @@ import type {Ref} from 'vue';
 import {onMounted, ref} from 'vue'
 import {useRedis} from '/@/use/redis'
 
-type RangeType = 'lrange'
-type LengthType = 'llength'
+type RangeType = 'lRange'
+type LengthType = 'lLen'
 
 export function usePointerScanner(name: string, rangeUsing: RangeType, measureUsing: LengthType, value: Ref<string[]>) {
   const isLoading = ref(true)
@@ -15,7 +15,7 @@ export function usePointerScanner(name: string, rangeUsing: RangeType, measureUs
   const loadKeys = async (start = 0, limit = redis.pageSize) => {
     isLoading.value = true;
     try {
-      const result = await redis.client.sendCommand([rangeUsing, name, start, start + limit - 1]) as string[]
+      const result = await redis.client.sendCommand([rangeUsing, name, String(start), String(start + limit - 1)]) as string[]
 
 
       if (pointer.value + result.length < size.value) {

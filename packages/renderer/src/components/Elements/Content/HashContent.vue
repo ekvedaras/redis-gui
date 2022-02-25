@@ -10,6 +10,7 @@ import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
 import type { Tuple } from 'types/models'
+import { useReloadOnKeyUpdate } from '/@/use/reloadOnKeyUpdate'
 
 const props = defineProps<{
   name: string,
@@ -27,19 +28,21 @@ const {
   loadKeys,
   loadMore,
 } = useCursorScanner(props.name, 'hScan', (newValue, shouldMerge) => {
-  value.value = shouldMerge ? { ...value.value, ...(newValue as Tuple[]) } : (newValue as Tuple[])
+  value.value = shouldMerge ? {...value.value, ...(newValue as Tuple[])} : (newValue as Tuple[])
 })
+
+useReloadOnKeyUpdate(props.name, () => loadKeys())
 
 const save = async (key: string, newKey: string | number, value: string) => {
   let commands = []
   if (key !== newKey) {
-    commands.push(['hdel', props.name, key])
+    commands.push({args: ['hdel', props.name, key]})
   }
 
-  commands.push(['hset', props.name, newKey, value])
+  commands.push({args: ['hset', props.name, newKey, value]})
 
   try {
-    await redis.client.multi(commands).exec()
+    await redis.client.multiExecutor(commands)
     toaster.success('Saved')
     await loadKeys()
   } catch (error) {
@@ -78,6 +81,7 @@ const deleteItem = (item: string) => {
       :name="name"
       using="deleteHashItem"
       @close="showDeleteDialog = false"
+      @deleted="loadKeys"
     />
   </div>
 </template>

@@ -1,16 +1,25 @@
 <script setup lang="ts">
-import { onMounted, ref, toRef, watch } from 'vue'
+import { ref, watch } from 'vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
-import type { StringArray } from 'types/models'
 import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
 import { useKeysStore } from '/@/store/keys'
 import useEmitter from '/@/use/emitter'
 
+export type AddModalFillOptions = {
+  name?: string,
+  hashName?: string,
+  score?: number,
+  index?: string,
+  type?: 'string' | 'list' | 'set' | 'zset' | 'hash',
+  ttl?: number,
+  values?: string[],
+}
+
 const props = withDefaults(defineProps<{
-  fill?: StringArray;
+  fill?: AddModalFillOptions;
 }>(), {
   fill: () => ({}),
 })
@@ -19,18 +28,13 @@ const emit = defineEmits<{
   (e: 'close'): void;
 }>()
 
-const name = ref('')
-const hashName = ref('')
-const score = ref(0)
-const index = ref('')
-const type = ref<'string' | 'list' | 'set' | 'zset' | 'hash'>('string')
-const ttl = ref(0)
-const values = ref([''])
-const fill = toRef(props, 'fill')
-
-onMounted(() => Object.entries(props.fill).forEach(([name, value]) => {
-  fill.value[name] = value
-}))
+const name = ref(props.fill.name ?? '')
+const hashName = ref(props.fill.hashName ?? '')
+const score = ref(props.fill.score ?? 0)
+const index = ref(props.fill.index ?? '')
+const type = ref<'string' | 'list' | 'set' | 'zset' | 'hash'>(props.fill.type ?? 'string')
+const ttl = ref(props.fill.ttl ?? 0)
+const values = ref(props.fill.values ?? [''])
 
 watch(() => type.value, (newType) => {
   if (!['list', 'set'].includes(newType)) {
@@ -43,33 +47,22 @@ const toaster = useToaster()
 const keysStore = useKeysStore()
 const emitter = useEmitter()
 const save = async () => {
-  let params = [name.value]
   switch (type.value) {
     case 'string':
-      params.push(...values.value)
-      if (ttl.value > 0) {
-        params.push('EX', String(ttl.value))
-      }
-      await redis.client.set(...params)
+      await redis.client.set(name.value, values.value[0], ttl.value ? {EX: ttl.value} : undefined)
       break
     case 'hash':
-      params.push(hashName.value, ...values.value)
-      await redis.client.hSet(...params)
+      await redis.client.hSet(name.value, hashName.value, values.value[0])
       break
     case 'list':
-      if (index.value !== '') {
-        params.push(index.value)
-      }
-      params.push(...values.value)
-      if (index.value !== '') {
-        await redis.client.lSet(...params)
+      if (index.value !== '' && values.value.length === 1) {
+        await redis.client.lSet(name.value, index.value, values.value[0])
       } else {
-        await redis.client.lPush(...params)
+        await redis.client.lPush(name.value, Object.values(values.value))
       }
       break
     case 'set':
-      params.push(...values.value)
-      await redis.client.sAdd(...params)
+      await redis.client.sAdd(name, Object.values(values.value))
       break
     case 'zset':
       await redis.client.zAdd(name.value, { score: score.value, value: values.value[0] })

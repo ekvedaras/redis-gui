@@ -2,9 +2,10 @@
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import { useKeysStore } from '/@/store/keys'
 import { computed } from 'vue'
+import useEmitter from '/@/use/emitter'
 
 const props = defineProps<{
-  item: string;
+  item: string | number;
   name: string;
   using: 'deleteListItem' | 'deleteSetItem' | 'deleteZsetItem' | 'deleteHashItem';
 }>()
@@ -14,8 +15,15 @@ const emit = defineEmits<{
   (e: 'deleted'): void
 }>()
 
-const itemName = computed(() => props.item.substring(0, 50))
+const itemName = computed(() => {
+  if (typeof props.item === 'string') {
+    return props.item.substring(0, 50)
+  }
 
+  return props.item
+})
+
+const emitter = useEmitter()
 const keysStore = useKeysStore()
 const deleteItem = async () => {
   switch (props.using) {
@@ -36,6 +44,8 @@ const deleteItem = async () => {
       break
     }
   }
+
+  emitter.emit('key-updated', props.name)
   emit('deleted')
   keysStore.loadKeys()
   emit('close')

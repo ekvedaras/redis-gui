@@ -110,13 +110,12 @@ export const useKeysStore = defineStore('keys', {
       delete this.list[name]
     },
     async deleteListItem(keyName: string, index: number): Promise<void> {
-      // TODO
       await redis.client.multiExecutor([
         {
-          args: ['lset', keyName, String(index), 'REDIS-GUI--DELETED--'],
+          args: ['lSet', keyName, String(index), 'REDIS-GUI--DELETED--'],
         },
         {
-          args: ['lrem', keyName, '0', 'REDIS-GUI--DELETED--'],
+          args: ['lRem', keyName, '0', 'REDIS-GUI--DELETED--'],
         },
       ]);
 

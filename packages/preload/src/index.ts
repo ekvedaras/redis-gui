@@ -9,6 +9,8 @@ import type {RedisClientType} from '@node-redis/client/dist/lib/client'
 import RedisClient from '@node-redis/client/dist/lib/client'
 import type {RedisApi} from '../types/redis-api'
 import {Color, Titlebar} from 'custom-electron-titlebar';
+import type {RedisMultiQueuedCommand} from '@node-redis/client/dist/lib/multi-command';
+import type {RedisCommandRawReply} from '@node-redis/client/dist/lib/commands';
 
 const redis = require('redis')
 const prettyBytes = require('pretty-bytes')
@@ -43,6 +45,7 @@ const redisApi: RedisApi = {
     },
     // @ts-ignore
     sendCommand: (...args) => client.sendCommand(...args),
+    multiExecutor: (commands: Array<RedisMultiQueuedCommand>, chainId?: symbol): Promise<Array<RedisCommandRawReply>> => client.multiExecutor(commands, chainId),
   },
 };
 

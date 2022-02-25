@@ -21,7 +21,6 @@ const value = ref<string[]>([])
 const redis = useRedis()
 const toaster = useToaster()
 const hasItems = useHasItems(value)
-useReloadOnKeyUpdate(props.name, () => resetCursor())
 
 const { search, filtered } = useRegexFilter(value)
 
@@ -29,13 +28,16 @@ const {
   isLoading,
   pointer,
   size,
+  loadKeys,
   loadMore,
-} = usePointerScanner(props.name, 'lrange', 'llength', value)
+} = usePointerScanner(props.name, 'lRange', 'lLen', value)
 
 const resetCursor = async () => {
   size.value = await redis.client.lLen(props.name)
   pointer.value = 0
 }
+
+useReloadOnKeyUpdate(props.name, () => loadKeys(), () => resetCursor())
 
 const save = async (key: number, newValue: string) => {
   try {
@@ -48,9 +50,9 @@ const save = async (key: number, newValue: string) => {
 }
 
 const showDeleteDialog = ref(false)
-const itemToDelete = ref<string | null>(null)
-const deleteItem = (item: string) => {
-  itemToDelete.value = item
+const itemToDelete = ref<number>(0)
+const deleteItem = (index: number) => {
+  itemToDelete.value = index
   showDeleteDialog.value = true
 }
 </script>
@@ -68,18 +70,17 @@ const deleteItem = (item: string) => {
         :key="i"
         class="relative" :value="item"
         @save="save(i, $event.value)"
-        @delete="deleteItem(item)"
+        @delete="deleteItem(i)"
       />
       <LoadMoreButton v-if="pointer" @click="loadMore" />
       <CenteredLoader v-if="isLoading && !hasItems" />
     </div>
     <ConfirmDeleteDialog
-      v-if="showDeleteDialog && itemToDelete"
+      v-if="showDeleteDialog"
       :item="itemToDelete"
       :name="name"
       using="deleteListItem"
       @close="showDeleteDialog = false"
-      @confirm="resetCursor"
     />
   </div>
 </template>

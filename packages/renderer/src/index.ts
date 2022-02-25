@@ -27,7 +27,5 @@ app.mount('#app');
 // TODO: fix issues with nested modals when child gets closed
 // TODO: should connection test be done in preload?
 // TODO: port NOPERM workaround
-// TODO: fix saving hash keys
 // TODO: fix randomly failing first load (the works after clicking cmd + r)
-// TODO: deleteListItem (keys store)
 // TODO: support ssh tunnel (redis.ts)

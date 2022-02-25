@@ -4,6 +4,7 @@ import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
 import Value from '/@/components/Elements/Value.vue'
 import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
+import { useReloadOnKeyUpdate } from '/@/use/reloadOnKeyUpdate'
 
 const props = defineProps<{
   name: string,
@@ -25,10 +26,14 @@ const save = async ({value: newValue}: { value: string }) => {
   }
 }
 
-onMounted(async () => {
+const load = async () => {
+  isLoading.value = true
   value.value = await redis.client.get(props.name)
   isLoading.value = false
-})
+}
+
+onMounted(load)
+useReloadOnKeyUpdate(props.name, () => load())
 </script>
 
 <template>

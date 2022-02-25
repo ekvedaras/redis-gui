@@ -3,15 +3,16 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import AddIcon from '/@/components/Icons/AddIcon.vue'
 import Search from '/@/components/Elements/Search.vue'
 import type { ClickKeys } from 'types/models'
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
+import type { AddModalFillOptions } from '/@/components/Elements/AddKeyModal.vue'
 import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
 
 const props = withDefaults(defineProps<{
   value: string,
   showSpinner: boolean,
   withAdd: boolean,
-  addName?: string,
-  addType?: string,
+  addName?: AddModalFillOptions['name'],
+  addType?: AddModalFillOptions['type'],
   focusKeys?: ClickKeys,
   addKeys?: ClickKeys,
 }>(), {
@@ -19,8 +20,19 @@ const props = withDefaults(defineProps<{
   withAdd: false,
   addName: undefined,
   addType: undefined,
-  focusKeys: () => ({ main: ['/'] }) as ClickKeys,
-  addKeys: () => ({ main: ['a'] }) as ClickKeys,
+  focusKeys: () => ({main: ['/']}) as ClickKeys,
+  addKeys: () => ({main: ['a']}) as ClickKeys,
+})
+
+const addModalFill = ref<AddModalFillOptions>({})
+onBeforeMount(() => {
+  if (props.addName) {
+    addModalFill.value.name = props.addName
+  }
+
+  if (props.addType) {
+    addModalFill.value.type = props.addType
+  }
 })
 
 const emit = defineEmits<{
@@ -46,6 +58,8 @@ const showKeyAddModal = ref(false)
     >
       <AddIcon class="w-10" />
     </IconButton>
-    <AddKeyModal v-if="showKeyAddModal" @close="showKeyAddModal = false" />
+    <AddKeyModal
+      v-if="showKeyAddModal" :fill="addModalFill" @close="showKeyAddModal = false"
+    />
   </div>
 </template>

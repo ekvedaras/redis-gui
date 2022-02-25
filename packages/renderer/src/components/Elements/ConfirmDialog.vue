@@ -27,7 +27,7 @@ const emit = defineEmits<{
       <slot />
     </div>
     <div class="flex justify-end space-x-2 mt-6">
-      <Button @click="close">
+      <Button @click="emit('close')">
         {{ cancelText }}
       </Button>
       <DangerButton v-if="danger" @click="emit('confirm')">

@@ -4,6 +4,7 @@ import useEmitter from '/@/use/emitter';
 
 export function useReloadOnKeyUpdate(
   name: string,
+  reload?: () => Promise<unknown>,
   resetCursor?: () => Promise<void>,
 ) {
   const keysStore = useKeysStore()
@@ -17,6 +18,10 @@ export function useReloadOnKeyUpdate(
 
       if (resetCursor) {
         await resetCursor()
+      }
+
+      if (reload) {
+        await reload()
       }
 
       await keysStore.loadKeys()

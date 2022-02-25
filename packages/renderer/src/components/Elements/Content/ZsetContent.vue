@@ -10,6 +10,7 @@ import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
 import type { ZMember } from 'types/models'
+import { useReloadOnKeyUpdate } from '/@/use/reloadOnKeyUpdate'
 
 const props = defineProps<{
   name: string,
@@ -29,6 +30,8 @@ const {
 } = useCursorScanner(props.name, 'zScan', (newValue, shouldMerge) => {
   value.value = shouldMerge ? [...value.value, ...(newValue as ZMember[])] : (newValue as ZMember[])
 })
+
+useReloadOnKeyUpdate(props.name, () => loadKeys())
 
 const save = async ({value: newValue, key: score}: { key: string | number, value: string }) => {
   try {
@@ -72,6 +75,7 @@ const deleteItem = (item: string) => {
       :name="name"
       using="deleteZsetItem"
       @close="showDeleteDialog = false"
+      @deleted="() => loadKeys()"
     />
   </div>
 </template>

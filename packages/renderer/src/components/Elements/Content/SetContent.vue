@@ -9,6 +9,7 @@ import { useHasItems } from '/@/use/hasItems'
 import CenteredLoader from '/@/components/Elements/CenteredLoader.vue'
 import LoadMoreButton from '/@/components/Elements/LoadMoreButton.vue'
 import ConfirmDeleteDialog from '/@/components/Elements/ConfirmDeleteDialog.vue'
+import { useReloadOnKeyUpdate } from '/@/use/reloadOnKeyUpdate'
 
 const props = defineProps<{
   name: string,
@@ -29,6 +30,8 @@ const {
 } = useCursorScanner(props.name, 'sScan', (newValue, shouldMerge) => {
   value.value = shouldMerge ? [...value.value, ...(newValue as string[])] : (newValue as string[])
 })
+
+useReloadOnKeyUpdate(props.name, () => loadKeys())
 
 const save = async ({value: newValue, key}: { key: number | string, value: string }) => {
   let commands = []
