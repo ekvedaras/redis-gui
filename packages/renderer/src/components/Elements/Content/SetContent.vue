@@ -44,7 +44,7 @@ const save = async ({value: newValue, key}: { key: number | string, value: strin
     toaster.success('Saved')
     await loadKeys()
   } catch (error) {
-    toaster.error(error)
+    toaster.error(String(error))
   }
 }
 

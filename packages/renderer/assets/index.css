@@ -63,26 +63,47 @@
         }
     }
     /*</editor-fold>*/
-    /*<editor-fold desc="Toasted" defaultstate="collapsed">*/
-    div.toasted.toasted-primary {
-        @apply rounded shadow-xl py-2 px-4;
+    /*<editor-fold desc="Toaster" defaultstate="collapsed">*/
+    div.c-toast {
         font-weight: 400;
+        display: grid;
+        align-items: center;
+        animation-duration: 150ms;
+        margin: 0.5em 0;
+        pointer-events: auto;
+        color: #fff;
+        min-height: 3em;
+        cursor: pointer;
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        word-break: break-word;
+
+        @apply rounded py-2 px-4;
     }
 
-    div.toasted.toasted-primary.default {
+    div.c-toast.c-toast--default {
         @apply bg-gray-800
     }
 
-    div.toasted.toasted-primary.info {
+    div.c-toast.c-toast--info {
         @apply bg-picton-blue-600
     }
 
-    div.toasted.toasted-primary.success {
+    div.c-toast.c-toast--success {
         @apply bg-jungle-green-500
     }
 
-    div.toasted.toasted-primary.error {
+    div.c-toast.c-toast--error {
         @apply bg-red-600
+    }
+
+    div.c-toast.c-toast--warning {
+        @apply bg-orange-600
+    }
+
+    @media (prefers-color-scheme: dark) {
+        div.c-toast.c-toast--default {
+            @apply bg-gray-700
+        }
     }
 
     /*</editor-fold>*/
