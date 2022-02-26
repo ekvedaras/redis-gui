@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppModal from '/@/components/Elements/AppModal.vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
 import type { SshConfig } from 'types/database'
@@ -10,9 +10,13 @@ import { useRedis } from '/@/use/redis'
 import { useToaster } from '/@/use/toaster'
 import Spinner from '/@/components/Elements/Spinner.vue'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   serverKey?: string | undefined;
-}>()
+  show?: boolean;
+}>(), {
+  serverKey: undefined,
+  show: true,
+})
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -38,7 +42,7 @@ const title = computed(() => props.serverKey ? 'Edit server' : 'Add new server')
 const privateKeyPlaceholder = computed(() => `Private key. Default: ${ window.fsApi.homedir }/.ssh/id_rsa`)
 
 const database = useDatabase()
-onBeforeMount(() => {
+watch(() => props.serverKey, () => {
   if (props.serverKey) {
     let server = database.data.servers[props.serverKey]
     name.value = server.name
@@ -105,7 +109,7 @@ const test = async () => {
 </script>
 
 <template>
-  <AppModal :title="title" @close="emit('close')">
+  <AppModal :title="title" :show="show" @close="emit('close')">
     <input v-model="name" type="text" placeholder="Name" />
     <div class="flex space-x-4">
       <input v-model="host" type="text" placeholder="Host / IP" class="flex-1" />

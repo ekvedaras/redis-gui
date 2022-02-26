@@ -94,7 +94,7 @@ const deleteServer = (server: Server) => {
       </PrimaryButton>
     </div>
     <ConfirmDialog
-      v-if="shouldShowDeleteDialog"
+      :show="shouldShowDeleteDialog"
       danger
       @confirm="() => serverToDelete && deleteServer(serverToDelete)"
       @close="shouldShowDeleteDialog = false"
@@ -102,7 +102,7 @@ const deleteServer = (server: Server) => {
       Are you sure you want to delete <b>{{ serverToDelete?.name }}</b>?
     </ConfirmDialog>
     <ServerModal
-      v-if="shouldShowServerModal"
+      :show="shouldShowServerModal"
       :server-key="serverToEdit"
       @close="shouldShowServerModal = false"
     />

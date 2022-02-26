@@ -5,10 +5,12 @@ import DangerButton from '/@/components/Elements/DangerButton.vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
 
 withDefaults(defineProps<{
+  show?: boolean;
   confirmText?: string;
   cancelText?: string;
   danger?: boolean;
 }>(), {
+  show: true,
   confirmText: 'Confirm',
   cancelText: 'Cancel',
   danger: false,
@@ -22,7 +24,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <AppModal @close="emit('close')">
+  <AppModal :show="show" @close="emit('close')">
     <div class="mt-2">
       <slot />
     </div>
