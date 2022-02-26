@@ -21,7 +21,7 @@ const emitInput = () => input.value && emit('update:value', input.value.value)
 </script>
 
 <template>
-  <div v-shortkey="focusKeys.main" class="relative flex flex-1 justify-center items-center" @shortkey="input?.focus()">
+  <div v-shortkey="focusKeys" class="relative flex flex-1 justify-center items-center" @shortkey="input?.focus()">
     <!--suppress HtmlFormInputWithoutLabel -->
     <input
       ref="input"

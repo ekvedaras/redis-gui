@@ -27,3 +27,4 @@ app.mount('#app');
 // TODO: should connection test be done in preload?
 // TODO: port NOPERM workaround
 // TODO: support ssh tunnel (redis.ts)
+// TODO: do not expect default server to always be there. On first install show add server dialog #25

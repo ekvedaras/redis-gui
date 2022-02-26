@@ -52,7 +52,7 @@ const showKeyAddModal = ref(false)
     />
     <IconButton
       v-if="props.withAdd"
-      v-shortkey="addKeys.main"
+      v-shortkey="addKeys"
       @click="showKeyAddModal = true"
       @shortkey="showKeyAddModal = true"
     >
