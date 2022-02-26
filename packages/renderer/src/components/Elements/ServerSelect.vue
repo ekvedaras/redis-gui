@@ -56,7 +56,7 @@ const selectAndReload = async (server: string, disconnect = true) => {
   if (disconnect) {
     await redis.disconnect()
   }
-  serversStore.select(server)
+  serversStore.selected = server
   await Promise.all([databasesStore.load, keysStore.loadKeys])
   await nextTick(() => connectingTo.value = String(Math.random()))
 }

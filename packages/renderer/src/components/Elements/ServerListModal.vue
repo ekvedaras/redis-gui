@@ -47,7 +47,7 @@ const deleteServer = (server: Server) => {
   delete database.data.servers[server.name]
   delete database.data.history[server.name]
   database.write()
-  serversStore.list = database.data.servers
+  delete serversStore.list[server.name]
   shouldShowDeleteDialog.value = false
 }
 </script>

@@ -68,7 +68,7 @@ const save = async () => {
   }
   database.data.history[props.serverKey || name.value] = []
   await database.write()
-  serversStore.list = database.data.servers
+  serversStore.list[props.serverKey || name.value] = database.data.servers[props.serverKey || name.value]
   emit('close')
 }
 
