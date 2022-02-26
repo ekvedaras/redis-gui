@@ -78,30 +78,20 @@ const test = async () => {
   isTesting.value = true
 
   try {
-    window.testRedisApi.createClient({
-      ...redis.buildConnectionConfig({
-        host: host.value,
-        port: port.value,
-        path: path.value,
-        url: url.value,
-        password: password.value,
-        ssh: ssh.value,
-      }),
-      retry_strategy: () => undefined, // Don't retry as we are only testing the connection.
-    })
-
-    window.testRedisApi.client.on('ready', () => {
+    await window.redisApi.test(redis.buildConnectionConfig({
+      host: host.value,
+      port: port.value,
+      path: path.value,
+      url: url.value,
+      password: password.value,
+      ssh: ssh.value,
+    }), () => {
       toaster.success('Connection successful')
       isTesting.value = false
-      window.testRedisApi.client.quit()
-    })
-
-    window.testRedisApi.client.on('error', (error: unknown) => {
+    }, (error) => {
       toaster.error(`REDIS ERROR: ${ error }`)
       isTesting.value = false
     })
-
-    await window.testRedisApi.client.connect()
   } finally {
     isTesting.value = false
   }

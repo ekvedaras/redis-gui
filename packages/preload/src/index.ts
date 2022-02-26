@@ -24,11 +24,26 @@ const api: ElectronApi = {
 };
 
 let client: RedisClientType;
-let testClient: RedisClientType;
 
 const redisApi: RedisApi = {
   createClient: (options) => {
     return client = redis.createClient(options);
+  },
+
+  test: async (options, onSuccess, onError) => {
+    const client = redis.createClient({
+      ...options,
+      // retry_strategy: () => undefined, // TODO: Don't retry as we are only testing the connection.
+    })
+
+    client.on('ready', () => {
+      client.quit()
+      onSuccess()
+    })
+
+    client.on('error', (error: unknown) => onError(String(error)))
+
+    await client.connect()
   },
 
   client: {
@@ -52,32 +67,6 @@ const redisApi: RedisApi = {
 for (const method of Object.keys(RedisClient.prototype)) {
   // @ts-ignore
   redisApi.client[method] = (...args) => client[method](...args)
-}
-
-const testRedisApi: RedisApi = {
-  createClient: (options) => {
-    return testClient = redis.createClient(options);
-  },
-
-  client: {
-    isConnectionOpen: () => testClient.isOpen,
-    connect: () => testClient.connect(),
-    disconnect: () => testClient.disconnect(),
-    quit: () => testClient.quit(),
-    // @ts-ignore
-    on: (...args) => {
-      // @ts-ignore
-      testClient.on(...args)
-      return testRedisApi.client
-    },
-    // @ts-ignore
-    sendCommand: (...args) => testClient.sendCommand(...args),
-  },
-};
-
-for (const method of Object.keys(RedisClient.prototype)) {
-  // @ts-ignore
-  testRedisApi.client[method] = (...args) => testClient[method](...args)
 }
 
 const fsApi: FsApi = {
@@ -132,7 +121,6 @@ ipcRenderer.on('titlebar-menu', (event, menu) => {
  */
 contextBridge.exposeInMainWorld('electron', api);
 contextBridge.exposeInMainWorld('redisApi', redisApi);
-contextBridge.exposeInMainWorld('testRedisApi', testRedisApi);
 contextBridge.exposeInMainWorld('fsApi', fsApi);
 contextBridge.exposeInMainWorld('utilApi', utilApi);
 contextBridge.exposeInMainWorld('prettyBytes', prettyBytes);

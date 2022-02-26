@@ -13,5 +13,7 @@ export interface RedisExtension {
 export interface RedisApi {
   createClient(options?: RedisClientOptions): RedisClientType,
 
+  test(options?: RedisClientOptions, onSuccess: () => void, onError: (error: string) => void): Promise<void>,
+
   client: RedisClient | RedisExtension
 }

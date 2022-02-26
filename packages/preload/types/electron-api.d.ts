@@ -15,7 +15,6 @@ declare global {
     electron: Readonly<ElectronApi>
     electronRequire?: NodeRequire,
     redisApi: Readonly<RedisApi>,
-    testRedisApi: Readonly<RedisApi>,
     fsApi: Readonly<FsApi>,
     utilApi: Readonly<UtilApi>,
     prettyBytes: (bytes: number, options?: prettyBytes.Options) => string,
