@@ -8,9 +8,9 @@ import type {UtilApi} from '../types/util-api'
 import type {RedisClientType} from '@node-redis/client/dist/lib/client'
 import RedisClient from '@node-redis/client/dist/lib/client'
 import type {RedisApi} from '../types/redis-api'
-import {Color, Titlebar} from 'custom-electron-titlebar';
-import type {RedisMultiQueuedCommand} from '@node-redis/client/dist/lib/multi-command';
-import type {RedisCommandRawReply} from '@node-redis/client/dist/lib/commands';
+import {Color, Titlebar} from 'custom-electron-titlebar'
+import type {RedisMultiQueuedCommand} from '@node-redis/client/dist/lib/multi-command'
+import type {RedisCommandRawReply} from '@node-redis/client/dist/lib/commands'
 
 const redis = require('redis')
 const prettyBytes = require('pretty-bytes')
@@ -31,17 +31,15 @@ const redisApi: RedisApi = {
   },
 
   test: async (options, onSuccess, onError) => {
-    const client = redis.createClient({
-      ...options,
-      // retry_strategy: () => undefined, // TODO: Don't retry as we are only testing the connection.
-    })
+    const client = redis.createClient(options)
 
     client.on('ready', () => {
       client.quit()
       onSuccess()
+    }).on('error', (error: unknown) => {
+      client.quit()
+      onError(String(error))
     })
-
-    client.on('error', (error: unknown) => onError(String(error)))
 
     await client.connect()
   },

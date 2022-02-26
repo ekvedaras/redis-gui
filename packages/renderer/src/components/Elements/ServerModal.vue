@@ -89,7 +89,7 @@ const test = async () => {
       toaster.success('Connection successful')
       isTesting.value = false
     }, (error) => {
-      toaster.error(`REDIS ERROR: ${ error }`)
+      toaster.error(error)
       isTesting.value = false
     })
   } finally {

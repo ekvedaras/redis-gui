@@ -27,7 +27,9 @@ export function useRedis(): Redis {
         toaster.info('Connected')
         options?.onReady && options.onReady()
       }).on('error', (error: unknown) => {
-        toaster.error('REDIS ERROR: ' + error)
+        toaster.error(String(error))
+      }).on('reconnecting', async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000))
       })
 
       await this.client.connect()

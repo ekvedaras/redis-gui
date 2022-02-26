@@ -24,7 +24,8 @@ app.config.globalProperties.emitter = mitt()
 app.mount('#app');
 
 // TODO: fix randomly failing first load (the works after clicking cmd + r)
-// TODO: do not retry on connection test
+// TODO: stop attempting to reconnect when switching to another server
+// TODO: Server select does not refresh the list after adding a new server
 // TODO: port NOPERM workaround
 // TODO: support ssh tunnel (redis.ts)
 // TODO: do not expect default server to always be there. On first install show add server dialog #25
