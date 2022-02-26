@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useDatabase } from '/@/use/database'
 import { useServersStore } from '/@/store/servers'
 import { useRedis } from '/@/use/redis'
@@ -19,7 +19,9 @@ const log = ref<ConsoleLog[]>([])
 const historyIndex = ref(-1)
 const command = ref('')
 const hideInfo = ref(false)
+const input = ref<HTMLInputElement>()
 
+onMounted(() => nextTick(() => input.value?.focus()))
 watch(() => command.value, () => hideInfo.value = false)
 
 const database = useDatabase()
@@ -133,6 +135,7 @@ const send = async (cmd?: string) => {
         </div>
       </div>
       <input
+        ref="input"
         v-model="command"
         type="text"
         :placeholder="placeholder"
