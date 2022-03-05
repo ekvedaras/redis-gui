@@ -28,6 +28,8 @@ const host = ref('')
 const port = ref(6379)
 const path = ref<string | undefined>(undefined)
 const url = ref<string | undefined>(undefined)
+const ssl = ref<boolean>(false)
+const username = ref<string | undefined>(undefined)
 const password = ref<string | undefined>(undefined)
 const ssh = ref<SshConfig>({
   tunnel: false,
@@ -50,8 +52,27 @@ watch(() => props.serverKey, () => {
     port.value = server.port
     path.value = server.path
     url.value = server.url
+    ssl.value = server.ssl ?? false
+    username.value = server.username
     password.value = server.password
     ssh.value = server.ssh
+  } else {
+    name.value = ''
+    host.value = ''
+    port.value = 6379
+    path.value = undefined
+    url.value = undefined
+    ssl.value = false
+    username.value = undefined
+    password.value = undefined
+    ssh.value = {
+      tunnel: false,
+      host: '',
+      port: 22,
+      user: undefined,
+      password: undefined,
+      privateKey: undefined,
+    }
   }
 })
 
@@ -63,6 +84,8 @@ const save = async () => {
     port: port.value,
     path: path.value,
     url: url.value,
+    ssl: ssl.value,
+    username: username.value,
     password: password.value,
     ssh: ssh.value,
   }
@@ -78,20 +101,32 @@ const test = async () => {
   isTesting.value = true
 
   try {
-    await window.redisApi.test(redis.buildConnectionConfig({
+    const redisClientConfig = redis.buildConnectionConfig({
       host: host.value,
       port: port.value,
       path: path.value,
       url: url.value,
+      ssl: ssl.value,
+      username: username.value,
       password: password.value,
-      ssh: ssh.value,
-    }), () => {
+    })
+    const onSuccess = () => {
       toaster.success('Connection successful')
       isTesting.value = false
-    }, (error) => {
+    }
+    const onError = (error: string) => {
       toaster.error(error)
       isTesting.value = false
-    })
+    }
+
+    if (ssh.value.tunnel) {
+      await window.redisApi.testThroughSsh({
+        ...ssh.value,
+        privateKey: ssh.value.privateKey || `${ window.fsApi.homedir }/.ssh/id_rsa`,
+      }, redisClientConfig, onSuccess, onError)
+    } else {
+      await window.redisApi.test(redisClientConfig, onSuccess, onError)
+    }
   } finally {
     isTesting.value = false
   }
@@ -101,13 +136,22 @@ const test = async () => {
 <template>
   <AppModal :title="title" :show="show" @close="emit('close')">
     <input v-model="name" type="text" placeholder="Name" />
-    <div class="flex space-x-4">
+    <div class="flex space-x-4 items-center">
       <input v-model="host" type="text" placeholder="Host / IP" class="flex-1" />
-      <input v-model="port" type="number" placeholder="Port" />
+      <div class="flex flex-1 items-center space-x-4">
+        <input v-model="port" type="number" placeholder="Port" class="w-1/2" />
+        <div class="flex items-center">
+          <input id="ssl" v-model="ssl" type="checkbox" />
+          <label for="ssl" class="ml-2">SSL</label>
+        </div>
+      </div>
     </div>
     <input v-if="!ssh.tunnel" v-model="path" type="text" placeholder="or UNIX socket path" class="flex-1" />
     <input v-if="!ssh.tunnel" v-model="url" type="text" placeholder="or URL (redis://, rediss://)" class="flex-1" />
-    <input v-model="password" type="password" placeholder="Password (optional)" />
+    <div class="flex">
+      <input v-model="username" placeholder="Username (optional)" class="flex-1" />
+      <input v-model="password" type="password" placeholder="Password (optional)" class="flex-1 ml-4" />
+    </div>
     <div class="flex space-x-4 items-baseline">
       <input id="ssh" v-model="ssh.tunnel" type="checkbox" />
       <label for="ssh">SSH tunnel</label>

@@ -2,7 +2,8 @@ import {useDatabase} from '/@/use/database'
 import type {KeysResult, Redis} from '../../types/redis'
 import {useToaster} from '/@/use/toaster'
 import type {Server} from '../../types/database'
-import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client';
+import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client'
+import {pickBy} from 'lodash'
 
 const database = useDatabase()
 const toaster = useToaster()
@@ -19,9 +20,17 @@ export function useRedis(): Redis {
     async connect(server = 'default', options): Promise<RedisClientType> {
       this.current = server
 
-      window.redisApi.createClient(
-        this.buildConnectionConfig(database.data.servers[server]),
-      )
+      if (database.data.servers[server].ssh.tunnel) {
+        await window.redisApi.createClientThroughSsh(
+          database.data.servers[server].ssh,
+          this.buildConnectionConfig(database.data.servers[server]),
+        )
+      } else {
+        window.redisApi.createClient(
+          this.buildConnectionConfig(database.data.servers[server]),
+        )
+      }
+
 
       this.client.on('ready', () => {
         toaster.info('Connected')
@@ -37,10 +46,38 @@ export function useRedis(): Redis {
       return this.client
     },
     buildConnectionConfig(config: Server): RedisClientOptions<Record<string, never>, Record<string, never>> {
-      // TODO: support ssh tunnel
-      return {
-        url: `redis://${config.host}:${config.port}`,
-      }
+      return pickBy({
+        url: config.url,
+        username: config.username,
+        password: config.password,
+        socket: {
+          host: config.host,
+          port: config.port,
+          reconnectStrategy(retries: number): number | Error {
+            if (retries > 10) {
+              return new Error('Retry limit exceeded')
+            }
+
+            return 1000
+          },
+          ...(config.ssl ? {tls: true} : {}),
+        },
+      }, v => v !== undefined)
+      // return
+      //
+      // if (config.path) {
+      //   return {socket: {path: config.path}}
+      // }
+      //
+      // return {
+      //   host: config.host,
+      //   port: config.port,
+      //   password: config.password,
+      // }
+      //
+      // return {
+      //   url: config.url || `redis${config.ssl ? 's' : ''}://${config.username || config.password ? `${config.username}:${config.password}@` : ''}${config.host}:${config.port}`,
+      // }
     },
     async disconnect(): Promise<void> {
       await this.client.quit()

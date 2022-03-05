@@ -13,6 +13,8 @@ export type Server = {
   port: number,
   path?: string,
   url?: string,
+  ssl?: boolean,
+  username?: string,
   password?: string,
   ssh: SshConfig,
 }

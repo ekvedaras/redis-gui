@@ -7,6 +7,7 @@ const defaultDatabase: DatabaseSettings = {
       name: 'default',
       host: 'localhost',
       port: 6379,
+      ssl: false,
       ssh: {
         tunnel: false,
         host: '',

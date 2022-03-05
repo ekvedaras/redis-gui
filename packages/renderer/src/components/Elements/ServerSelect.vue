@@ -5,6 +5,7 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import { useServersStore } from '/@/store/servers'
 import { useDatabasesStore } from '/@/store/databases'
 import { useKeysStore } from '/@/store/keys'
+import { useToaster } from '/@/use/toaster'
 
 const redis = useRedis()
 const serversStore = useServersStore()
@@ -35,20 +36,20 @@ const connectionMessage = computed<string>(() => {
   }
 })
 
-const connect = async ({ target }: Event) => {
+const toaster = useToaster()
+const connect = async ({target}: Event) => {
   const select = target as HTMLSelectElement
-
-  if (select.value === serversStore.selected) {
-    return
-  }
 
   try {
     connectingTo.value = select.value
+    if (redis.client) {
+      await redis.disconnect()
+    }
     await redis.connect(select.value)
     await selectAndReload(select.value, false)
   } catch (error) {
-    select.value = String(serversStore.selected)
-    throw error
+    // select.value = String(serversStore.selected)
+    toaster.error(String(error))
   }
 }
 
