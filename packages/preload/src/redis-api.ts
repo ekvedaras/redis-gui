@@ -1,5 +1,5 @@
 import type {RedisMultiQueuedCommand} from '@node-redis/client/dist/lib/multi-command'
-import type {RedisCommandRawReply, RedisScripts} from '@node-redis/client/dist/lib/commands'
+import type {RedisCommandRawReply} from '@node-redis/client/dist/lib/commands'
 import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client'
 import RedisClient from '@node-redis/client/dist/lib/client'
 import type {RedisApi} from '../types/redis-api'
@@ -7,7 +7,7 @@ import type {Client, ConnectConfig} from 'ssh2'
 
 const fs = require('fs');
 const net = require('net');
-const SshClient = require('ssh2').Client;
+const SshClient = require('ssh2').Client
 const redis = require('redis')
 
 const connectToSsh = async (sshConfig: ConnectConfig): Promise<Client> => new Promise((resolve, reject) => {
@@ -19,17 +19,23 @@ const connectToSsh = async (sshConfig: ConnectConfig): Promise<Client> => new Pr
     .connect(sshConfig);
 })
 
-const createProxyServer = async <S extends RedisScripts = Record<string, never>>(sshConnection: Client, redisConfig: Omit<RedisClientOptions<never, S>, 'modules'>): Promise<typeof net.Server> => new Promise((resolve, reject) => {
+const createProxyServer = async (sshConnection: Client, redisConfig: RedisClientOptions<never, Record<string, never>>): Promise<typeof net.Server> => new Promise((resolve, reject) => {
   const server = net.createServer((sock: typeof net.Socket) => {
-    sshConnection.forwardOut(sock.remoteAddress, sock.remotePort, redisConfig.socket.host, redisConfig.socket.port, (err, stream) => {
-      if (err) {
-        sock.end();
-      } else {
-        sock.pipe(stream).pipe(sock);
-      }
-    });
+    const redisSocket = redisConfig.socket as typeof net.TcpSocketConnectOpts
+    sshConnection.forwardOut(
+      sock.remoteAddress,
+      sock.remotePort,
+      redisSocket.host,
+      redisSocket.port,
+      (err, stream) => err
+        ? sock.end()
+        : sock.pipe(stream).pipe(sock),
+    );
   });
-  server.on('error', reject).listen(0, () => resolve(server));
+
+  server
+    .on('error', reject)
+    .listen(0, () => resolve(server));
 })
 
 let client: RedisClientType;
