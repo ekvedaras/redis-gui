@@ -22,7 +22,10 @@ export function useRedis(): Redis {
 
       if (database.data.servers[server].ssh.tunnel) {
         await window.redisApi.createClientThroughSsh(
-          database.data.servers[server].ssh,
+          {
+            ...database.data.servers[server].ssh,
+            privateKey: database.data.servers[server].ssh.privateKey || `${window.fsApi.homedir}/.ssh/id_rsa`,
+          },
           this.buildConnectionConfig(database.data.servers[server]),
         )
       } else {

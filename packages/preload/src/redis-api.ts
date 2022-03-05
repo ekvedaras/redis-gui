@@ -56,11 +56,13 @@ export const redisApi: RedisApi = {
       closeSshTunnel = undefined
     }
 
-    const sshConnection = await connectToSsh({
+    const _sshConfig = {
       ...sshOptions,
       ...(sshOptions.privateKey ? {privateKey: fs.readFileSync(sshOptions.privateKey)} : {}),
-    });
-    const proxyServer = await createProxyServer(sshConnection, redisOptions);
+    }
+
+    const sshConnection = await connectToSsh(_sshConfig)
+    const proxyServer = await createProxyServer(sshConnection, redisOptions)
 
     client = redis.createClient({
       ...redisOptions,

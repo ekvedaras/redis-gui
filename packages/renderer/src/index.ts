@@ -24,6 +24,6 @@ app.config.globalProperties.emitter = mitt()
 app.mount('#app');
 
 // TODO: fix randomly failing first load (the works after clicking cmd + r)
-// TODO: fix switching between servers
+// TODO: fix finicky connection status indicator (and some client closed errors when switching servers)
 // TODO: port NOPERM workaround
 // TODO: do not expect default server to always be there. On first install show add server dialog #25

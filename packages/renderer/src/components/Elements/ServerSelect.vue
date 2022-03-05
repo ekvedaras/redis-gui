@@ -45,10 +45,10 @@ const connect = async ({target}: Event) => {
     if (redis.client) {
       await redis.disconnect()
     }
+    serversStore.selected = select.value
     await redis.connect(select.value)
     await selectAndReload(select.value, false)
   } catch (error) {
-    // select.value = String(serversStore.selected)
     toaster.error(String(error))
   }
 }
@@ -57,8 +57,7 @@ const selectAndReload = async (server: string, disconnect = true) => {
   if (disconnect) {
     await redis.disconnect()
   }
-  serversStore.selected = server
-  await Promise.all([databasesStore.load, keysStore.loadKeys])
+  await Promise.all([databasesStore.load(), keysStore.loadKeys()])
   await nextTick(() => connectingTo.value = String(Math.random()))
 }
 
