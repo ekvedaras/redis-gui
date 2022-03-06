@@ -39,22 +39,30 @@ const createProxyServer = async (sshConnection: Client, redisConfig: RedisClient
 })
 
 let client: RedisClientType;
-let closeSshTunnel: (() => void) | undefined;
+let closeSshTunnel: (() => Promise<void>) | undefined;
+
+const disconnect = async () => {
+  try {
+    if (closeSshTunnel) {
+      await closeSshTunnel();
+      closeSshTunnel = undefined
+    }
+
+    await client.disconnect()
+  } catch (e) {
+    // ignore
+  }
+}
 
 export const redisApi: RedisApi = {
   createClient: (options) => {
-    if (closeSshTunnel) {
-      closeSshTunnel();
-      closeSshTunnel = undefined
-    }
+    disconnect();
+
     return client = redis.createClient(options);
   },
 
   createClientThroughSsh: async (sshOptions, redisOptions) => {
-    if (closeSshTunnel) {
-      closeSshTunnel();
-      closeSshTunnel = undefined
-    }
+    disconnect();
 
     const _sshConfig = {
       ...sshOptions,
@@ -73,10 +81,10 @@ export const redisApi: RedisApi = {
       },
     });
 
-    closeSshTunnel = () => {
-      client.quit();
-      proxyServer.close();
-      sshConnection.end();
+    closeSshTunnel = async () => {
+      await client.quit()
+      proxyServer.close()
+      sshConnection.end()
     }
 
     return client
@@ -125,16 +133,8 @@ export const redisApi: RedisApi = {
   },
 
   client: {
-    isConnectionOpen: () => client.isOpen,
+    isConnectionOpen: () => client?.isOpen ?? false,
     connect: () => client.connect(),
-    disconnect: () => {
-      client.disconnect()
-
-      if (closeSshTunnel) {
-        closeSshTunnel();
-        closeSshTunnel = undefined
-      }
-    },
     select: (db: number) => client.select(db),
     quit: () => client.quit(),
     // @ts-ignore

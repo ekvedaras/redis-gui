@@ -15,7 +15,7 @@ const keysStore = useKeysStore()
 const connectingTo = ref<string>()
 
 const connectionState = computed<'pending' | 'ok' | 'fail'>(() => {
-  if (!connectingTo.value || !redis.client) {
+  if (!connectingTo.value || !redis.client.isConnectionOpen()) {
     return 'pending'
   }
   if (redis.client.isConnectionOpen()) {
@@ -42,37 +42,29 @@ const connect = async ({target}: Event) => {
 
   try {
     connectingTo.value = select.value
-    if (redis.client) {
-      await redis.disconnect()
-    }
-    serversStore.selected = select.value
     await redis.connect(select.value)
-    await selectAndReload(select.value, false)
+    await reload(select.value)
   } catch (error) {
     toaster.error(String(error))
   }
 }
 
-const selectAndReload = async (server: string, disconnect = true) => {
-  if (disconnect) {
-    await redis.disconnect()
-  }
+const reload = async (server: string) => {
+  serversStore.selected = server
   await Promise.all([databasesStore.load(), keysStore.loadKeys()])
   await nextTick(() => connectingTo.value = String(Math.random()))
 }
 
 onMounted(() => setTimeout(async () => {
+  connectingTo.value = 'default'
   await redis.connect('default')
-  await databasesStore.load()
-  await keysStore.loadKeys()
-  connectingTo.value = String(Math.random())
-}, 1000))
+  await reload('default')
+}, 10))
 </script>
 
 <template>
   <div class="flex items-center">
     <StateIndicator
-      :key="connectingTo"
       v-tooltip="connectionMessage"
       :state="connectionState"
     />
