@@ -15,16 +15,16 @@ export function useRedis(): Redis {
   return {
     pageSize,
     namespaceSeparator: database.data.settings.namespaceSeparator,
-    current: Object.keys(database.data.servers)[0] ?? 'default',
     client: window.redisApi.client,
     async connect(server = 'default', options): Promise<RedisClientType> {
       const serversStore = useServersStore()
-      this.current = server
-      serversStore.connecting = true
       serversStore.connected = false
+      serversStore.connectingTo = server
+      serversStore.connecting = true
 
       if (database.data.servers[server].ssh.tunnel) {
         await window.redisApi.createClientThroughSsh(
+          server,
           {
             ...database.data.servers[server].ssh,
             privateKey: database.data.servers[server].ssh.privateKey || `${window.fsApi.homedir}/.ssh/id_rsa`,
@@ -33,6 +33,7 @@ export function useRedis(): Redis {
         )
       } else {
         window.redisApi.createClient(
+          server,
           this.buildConnectionConfig(database.data.servers[server]),
         )
       }
@@ -44,13 +45,16 @@ export function useRedis(): Redis {
         serversStore.connected = true
         options?.onReady && options.onReady()
       }).on('error', (error: unknown) => {
-        toaster.error(String(error))
-        serversStore.connecting = false
-        serversStore.connected = false
-      }).on('reconnecting', async () => {
-        serversStore.connecting = true
-        serversStore.connected = false
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        if (serversStore.connectingTo === server) {
+          toaster.error(String(error))
+          serversStore.connecting = false
+          serversStore.connected = false
+        }
+      }).on('reconnecting', () => {
+        if (serversStore.connectingTo === server) {
+          serversStore.connecting = true
+          serversStore.connected = false
+        }
       })
 
       await this.client.connect()

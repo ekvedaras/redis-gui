@@ -55,13 +55,26 @@ const disconnect = async () => {
 }
 
 export const redisApi: RedisApi = {
-  createClient: (options) => {
+  connectingTo: '',
+  createClient: (server, options) => {
+    redisApi.connectingTo = server
     disconnect();
+
+    if ('socket' in options && options.socket) {
+      options.socket.reconnectStrategy = (attempt: number) => {
+        if (server !== redisApi.connectingTo) {
+          return new Error(`Connection to ${server} aborted`)
+        }
+
+        return attempt < 10 ? 1000 : new Error(`Connection to ${server} failed`)
+      }
+    }
 
     return client = redis.createClient(options);
   },
 
-  createClientThroughSsh: async (sshOptions, redisOptions) => {
+  createClientThroughSsh: async (server, sshOptions, redisOptions) => {
+    redisApi.connectingTo = server
     disconnect();
 
     const _sshConfig = {
@@ -76,6 +89,13 @@ export const redisApi: RedisApi = {
       ...redisOptions,
       socket: {
         ...(redisOptions.socket ?? {}),
+        reconnectStrategy: (attempt: number) => {
+          if (server !== redisApi.connectingTo) {
+            return new Error(`Connection to ${server} aborted`)
+          }
+
+          return attempt < 10 ? 1000 : new Error(`Connection to ${server} failed`)
+        },
         host: proxyServer.address().address,
         port: proxyServer.address().port,
       },

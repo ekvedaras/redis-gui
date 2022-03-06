@@ -16,6 +16,7 @@ interface KeysLoadResult {
 
 interface State {
   list: Record<string, Key>,
+  loading: boolean,
   cursor: number,
   selected: string | undefined,
   pattern: string,
@@ -25,6 +26,7 @@ interface State {
 export const useKeysStore = defineStore('keys', {
   state: (): State => ({
     list: {},
+    loading: false,
     cursor: 0,
     selected: undefined,
     pattern: '*',
@@ -54,6 +56,7 @@ export const useKeysStore = defineStore('keys', {
       this.registerTtlTimer()
     },
     async loadKeys(pattern = '*', cursor = 0, limit = redis.pageSize, lastLoad = 0): Promise<KeysLoadResult> {
+      this.loading = true
       this.registerTtlTimer()
 
       if (pattern === '**') {
@@ -84,6 +87,8 @@ export const useKeysStore = defineStore('keys', {
 
       loadResult.wasCancelled = pattern !== this.pattern
       loadResult.loaded = loadResult.lastLoad + lastLoad
+
+      this.loading = false
 
       return loadResult
     },

@@ -12,9 +12,11 @@ export interface RedisExtension {
 }
 
 export interface RedisApi {
-  createClient(options?: RedisClientOptions): RedisClientType,
+  connectingTo: string,
 
-  createClientThroughSsh(sshOptions: SshConfig, redisOptions?: RedisClientOptions): Promise<RedisClientType>,
+  createClient(server: string, options?: RedisClientOptions): RedisClientType,
+
+  createClientThroughSsh(server: string, sshOptions: SshConfig, redisOptions?: RedisClientOptions): Promise<RedisClientType>,
 
   test(options?: RedisClientOptions, onSuccess: () => void, onError: (error: string) => void): Promise<void>,
 

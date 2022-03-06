@@ -23,6 +23,5 @@ app.config.globalProperties.emitter = mitt()
 
 app.mount('#app');
 
-// TODO: Stop reconnecting when switched to another server.
 // TODO: port NOPERM workaround
 // TODO: do not expect default server to always be there. On first install show add server dialog #25
