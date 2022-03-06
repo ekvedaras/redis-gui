@@ -19,11 +19,9 @@ export type Redis = {
   namespaceSeparator: string,
   current: string,
   client: RedisClient & RedisClientType & RedisExtension,
-  beSilent: boolean,
   connect: (server?: string = 'default', options?: { onReady?: () => void }) => Promise<RedisClientType>,
   buildConnectionConfig: (config: Server) => RedisClientOptions,
   disconnect: () => Promise<void>,
-  silently: () => Redis
   keys: (pattern: string, limit: number, cursor: number) => Promise<KeysResult>,
 };
 

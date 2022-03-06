@@ -15,10 +15,10 @@ const keysStore = useKeysStore()
 const connectingTo = ref<string>()
 
 const connectionState = computed<'pending' | 'ok' | 'fail'>(() => {
-  if (!connectingTo.value || !redis.client.isConnectionOpen()) {
+  if (serversStore.connecting) {
     return 'pending'
   }
-  if (redis.client.isConnectionOpen()) {
+  if (redis.client.isConnectionOpen() && serversStore.connected) {
     return 'ok'
   }
 

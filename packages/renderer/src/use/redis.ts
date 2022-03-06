@@ -4,6 +4,7 @@ import {useToaster} from '/@/use/toaster'
 import type {Server} from '../../types/database'
 import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client'
 import {pickBy} from 'lodash'
+import {useServersStore} from '/@/store/servers';
 
 const database = useDatabase()
 const toaster = useToaster()
@@ -16,9 +17,11 @@ export function useRedis(): Redis {
     namespaceSeparator: database.data.settings.namespaceSeparator,
     current: Object.keys(database.data.servers)[0] ?? 'default',
     client: window.redisApi.client,
-    beSilent: false,
     async connect(server = 'default', options): Promise<RedisClientType> {
+      const serversStore = useServersStore()
       this.current = server
+      serversStore.connecting = true
+      serversStore.connected = false
 
       if (database.data.servers[server].ssh.tunnel) {
         await window.redisApi.createClientThroughSsh(
@@ -37,11 +40,17 @@ export function useRedis(): Redis {
 
       this.client.on('ready', () => {
         toaster.info('Connected')
+        serversStore.connecting = false
+        serversStore.connected = true
         options?.onReady && options.onReady()
       }).on('error', (error: unknown) => {
         toaster.error(String(error))
+        serversStore.connecting = false
+        serversStore.connected = false
       }).on('reconnecting', async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000))
+        serversStore.connecting = true
+        serversStore.connected = false
+        await new Promise((resolve) => setTimeout(resolve, 1000))
       })
 
       await this.client.connect()
@@ -84,10 +93,6 @@ export function useRedis(): Redis {
     },
     async disconnect(): Promise<void> {
       await this.client.quit()
-    },
-    silently(): Redis {
-      this.beSilent = true
-      return this
     },
     keys: async function (pattern = '*', limit = pageSize, cursor = 0): Promise<KeysResult> {
       if (!this.client) {
