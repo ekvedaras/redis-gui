@@ -2,7 +2,7 @@
 import AppModal from '/@/components/Elements/AppModal.vue'
 import { useServersStore } from '/@/store/servers'
 import type { Server } from 'types/database'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import { useDatabase } from '/@/use/database'
 import Button from '/@/components/Elements/Button.vue'
@@ -29,7 +29,8 @@ const serverDetails = ({ host, path, port, url }: Server) => {
   return `${ host }:${ port }`
 }
 
-const shouldShowServerModal = ref(false)
+const shouldShowServerModal = ref(!serversStore.hasServers)
+watch(() => serversStore.hasServers, () => shouldShowServerModal.value = !serversStore.hasServers)
 const serverToEdit = ref<string | undefined>(undefined)
 const edit = (key?: string) => {
   serverToEdit.value = key
@@ -47,6 +48,11 @@ const deleteServer = (server: Server) => {
   delete database.data.servers[server.name]
   delete database.data.history[server.name]
   database.write()
+  if (serversStore.selected == server.name) {
+    serversStore.selected = ''
+    serversStore.connectingTo = ''
+    serversStore.connected = false
+  }
   delete serversStore.list[server.name]
   shouldShowDeleteDialog.value = false
 }
@@ -104,7 +110,7 @@ const deleteServer = (server: Server) => {
     <ServerModal
       :show="shouldShowServerModal"
       :server-key="serverToEdit"
-      @close="shouldShowServerModal = false"
+      @close="shouldShowServerModal = !serversStore.hasServers"
     />
   </AppModal>
 </template>

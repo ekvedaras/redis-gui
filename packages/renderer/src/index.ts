@@ -24,4 +24,3 @@ app.config.globalProperties.emitter = mitt()
 app.mount('#app');
 
 // TODO: port NOPERM workaround
-// TODO: do not expect default server to always be there. On first install show add server dialog #25

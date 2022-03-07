@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import StateIndicator from './StateIndicator.vue'
 import { useRedis } from '/@/use/redis'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useServersStore } from '/@/store/servers'
 import { useDatabasesStore } from '/@/store/databases'
 import { useKeysStore } from '/@/store/keys'
@@ -51,10 +51,15 @@ const reload = async (server: string) => {
   await Promise.all([databasesStore.load(), keysStore.loadKeys()])
 }
 
-onMounted(() => setTimeout(async () => {
-  await redis.connect('default')
-  await reload('default')
-}, 10))
+const connectToFirst = async () => {
+  if (serversStore.hasServers) {
+    const server = Object.keys(serversStore.list)[0]
+    await redis.connect(server)
+    await reload(server)
+  }
+}
+onMounted(connectToFirst)
+watch(() => serversStore.hasServers, connectToFirst)
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppModal from '/@/components/Elements/AppModal.vue'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Button from '/@/components/Elements/Button.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
 import type { SshConfig } from 'types/database'
@@ -44,7 +44,12 @@ const title = computed(() => props.serverKey ? 'Edit server' : 'Add new server')
 const privateKeyPlaceholder = computed(() => `Private key. Default: ${ window.fsApi.homedir }/.ssh/id_rsa`)
 
 const database = useDatabase()
-watch(() => props.serverKey, () => {
+const fillForm = () => {
+  console.log({
+    key: props.serverKey,
+    has: serversStore.hasServers,
+  })
+
   if (props.serverKey) {
     let server = database.data.servers[props.serverKey]
     name.value = server.name
@@ -57,8 +62,8 @@ watch(() => props.serverKey, () => {
     password.value = server.password
     ssh.value = server.ssh
   } else {
-    name.value = ''
-    host.value = ''
+    name.value = serversStore.hasServers ? '' : 'Local'
+    host.value = serversStore.hasServers ? '' : 'localhost'
     port.value = 6379
     path.value = undefined
     url.value = undefined
@@ -74,7 +79,10 @@ watch(() => props.serverKey, () => {
       privateKey: undefined,
     }
   }
-})
+}
+
+watch(() => props.show && props.serverKey && serversStore.hasServers, fillForm)
+onMounted(fillForm)
 
 const serversStore = useServersStore()
 const save = async () => {
@@ -115,7 +123,7 @@ const test = async () => {
       isTesting.value = false
     }
     const onError = (error: string) => {
-      toaster.error(error)
+      toaster.error(error.replace(/Error: /, ''))
       isTesting.value = false
     }
 
@@ -173,13 +181,13 @@ const test = async () => {
       <div v-if="isTesting" class="relative w-10 h-10 flex items-center justify-end">
         <Spinner />
       </div>
-      <Button class="relative" @click="test">
+      <Button class="relative" :disabled="!name.length || isTesting" @click="test">
         Test
       </Button>
-      <Button @click="emit('close')">
+      <Button v-if="serversStore.hasServers" @click="emit('close')">
         Cancel
       </Button>
-      <PrimaryButton @click="save">
+      <PrimaryButton :disabled="!name.length" @click="save">
         Save
       </PrimaryButton>
     </div>

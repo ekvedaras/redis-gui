@@ -1,6 +1,6 @@
 <template>
   <svg
-    class="animate-spin w-5 h-5 transition-opacity duration-300 absolute right-0 mr-3 text-gray-800"
+    class="animate-spin w-5 h-5 transition-opacity duration-300 absolute right-0 mr-3 text-gray-800 dark:text-gray-200"
     fill="none"
     viewBox="0 0 50 50"
   >

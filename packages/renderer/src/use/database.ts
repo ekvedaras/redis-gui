@@ -2,22 +2,8 @@ import {LocalStorage, LowSync} from 'lowdb'
 import type {DatabaseSettings} from '../../types/database'
 
 const defaultDatabase: DatabaseSettings = {
-  servers: {
-    default: {
-      name: 'default',
-      host: 'localhost',
-      port: 6379,
-      ssl: false,
-      ssh: {
-        tunnel: false,
-        host: '',
-        port: 22,
-      },
-    },
-  },
-  history: {
-    default: [],
-  },
+  servers: {},
+  history: {},
   settings: {
     itemsPerPage: 100,
     namespaceSeparator: ':',

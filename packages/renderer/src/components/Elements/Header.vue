@@ -7,7 +7,7 @@ import IconButton from '/@/components/Elements/IconButton.vue'
 import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
 import ServerSelect from '/@/components/Elements/ServerSelect.vue'
 import DatabaseSelect from '/@/components/Elements/DatabaseSelect.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import SettingsModal from '/@/components/Elements/SettingsModal.vue'
 import InfoModal from '/@/components/Elements/InfoModal.vue'
 import { useDatabasesStore } from '/@/store/databases'
@@ -16,12 +16,17 @@ import { useToaster } from '/@/use/toaster'
 import ServerListModal from '/@/components/Elements/ServerListModal.vue'
 import ConsoleModal from '/@/components/Elements/ConsoleModal.vue'
 import ShortKeyModal from '/@/components/Elements/ShortKeyModal.vue'
+import { useServersStore } from '/@/store/servers'
 
-const shouldShowServerListModal = ref(false)
+const serversStore = useServersStore()
+
+const shouldShowServerListModal = ref(!serversStore.hasServers)
 const shouldShowInfoModal = ref(false)
 const shouldShowConsoleModal = ref(false)
 const shouldShowSettingsModal = ref(false)
 const shouldShowShortKeysModal = ref(false)
+
+watch(() => serversStore.hasServers, () => shouldShowServerListModal.value = !serversStore.hasServers)
 
 const databasesStore = useDatabasesStore()
 const keysStore = useKeysStore()

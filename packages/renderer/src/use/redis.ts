@@ -16,7 +16,7 @@ export function useRedis(): Redis {
     pageSize,
     namespaceSeparator: database.data.settings.namespaceSeparator,
     client: window.redisApi.client,
-    async connect(server = 'default', options): Promise<RedisClientType> {
+    async connect(server, options): Promise<RedisClientType> {
       const serversStore = useServersStore()
       serversStore.connected = false
       serversStore.connectingTo = server
@@ -79,21 +79,6 @@ export function useRedis(): Redis {
           ...(config.ssl ? {tls: true} : {}),
         },
       }, v => v !== undefined)
-      // return
-      //
-      // if (config.path) {
-      //   return {socket: {path: config.path}}
-      // }
-      //
-      // return {
-      //   host: config.host,
-      //   port: config.port,
-      //   password: config.password,
-      // }
-      //
-      // return {
-      //   url: config.url || `redis${config.ssl ? 's' : ''}://${config.username || config.password ? `${config.username}:${config.password}@` : ''}${config.host}:${config.port}`,
-      // }
     },
     async disconnect(): Promise<void> {
       await this.client.quit()

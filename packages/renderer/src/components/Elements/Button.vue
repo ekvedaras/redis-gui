@@ -2,9 +2,11 @@
 export type ButtonType = 'button' | 'submit' | 'reset'
 
 withDefaults(defineProps<{
-  type?: 'button' | 'submit' | 'reset'
+  type?: 'button' | 'submit' | 'reset',
+  disabled?: boolean,
 }>(), {
   type: 'button',
+  disabled: false,
 })
 
 const emit = defineEmits<{
@@ -16,6 +18,8 @@ const emit = defineEmits<{
   <button
     :type="type"
     class="btn transition transition-colors duration-100 ease-in-out p-2 rounded shadow-none hover:underline focus:underline"
+    :class="{'opacity-50' : disabled}"
+    :disabled="disabled"
     @click="emit('click')"
   >
     <slot />

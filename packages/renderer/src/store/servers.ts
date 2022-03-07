@@ -14,18 +14,14 @@ interface State {
 
 export const useServersStore = defineStore('servers', {
   state: (): State => ({
-    selected: database.data.servers.default ? 'default' : Object.keys(database.data.servers)[0],
+    selected: Object.keys(database.data.servers)[0] ?? '',
     connecting: false,
     connectingTo: '',
     connected: false,
     list: {...database.data.servers},
   }),
   getters: {
-    selectedHost: state => state.list[state.selected].host,
-  },
-  actions: {
-    setServers(servers: Record<string, Server>) {
-      this.list = servers
-    },
+    selectedHost: state => state.list[state.selected]?.host,
+    hasServers: state => Object.keys(state.list).length > 0,
   },
 })
