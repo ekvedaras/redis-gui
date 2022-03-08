@@ -39,6 +39,9 @@ export const useKeysStore = defineStore('keys', {
     current(state) {
       return _.find(state.list, {name: state.selected})
     },
+    hasKeys(state) {
+      return Object.keys(state.list).length > 0
+    },
   },
   actions: {
     setKeys(keys: Record<string, Key>) {

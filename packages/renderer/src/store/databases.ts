@@ -8,6 +8,7 @@ interface State {
   list: Array<Database>,
   total: number,
   selected: number | null,
+  infoAllowed: boolean,
 }
 
 export const useDatabasesStore = defineStore('databases', {
@@ -15,13 +16,16 @@ export const useDatabasesStore = defineStore('databases', {
     list: [],
     total: 0,
     selected: null,
+    infoAllowed: true,
   }),
   actions: {
     load() {
       const redis = useRedis()
 
       return Promise.all([
-        redis.client.configGet('databases').then(({databases}: { databases: string }) => this.total = parseInt(databases)),
+        redis.client.configGet('databases')
+          .then(({databases}: { databases: string }) => this.total = parseInt(databases))
+          .catch(() => this.total = 16),
         redis.client.info('keyspace').then((result: string) => {
           this.list = []
           result.split('\n').slice(1, -1).forEach((db: string) => {
@@ -37,6 +41,19 @@ export const useDatabasesStore = defineStore('databases', {
 
             this.list[database.index] = database
           })
+        }).catch((error: unknown) => {
+          if (String(error).includes('NOPERM')) {
+            this.infoAllowed = false
+            this.list.push({
+              avg_ttl: '?',
+              expires: '?',
+              id: 'db0',
+              index: 0,
+              keys: '?',
+            })
+          } else {
+            throw error
+          }
         }),
       ])
     },

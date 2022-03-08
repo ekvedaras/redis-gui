@@ -22,5 +22,3 @@ const app = createApp(App)
 app.config.globalProperties.emitter = mitt()
 
 app.mount('#app');
-
-// TODO: port NOPERM workaround

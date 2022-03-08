@@ -21,7 +21,6 @@ export const useServersStore = defineStore('servers', {
     list: {...database.data.servers},
   }),
   getters: {
-    selectedHost: state => state.list[state.selected]?.host,
     hasServers: state => Object.keys(state.list).length > 0,
   },
 })

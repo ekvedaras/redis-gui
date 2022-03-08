@@ -108,7 +108,7 @@ const groupedKeys = computed(() => {
     />
     <div class="overflow-y-auto mt-2 h-full px-1" :class="{'opacity-50': !serverStore.connected || keysStore.loading}">
       <Keys
-        v-show="serverStore.connected && !keysStore.loading"
+        v-show="serverStore.connected"
         :keys="groupedKeys"
         :level="0"
         class="mt-2"

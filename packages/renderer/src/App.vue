@@ -9,12 +9,10 @@ import Header from '/@/components/Elements/Header.vue'
 import KeysSidebar from '/@/components/Elements/KeysSidebar.vue'
 import KeyContent from '/@/components/Elements/KeyContent.vue'
 import { useServersStore } from '/@/store/servers'
-import { useKeysStore } from '/@/store/keys'
 
 const redis = useRedis()
 const database = useDatabase()
 const serversStore = useServersStore()
-const keysStore = useKeysStore()
 
 const saveLayout = (panes: SplitpaneIndexedType) => {
   database.data.settings.leftPaneSize = `${ panes[0].size }%`
@@ -43,7 +41,7 @@ onUnmounted(() => redis.disconnect())
     </Pane>
     <Pane class="flex-1 pb-2 px-4 overflow-hidden">
       <KeyContent
-        v-show="serversStore.connected && !keysStore.loading"
+        v-show="serversStore.connected"
         class="flex-1 pb-2 px-4 h-full overflow-hidden rounded-b bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200"
       />
     </Pane>
