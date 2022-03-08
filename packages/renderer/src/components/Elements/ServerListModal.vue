@@ -11,23 +11,14 @@ import EditIcon from '/@/components/Icons/EditIcon.vue'
 import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'
 import PrimaryButton from '/@/components/Elements/PrimaryButton.vue'
 import ServerModal from '/@/components/Elements/ServerModal.vue'
+import { useServerRepresenter } from '/@/use/serverRepresenter'
 
 const emit = defineEmits<{
   (e: 'close'): void;
 }>()
 
 const serversStore = useServersStore()
-const serverDetails = ({ host, path, port, url }: Server) => {
-  if (path) {
-    return path
-  }
-
-  if (url) {
-    return url
-  }
-
-  return `${ host }:${ port }`
-}
+const { representServer } = useServerRepresenter()
 
 const shouldShowServerModal = ref(!serversStore.hasServers)
 watch(() => serversStore.hasServers, () => shouldShowServerModal.value = !serversStore.hasServers)
@@ -74,7 +65,7 @@ const deleteServer = (server: Server) => {
             v-if="server.ssh.tunnel"
             class="rounded shadow bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 px-1 mx-1"
           >SSH</span>
-          {{ serverDetails(server) }}
+          {{ representServer(server) }}
         </td>
         <td class="p-2">
           <div class="flex space-x-1 justify-start">

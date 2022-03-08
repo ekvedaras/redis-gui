@@ -45,11 +45,6 @@ const privateKeyPlaceholder = computed(() => `Private key. Default: ${ window.fs
 
 const database = useDatabase()
 const fillForm = () => {
-  console.log({
-    key: props.serverKey,
-    has: serversStore.hasServers,
-  })
-
   if (props.serverKey) {
     let server = database.data.servers[props.serverKey]
     name.value = server.name
