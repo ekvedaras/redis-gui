@@ -77,7 +77,7 @@
         font-family: Avenir, Helvetica, Arial, sans-serif;
         word-break: break-word;
 
-        @apply rounded py-2 px-4;
+        @apply rounded py-2 px-4 shadow-lg;
     }
 
     div.c-toast.c-toast--default {
