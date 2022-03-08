@@ -35,7 +35,7 @@ const connectionMessage = computed<string>(() => {
 })
 
 const toaster = useToaster()
-const connect = async ({target}: Event) => {
+const connect = async ({ target }: Event) => {
   const select = target as HTMLSelectElement
 
   try {
@@ -65,7 +65,7 @@ watch(() => serversStore.hasServers, connectToFirst)
 <template>
   <div class="flex items-center">
     <StateIndicator
-      v-tooltip="connectionMessage"
+      v-tooltip.left="connectionMessage"
       :state="connectionState"
     />
     <select
