@@ -24,7 +24,7 @@ jobs :
   e2e :
     strategy :
       matrix :
-        os : [ ubuntu-latest ]
+        os : [ windows-latest ]
 
     runs-on : ${{ matrix.os }}
 
