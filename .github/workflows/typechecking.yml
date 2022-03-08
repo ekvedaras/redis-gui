@@ -1,42 +1,43 @@
-name: Typechecking
-on:
-  push:
-    branches:
+name : Typechecking
+on :
+  push :
+    branches :
       - main
-    paths:
+      - v2
+    paths :
       - '**.ts'
       - '**.vue'
       - '**/tsconfig.json'
       - 'yarn.lock'
       - '.github/workflows/typechecking.yml'
-  pull_request:
-    paths:
+  pull_request :
+    paths :
       - '**.ts'
       - '**.vue'
       - '**/tsconfig.json'
       - 'yarn.lock'
       - '.github/workflows/typechecking.yml'
 
-defaults:
-  run:
-    shell: 'bash'
+defaults :
+  run :
+    shell : 'bash'
 
-jobs:
-  typescript:
-    runs-on: ubuntu-latest
+jobs :
+  typescript :
+    runs-on : ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16 # Need for npm >=7.7
-          cache: 'yarn'
+    steps :
+      - uses : actions/checkout@v2
+      - uses : actions/setup-node@v2
+        with :
+          node-version : 16 # Need for npm >=7.7
+          cache : 'yarn'
 
       # TODO: Install not all dependencies, but only those required for this workflow
-      - name: Install dependencies
-        run: yarn install
+      - name : Install dependencies
+        run : yarn install
 
       # Type checking is divided into three separate commands for more convenient logs
-      - run: yarn run typecheck-main
-      - run: yarn run typecheck-preload
-      - run: yarn run typecheck-renderer
+      - run : yarn run typecheck-main
+      - run : yarn run typecheck-preload
+      - run : yarn run typecheck-renderer

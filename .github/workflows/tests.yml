@@ -1,41 +1,42 @@
-name: Tests
-on:
-  push:
-    branches:
+name : Tests
+on :
+  push :
+    branches :
       - main
-    paths:
+      - v2
+    paths :
       - 'packages/**'
       - 'tests/**'
       - 'yarn.lock'
       - '.github/workflows/tests.yml'
-  pull_request:
-    paths:
+  pull_request :
+    paths :
       - 'packages/**'
       - 'tests/**'
       - 'package-lock.json'
       - '.github/workflows/tests.yml'
 
-defaults:
-  run:
-    shell: 'bash'
+defaults :
+  run :
+    shell : 'bash'
 
-jobs:
-  e2e:
-    strategy:
-      matrix:
-        os: [ windows-latest ]
+jobs :
+  e2e :
+    strategy :
+      matrix :
+        os : [ ubuntu-latest ]
 
-    runs-on: ${{ matrix.os }}
+    runs-on : ${{ matrix.os }}
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16 # Need for npm >=7.7
-          cache: 'yarn'
+    steps :
+      - uses : actions/checkout@v2
+      - uses : actions/setup-node@v2
+        with :
+          node-version : 16 # Need for npm >=7.7
+          cache : 'yarn'
 
       # TODO: Install not all dependencies, but only those required for this workflow
-      - name: Install dependencies
-        run: yarn install
+      - name : Install dependencies
+        run : yarn install
 
-      - run: yarn run test
+      - run : yarn run test

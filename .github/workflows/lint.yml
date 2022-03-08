@@ -1,16 +1,17 @@
-name: Linters
-on:
-  push:
-    branches:
+name : Linters
+on :
+  push :
+    branches :
       - main
-    paths:
+      - v2
+    paths :
       - '**.js'
       - '**.ts'
       - '**.vue'
       - 'yarn.lock'
       - '.github/workflows/lint.yml'
-  pull_request:
-    paths:
+  pull_request :
+    paths :
       - '**.js'
       - '**.ts'
       - '**.vue'
@@ -18,23 +19,23 @@ on:
       - '.github/workflows/lint.yml'
 
 
-defaults:
-  run:
-    shell: 'bash'
+defaults :
+  run :
+    shell : 'bash'
 
-jobs:
-  eslint:
-    runs-on: ubuntu-latest
+jobs :
+  eslint :
+    runs-on : ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16 # Need for npm >=7.7
-          cache: 'yarn'
+    steps :
+      - uses : actions/checkout@v2
+      - uses : actions/setup-node@v2
+        with :
+          node-version : 16 # Need for npm >=7.7
+          cache : 'yarn'
 
       # TODO: Install not all dependencies, but only those required for this workflow
-      - name: Install dependencies
-        run: yarn install
+      - name : Install dependencies
+        run : yarn install
 
-      - run: yarn run lint
+      - run : yarn run lint
