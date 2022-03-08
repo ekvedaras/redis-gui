@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { Key } from 'types/redis'
 import { computed } from 'vue'
-import StringIcon from '../icons/StringIcon.vue'
-import ZsetIcon from '../icons/ZsetIcon.vue'
-import SetIcon from '../icons/SetIcon.vue'
-import ListIcon from '../icons/ListIcon.vue'
-import HashIcon from '../icons/HashIcon.vue'
-import LaravelIcon from '../icons/LaravelIcon.vue'
-import HorizonIcon from '../icons/HorizonIcon.vue'
+import StringIcon from '/@/components/Icons/StringIcon.vue'
+import ZSetIcon from '/@/components/Icons/ZSetIcon.vue'
+import SetIcon from '/@/components/Icons/SetIcon.vue'
+import ListIcon from '/@/components/Icons/ListIcon.vue'
+import HashIcon from '/@/components/Icons/HashIcon.vue'
+import LaravelIcon from '/@/components/Icons/LaravelIcon.vue'
+import HorizonIcon from '/@/components/Icons/HorizonIcon.vue'
 
 const props = defineProps<{
   redisKey: Key,
@@ -18,7 +18,7 @@ const icon = computed(() => {
     case 'string':
       return StringIcon
     case 'zset':
-      return ZsetIcon
+      return ZSetIcon
     case 'set':
       return SetIcon
     case 'list':
