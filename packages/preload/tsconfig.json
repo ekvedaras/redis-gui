@@ -1,21 +1,24 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "/@/*": [
-        "./src/*"
-      ]
-    }
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": false,
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "strict": true,
+    "isolatedModules": true,
+    "types": [
+      "node"
+    ],
+    "baseUrl": "."
   },
-  "files": [
-    "types/electron-api.d.ts",
-    "types/fs-api.d.ts",
-    "types/redis-api.d.ts",
-    "types/util-api.d.ts",
-    "src/index.ts"
-  ],
   "include": [
+    "src/**/*.ts",
+    "contracts.d.ts",
     "../../types/**/*.d.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts"
   ]
 }

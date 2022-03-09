@@ -1,21 +1,53 @@
-import type {MenuItem} from 'electron';
-import {app, BrowserWindow, ipcMain, Menu, shell} from 'electron'
-import {join} from 'path'
-import {URL} from 'url'
+import type {MenuItem} from 'electron'
+import {app, BrowserWindow, ipcMain, Menu} from 'electron'
 import menu from '/@/menu'
+import './security-restrictions'
+import {restoreOrCreateWindow} from '/@/mainWindow'
 
 
+/**
+ * Prevent multiple instances
+ */
 const isSingleInstance = app.requestSingleInstanceLock();
-
 if (!isSingleInstance) {
   app.quit();
   process.exit(0);
 }
+app.on('second-instance', restoreOrCreateWindow);
 
+
+/**
+ * Disable Hardware Acceleration for more power-save
+ */
 app.disableHardwareAcceleration();
 
-// Install "Vue.js devtools"
-if (import.meta.env.MODE === 'development') {
+/**
+ * Shout down background process if all windows was closed
+ */
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+/**
+ * @see https://www.electronjs.org/docs/v14-x-y/api/app#event-activate-macos Event: 'activate'
+ */
+app.on('activate', restoreOrCreateWindow);
+
+
+/**
+ * Create app window when background process will be ready
+ */
+app.whenReady()
+  .then(restoreOrCreateWindow)
+  .catch((e) => console.error('Failed create window:', e));
+
+
+/**
+ * Install Vue.js or some other devtools in development mode only
+ */
+if (import.meta.env.DEV) {
   app.whenReady()
     .then(() => import('electron-devtools-installer'))
     .then(({default: installExtension, VUEJS3_DEVTOOLS}) => installExtension(VUEJS3_DEVTOOLS, {
@@ -25,72 +57,6 @@ if (import.meta.env.MODE === 'development') {
     }))
     .catch(e => console.error('Failed install extension:', e));
 }
-
-let mainWindow: BrowserWindow | null = null;
-
-const createWindow = async () => {
-  mainWindow = new BrowserWindow({
-    show: false, // Use 'ready-to-show' event to show window
-    titleBarStyle: 'hidden',
-    frame: false,
-    webPreferences: {
-      nativeWindowOpen: true,
-      preload: join(__dirname, '../../preload/dist/index.cjs'),
-    },
-  });
-
-  /**
-   * If you install `show: true` then it can cause issues when trying to close the window.
-   * Use `show: false` and listener events `ready-to-show` to fix these issues.
-   *
-   * @see https://github.com/electron/electron/issues/25012
-   */
-  mainWindow.on('ready-to-show', () => {
-    mainWindow?.show();
-
-    if (import.meta.env.MODE === 'development') {
-      mainWindow?.webContents.openDevTools();
-    }
-  });
-
-  /**
-   * External hyperlinks open in the default browser.
-   *
-   * @see https://stackoverflow.com/a/67409223
-   */
-  mainWindow.webContents.setWindowOpenHandler(({url}) => {
-    shell.openExternal(url);
-    return {action: 'deny'};
-  });
-
-  /**
-   * URL for main window.
-   * Vite dev server for development.
-   * `file://../renderer/index.html` for production and test
-   */
-  const pageUrl = import.meta.env.MODE === 'development' && import.meta.env.VITE_DEV_SERVER_URL !== undefined
-    ? import.meta.env.VITE_DEV_SERVER_URL
-    : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
-
-
-  await mainWindow.loadURL(pageUrl);
-};
-
-
-app.on('second-instance', () => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
-
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
 
 app.whenReady()
   .then(() => {
@@ -105,35 +71,15 @@ app.whenReady()
   })
   .catch((e) => console.error('Failed to build menu:', e));
 
-app.whenReady()
-  .then(createWindow)
-  .catch((e) => console.error('Failed create window:', e));
-
-
-// Auto-updates
+/**
+ * Check new app version in production mode only
+ */
 if (import.meta.env.PROD) {
   app.whenReady()
     .then(() => import('electron-updater'))
     .then(({autoUpdater}) => autoUpdater.checkForUpdatesAndNotify())
     .catch((e) => console.error('Failed check updates:', e));
 }
-
-ipcMain.on('window-minimize', function (event) {
-  BrowserWindow.fromWebContents(event.sender)?.minimize();
-})
-
-ipcMain.on('window-maximize', function (event) {
-  const window = BrowserWindow.fromWebContents(event.sender);
-  window?.isMaximized() ? window?.unmaximize() : window?.maximize();
-})
-
-ipcMain.on('window-close', function (event) {
-  BrowserWindow.fromWebContents(event.sender)?.close()
-})
-
-ipcMain.on('window-is-maximized', function (event) {
-  event.returnValue = BrowserWindow.fromWebContents(event.sender)?.isMaximized()
-})
 
 ipcMain.on('request-application-menu', function (event) {
   const menu = Menu.getApplicationMenu();

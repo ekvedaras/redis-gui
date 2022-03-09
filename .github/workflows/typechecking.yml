@@ -37,7 +37,4 @@ jobs :
       - name : Install dependencies
         run : yarn install
 
-      # Type checking is divided into three separate commands for more convenient logs
-      - run : yarn run typecheck-main
-      - run : yarn run typecheck-preload
-      - run : yarn run typecheck-renderer
+      - run : yarn run typecheck

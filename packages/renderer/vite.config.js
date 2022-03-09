@@ -1,11 +1,11 @@
 /* eslint-env node */
 
-import {chrome} from '../../electron-vendors.config.json';
-import {join} from 'path';
-import {builtinModules} from 'module';
-import vue from '@vitejs/plugin-vue';
+import { chrome } from '../../.electron-vendors.cache.json'
+import { join } from 'path'
+import { builtinModules } from 'module'
+import vue from '@vitejs/plugin-vue'
 
-const PACKAGE_ROOT = __dirname;
+const PACKAGE_ROOT = __dirname
 
 /**
  * @type {import('vite').UserConfig}
@@ -32,12 +32,16 @@ const config = {
     outDir: 'dist',
     assetsDir: '.',
     rollupOptions: {
+      input: join(PACKAGE_ROOT, 'index.html'),
       external: [
-        ...builtinModules,
+        ...builtinModules.flatMap(p => [p, `node:${p}`]),
       ],
     },
     emptyOutDir: true,
     brotliSize: false,
+  },
+  test: {
+    environment: 'happy-dom',
   },
 };
 
