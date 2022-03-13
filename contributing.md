@@ -20,8 +20,8 @@ _It can't be understated how frustrating and draining it can be to maintainers t
 The package manager used to install and link dependencies must be npm v7 or later.
 
 1. Clone repo
-1. `npm run watch` start electron app in watch mode.
-1. `npm run compile` build app but for local debugging only.
-1. `npm run lint` lint your code.
-1. `npm run typecheck` Run typescript check.
-1. `npm run test` Run app test.
+1. `yarn run watch` start electron app in watch mode.
+1. `yarn run compile` build app but for local debugging only.
+1. `yarn run lint` lint your code.
+1. `yarn run typecheck` Run typescript check.
+1. `yarn run test` Run app test.

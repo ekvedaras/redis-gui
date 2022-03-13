@@ -4,6 +4,12 @@
 
 import './nodeCrypto';
 import './versions';
+import './fs-api';
+import './util-api';
+import './redis-api';
+import './openExternal';
+import './prettyBytes';
+import './titlebar';
 
 // import {contextBridge, shell} from 'electron'
 // import type {ElectronApi} from '../types/electron-api'
@@ -20,14 +26,6 @@ import './versions';
 // const api: ElectronApi = {
 //   versions: process.versions,
 //   openExternal: shell.openExternal,
-// };
-//
-// const fsApi: FsApi = {
-//   homedir: homedir(),
-// };
-//
-// const utilApi: UtilApi = {
-//   promisify,
 // };
 //
 // /**

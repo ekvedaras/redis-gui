@@ -2,8 +2,34 @@ import type {RedisMultiQueuedCommand} from '@node-redis/client/dist/lib/multi-co
 import type {RedisCommandRawReply} from '@node-redis/client/dist/lib/commands'
 import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client'
 import RedisClient from '@node-redis/client/dist/lib/client'
-import type {RedisApi} from '../types/redis-api'
+// import type {RedisApi} from '../types/redis-api'
 import type {Client, ConnectConfig} from 'ssh2'
+// import type {SshConfig} from '../../renderer/types/database'
+
+// type ServerConfig = {
+//   host: string
+//   port: number
+//   password?: string
+// }
+
+export interface RedisExtension {
+  isConnectionOpen(): boolean
+}
+
+//
+// export interface RedisApi {
+//   connectingTo: string,
+//
+//   createClient(server: string, options?: RedisClientOptions): RedisClientType,
+//
+//   createClientThroughSsh(server: string, sshOptions: SshConfig, redisOptions?: RedisClientOptions): Promise<RedisClientType>,
+//
+//   test(options?: RedisClientOptions, onSuccess: () => void, onError: (error: string) => void): Promise<void>,
+//
+//   testThroughSsh(sshOptions: SshConfig, redisOptions?: RedisClientOptions, onSuccess: () => void, onError: (error: string) => void): Promise<void>,
+//
+//   client: RedisClient | RedisExtension
+// }
 
 const fs = require('fs');
 const net = require('net');
@@ -54,13 +80,13 @@ const disconnect = async () => {
   }
 }
 
-export const redisApi: RedisApi = {
+export const redisApi = {
   connectingTo: '',
   createClient: (server, options) => {
     redisApi.connectingTo = server
     disconnect();
 
-    if ('socket' in options && options.socket) {
+    if (options && 'socket' in options && options.socket) {
       options.socket.reconnectStrategy = (attempt: number) => {
         if (server !== redisApi.connectingTo) {
           return new Error(`Connection to ${server} aborted`)

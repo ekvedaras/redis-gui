@@ -58,19 +58,6 @@ if (import.meta.env.DEV) {
     .catch(e => console.error('Failed install extension:', e));
 }
 
-app.whenReady()
-  .then(() => {
-    const current = Menu.getApplicationMenu()
-    const newMenu = Menu.buildFromTemplate(menu)
-    const appMenu = Menu.buildFromTemplate([])
-
-    current?.items.filter(item => item.label !== 'Help').forEach(item => appMenu?.append(item))
-    newMenu.items.forEach(item => appMenu?.append(item))
-
-    Menu.setApplicationMenu(appMenu)
-  })
-  .catch((e) => console.error('Failed to build menu:', e));
-
 /**
  * Check new app version in production mode only
  */
@@ -119,3 +106,16 @@ const getMenuItemByCommandId = (commandId: number, menu = Menu.getApplicationMen
 
   return menuItem || null;
 };
+
+app.whenReady()
+  .then(() => {
+    const current = Menu.getApplicationMenu()
+    const newMenu = Menu.buildFromTemplate(menu)
+    const appMenu = Menu.buildFromTemplate([])
+
+    current?.items.filter(item => item.label !== 'Help').forEach(item => appMenu?.append(item))
+    newMenu.items.forEach(item => appMenu?.append(item))
+
+    Menu.setApplicationMenu(appMenu)
+  })
+  .catch((e) => console.error('Failed to build menu:', e));

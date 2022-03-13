@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.send('request-application-menu');
 })
 
-window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
   if (titlebar instanceof Titlebar) {
     titlebar.updateBackground(Color.fromHex(e.matches ? titleBarColors.dark : titleBarColors.light))
   }
