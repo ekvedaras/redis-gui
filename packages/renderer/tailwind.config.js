@@ -1,5 +1,17 @@
+// eslint-disable-next-line no-undef
 module.exports = {
-  content: ['./packages/**/*.{vue,js,ts,jsx,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{vue,ts}',
+  ],
+  safelist: [
+    'c-toast',
+    'c-toast--default',
+    'c-toast--success',
+    'c-toast--info',
+    'c-toast--error',
+    'c-toast--warning',
+  ],
   theme: {
     extend: {
       gridTemplateRows: {

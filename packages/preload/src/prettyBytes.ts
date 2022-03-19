@@ -1,4 +1,3 @@
 import {exposeInMainWorld} from './exposeInMainWorld';
-import * as prettyBytes from 'pretty-bytes';
 
-exposeInMainWorld('prettyBytes', prettyBytes);
+exposeInMainWorld('prettyBytes', require('pretty-bytes'));

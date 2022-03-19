@@ -13,7 +13,7 @@ const showAddKeyModal = ref(false)
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-full text-center">
+  <div v-if="serversStore.connected" class="flex flex-col items-center justify-center h-full text-center">
     <div class="text-5xl font-medium text-gray-500">
       {{ representServer(serversStore.list[serversStore.selected]) }}
     </div>

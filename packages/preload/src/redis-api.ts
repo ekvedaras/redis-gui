@@ -4,7 +4,15 @@ import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/
 import RedisClient from '@node-redis/client/dist/lib/client'
 // import type {RedisApi} from '../types/redis-api'
 import type {Client, ConnectConfig} from 'ssh2'
+import {exposeInMainWorld} from './exposeInMainWorld';
 // import type {SshConfig} from '../../renderer/types/database'
+import * as fs from 'node:fs'
+import * as net from 'node:net'
+
+// const fs = require('fs');
+// const net = require('net');
+const SshClient = require('ssh2').Client
+const redis = require('redis')
 
 // type ServerConfig = {
 //   host: string
@@ -30,11 +38,6 @@ export interface RedisExtension {
 //
 //   client: RedisClient | RedisExtension
 // }
-
-const fs = require('fs');
-const net = require('net');
-const SshClient = require('ssh2').Client
-const redis = require('redis')
 
 const connectToSsh = async (sshConfig: ConnectConfig): Promise<Client> => new Promise((resolve, reject) => {
   const sshConnection = new SshClient();
@@ -199,3 +202,5 @@ for (const method of Object.keys(RedisClient.prototype)) {
   // @ts-ignore
   redisApi.client[method] = (...args) => client[method](...args)
 }
+
+exposeInMainWorld('redisApi', redisApi)

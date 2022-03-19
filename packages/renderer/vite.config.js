@@ -6,6 +6,10 @@ import { builtinModules } from 'module'
 import vue from '@vitejs/plugin-vue'
 
 const PACKAGE_ROOT = __dirname
+const _builtinModules = [...builtinModules]
+_builtinModules.splice(_builtinModules.indexOf('fs'), 1)
+_builtinModules.splice(_builtinModules.indexOf('path'), 1)
+// _builtinModules.splice(_builtinModules.indexOf('os'), 1)
 
 /**
  * @type {import('vite').UserConfig}
@@ -34,7 +38,7 @@ const config = {
     rollupOptions: {
       input: join(PACKAGE_ROOT, 'index.html'),
       external: [
-        ...builtinModules.flatMap(p => [p, `node:${p}`]),
+        ..._builtinModules.flatMap(p => [p, `node:${p}`]),
       ],
     },
     emptyOutDir: true,

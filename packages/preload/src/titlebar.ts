@@ -19,8 +19,6 @@ window.addEventListener('DOMContentLoaded', () => {
     isMaximized: () => ipcRenderer.sendSync('window-is-maximized'),
     onMenuItemClick: (commandId) => ipcRenderer.send('menu-event', commandId),
   });
-
-  ipcRenderer.send('request-application-menu');
 })
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {

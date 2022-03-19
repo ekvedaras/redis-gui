@@ -23,8 +23,8 @@ const shouldShowShortKeysModal = ref(false)
 const search = ref('')
 const isLoading = ref(false)
 
-const openTwitter = () => window.electron.openExternal('https://twitter.com/ekvedaras')
-const openGitHub = () => window.electron.openExternal('https://github.com/ekvedaras/redis-gui')
+const openTwitter = () => window.openExternal('https://twitter.com/ekvedaras')
+const openGitHub = () => window.openExternal('https://github.com/ekvedaras/redis-gui')
 
 const loadKeys = async (cursor = 0) => {
   isLoading.value = true

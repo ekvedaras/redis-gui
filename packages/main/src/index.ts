@@ -68,7 +68,7 @@ if (import.meta.env.PROD) {
     .catch((e) => console.error('Failed check updates:', e));
 }
 
-ipcMain.on('request-application-menu', function (event) {
+ipcMain.handle('request-application-menu', function (event) {
   const menu = Menu.getApplicationMenu();
   const jsonMenu = JSON.parse(JSON.stringify(menu, parseMenu()));
   event.sender.send('titlebar-menu', jsonMenu);
