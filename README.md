@@ -4,7 +4,7 @@
 
 A graphical UI for managing Redis databases.
 
-<img src="src/assets/redis.svg" width="192" height="192"/>
+<img src="packages/renderer/assets/redis.svg" width="192" height="192"/>
 
 ## Main features
 

@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "node": false,
+    "vue/setup-compiler-macros": true
+  },
+  "extends": [
+    /** @see https://eslint.vuejs.org/rules/ */
+    "plugin:vue/vue3-recommended"
+  ],
+  "rules": {
+    "vue/multi-word-component-names": "off",
+    "vue/max-attributes-per-line": "off",
+    "vue/html-self-closing": "off"
+  },
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  }
+}
