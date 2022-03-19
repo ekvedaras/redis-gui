@@ -106,6 +106,14 @@ jobs :
           RELEASE_NOTE : ${{ needs.draft.outputs.release-note }}
         run : echo "$RELEASE_NOTE" >> ./buildResources/release-notes.md
 
+      - name : Install Snapcraft
+        uses : samuelmeuli/action-snapcraft@v1
+        # Only install Snapcraft on Ubuntu
+        if : startsWith(matrix.os, 'ubuntu')
+        with :
+          # Log in to Snap Store
+          snapcraft_token : ${{ secrets.snapcraft_token }}
+
       # Compile app and upload artifacts
       - name : Compile & release Electron app
         uses : samuelmeuli/action-electron-builder@v1
@@ -119,10 +127,6 @@ jobs :
           # (No need to define this secret in the repo settings)
           github_token : ${{ secrets.github_token }}
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release : true
-
           # Sometimes the build may fail due to a connection problem with Apple, GitHub, etc. servers.
           # This option will restart the build as many attempts as possible
           max_attempts : 3
@@ -135,6 +139,32 @@ jobs :
 
           # Password for decrypting `windows_certs`
           # windows_certs_password: ''
+
+          # Base64-encoded code signing certificate for macOS
+          # mac_certs: ''
+
+          # Password for decrypting `mac_certs`
+          # mac_certs_password: ''
+
+      # Compile app and upload artifacts
+      - name : Compile & release Electron app
+        uses : samuelmeuli/action-electron-builder@v1
+        if : startsWith(matrix.os, 'macos')
+        env :
+          VITE_APP_VERSION : ${{ needs.draft.outputs.version }}
+        with :
+          build_script_name : build
+          args : --config .electron-builder.config.js --arch=arm64
+
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token : ${{ secrets.github_token }}
+
+          # Sometimes the build may fail due to a connection problem with Apple, GitHub, etc. servers.
+          # This option will restart the build as many attempts as possible
+          max_attempts : 3
+
+          # Code Signing params
 
           # Base64-encoded code signing certificate for macOS
           # mac_certs: ''
