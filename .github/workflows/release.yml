@@ -147,14 +147,14 @@ jobs :
           # mac_certs_password: ''
 
       # Compile app and upload artifacts
-      - name : Compile & release Electron app
+      - name : Compile & release Electron app (arm64
         uses : samuelmeuli/action-electron-builder@v1
         if : startsWith(matrix.os, 'macos')
         env :
           VITE_APP_VERSION : ${{ needs.draft.outputs.version }}
         with :
           build_script_name : build
-          args : --config .electron-builder.config.js --arch=arm64
+          args : --arm64 --config .electron-builder.config.js
 
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
