@@ -1,8 +1,8 @@
 name : Release
 on :
-  create :
-    tags :
-      - v*
+  push :
+    branches :
+      - main
     paths-ignore :
       - '**.md'
       - '**.spec.js'
@@ -85,8 +85,6 @@ jobs :
     strategy :
       matrix :
         os : [ windows-latest, macos-latest, ubuntu-latest ]
-    #    To compile the application for different platforms, use:
-    #    os: [ macos-latest, ubuntu-latest, windows-latest ]
 
     runs-on : ${{ matrix.os }}
 
