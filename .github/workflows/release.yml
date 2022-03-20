@@ -127,6 +127,10 @@ jobs :
           # (No need to define this secret in the repo settings)
           github_token : ${{ secrets.github_token }}
 
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release : true
+
           # Sometimes the build may fail due to a connection problem with Apple, GitHub, etc. servers.
           # This option will restart the build as many attempts as possible
           max_attempts : 3
@@ -147,7 +151,7 @@ jobs :
           # mac_certs_password: ''
 
       # Compile app and upload artifacts
-      - name : Compile & release Electron app (arm64
+      - name : Compile & release Electron app (arm64)
         uses : samuelmeuli/action-electron-builder@v1
         if : startsWith(matrix.os, 'macos')
         env :

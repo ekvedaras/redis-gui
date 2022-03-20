@@ -41,7 +41,3 @@ Binaries are available to download on [releases page](https://github.com/ekvedar
 ![JSON key](./artifacts/previews/json-key.png)
 
 ![Console](./artifacts/previews/console.png)
-
----
-
-Currently working on v2.
