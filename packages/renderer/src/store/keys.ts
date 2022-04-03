@@ -1,4 +1,4 @@
-import {filter, find, create, toPairs, sortBy, fromPairs} from 'lodash'
+import {create, filter, find, fromPairs, sortBy, toPairs} from 'lodash'
 import {defineStore} from 'pinia'
 import type {Key, KeysResult} from '../../types/redis'
 import {useRedis} from '/@/use/redis'
@@ -21,6 +21,8 @@ interface State {
   selected: string | undefined,
   pattern: string,
   ttlTimer: NodeJS.Timer | undefined,
+  checkboxesVisible: boolean,
+  selectedKeys: string[],
 }
 
 export const useKeysStore = defineStore('keys', {
@@ -31,6 +33,8 @@ export const useKeysStore = defineStore('keys', {
     selected: undefined,
     pattern: '*',
     ttlTimer: undefined,
+    checkboxesVisible: false,
+    selectedKeys: [],
   }),
   getters: {
     withTTL(state) {
@@ -41,6 +45,17 @@ export const useKeysStore = defineStore('keys', {
     },
     hasKeys(state) {
       return Object.keys(state.list).length > 0
+    },
+    isKeySelected(state) {
+      return (key: string) => state.selectedKeys.find(selectedKey => {
+        if (selectedKey.substring(selectedKey.length - 1) === '*' && key.substring(key.length - 1) !== '*') {
+          return selectedKey.substring(0, selectedKey.length - 1) === key.substring(0, selectedKey.length - 1)
+        }
+
+        console.log({selectedKey, key, res: selectedKey === key})
+
+        return selectedKey === key
+      })
     },
   },
   actions: {

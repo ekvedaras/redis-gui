@@ -13,6 +13,7 @@ import { useRedis } from '/@/use/redis'
 import SearchBar from '/@/components/Elements/SearchBar.vue'
 import Keys from '/@/components/Elements/Keys.vue'
 import ShortKeyModal from '/@/components/Elements/ShortKeyModal.vue'
+import ActionButton from '/@/components/Elements/ActionButton.vue'
 
 const serverStore = useServersStore()
 const keysStore = useKeysStore()
@@ -37,6 +38,7 @@ const loadKeys = async (cursor = 0) => {
     isLoading.value = false
   }
 }
+
 const loadMore = async () => {
   const result = await loadKeys(keysStore.cursor)
   toaster.info(`${ result.loaded } keys loaded`)
@@ -63,6 +65,7 @@ const nestKey = (grouped: object, path: string) => {
 
   return [key, keyPath]
 }
+
 const groupedKeys = computed(() => {
   const grouped: Record<string, Key> = {}
 
@@ -94,6 +97,11 @@ const groupedKeys = computed(() => {
 
   return grouped
 })
+
+const hideSelection = () => {
+  keysStore.checkboxesVisible = false
+  keysStore.selectedKeys = []
+}
 </script>
 
 <template>
@@ -106,7 +114,18 @@ const groupedKeys = computed(() => {
       :add-keys="{main: ['a'], forced: ['ctrl', 'a']}"
       class="px-2"
     />
-    <div class="overflow-y-auto mt-2 h-full px-1" :class="{'opacity-50': !serverStore.connected || keysStore.loading}">
+    <ActionButton v-if="!keysStore.checkboxesVisible" @click="keysStore.checkboxesVisible = true">
+      Select keys
+    </ActionButton>
+    <div v-else>
+      <ActionButton @click="alert('TODO')">
+        Select all
+      </ActionButton>
+      <ActionButton @click="hideSelection">
+        Unselect keys
+      </ActionButton>
+    </div>
+    <div class="overflow-y-auto h-full px-1" :class="{'opacity-50': !serverStore.connected || keysStore.loading}">
       <Keys
         v-show="serverStore.connected"
         :keys="groupedKeys"
