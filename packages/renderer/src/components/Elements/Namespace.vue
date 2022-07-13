@@ -73,7 +73,7 @@ const toggleNamespaceSelection = (namespace: string) => {
       @click="toggle"
     >
       <LevelTab :level="level" />
-      <input v-if="keysStore.checkboxesVisible" :key="keysStore.selectedKeys" type="checkbox" :checked="keysStore.isKeySelected(namespaceForSelection)" class="mr-1" @click.stop="toggleNamespaceSelection(namespaceForSelection)" />
+      <input v-if="keysStore.checkboxesVisible" :key="keysStore.selectedKeys.join()" type="checkbox" :checked="keysStore.isKeySelected(namespaceForSelection)" class="mr-1" @click.stop="toggleNamespaceSelection(namespaceForSelection)" />
       <div class="flex items-start">
         <OpenFolderIcon
           v-if="expanded"

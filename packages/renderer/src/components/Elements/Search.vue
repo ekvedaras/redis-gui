@@ -30,7 +30,7 @@ const emitInput = () => input.value && emit('update:value', input.value.value)
       :value="props.value"
       class="py-2 px-3 w-full"
       @input="emitInput"
-      @keydown.esc="blur"
+      @keydown.esc="input?.blur"
     >
     <Spinner :class="[showSpinner ? 'opacity-100' : 'opacity-0']" />
   </div>

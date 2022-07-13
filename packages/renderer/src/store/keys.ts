@@ -47,12 +47,10 @@ export const useKeysStore = defineStore('keys', {
       return Object.keys(state.list).length > 0
     },
     isKeySelected(state) {
-      return (key: string) => state.selectedKeys.find(selectedKey => {
+      return (key: string): boolean => !!state.selectedKeys.find(selectedKey => {
         if (selectedKey.substring(selectedKey.length - 1) === '*' && key.substring(key.length - 1) !== '*') {
           return selectedKey.substring(0, selectedKey.length - 1) === key.substring(0, selectedKey.length - 1)
         }
-
-        console.log({selectedKey, key, res: selectedKey === key})
 
         return selectedKey === key
       })

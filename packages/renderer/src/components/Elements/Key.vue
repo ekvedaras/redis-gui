@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useKeysStore } from '/@/store/keys'
-import { computed, nextTick } from 'vue'
+import { computed } from 'vue'
 import type { Key } from 'types/redis'
 import { useRedis } from '/@/use/redis'
 import TimeIcon from '/@/components/Icons/TimeIcon.vue'
@@ -66,7 +66,7 @@ const toggleKeySelection = (key: string) => {
     @click="keysStore.selected = redisKey.name"
   >
     <LevelTab :level="level" />
-    <input v-if="keysStore.checkboxesVisible" :key="keysStore.selectedKeys" type="checkbox" :checked="keysStore.isKeySelected(redisKey.name)" class="mr-1" @click.stop="toggleKeySelection(redisKey.name)" />
+    <input v-if="keysStore.checkboxesVisible" :key="keysStore.selectedKeys.join()" type="checkbox" :checked="keysStore.isKeySelected(redisKey.name)" class="mr-1" @click.stop="toggleKeySelection(redisKey.name)" />
     <KeyIcon v-tooltip="redisKey.type" :redis-key="redisKey" />
     <div class="ml-2 flex-1">
       {{ nameWithDots }}

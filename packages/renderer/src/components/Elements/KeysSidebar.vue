@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { get, setWith, create, toPairs, sortBy, fromPairs } from 'lodash'
+import { create, fromPairs, get, setWith, sortBy, toPairs } from 'lodash'
 import { computed, ref, watch } from 'vue'
 import { useKeysStore } from '/@/store/keys'
 import { useServersStore } from '/@/store/servers'
@@ -14,6 +14,8 @@ import SearchBar from '/@/components/Elements/SearchBar.vue'
 import Keys from '/@/components/Elements/Keys.vue'
 import ShortKeyModal from '/@/components/Elements/ShortKeyModal.vue'
 import ActionButton from '/@/components/Elements/ActionButton.vue'
+import DeleteIcon from '/@/components/Icons/DeleteIcon.vue'
+import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 
 const serverStore = useServersStore()
 const keysStore = useKeysStore()
@@ -102,6 +104,24 @@ const hideSelection = () => {
   keysStore.checkboxesVisible = false
   keysStore.selectedKeys = []
 }
+
+const selectAll = () => {
+  keysStore.selectedKeys = Object.keys(keysStore.list)
+}
+
+const shouldShowDeleteSelectedDialog = ref(false)
+const deleteSelectedKeys = () => {
+  redis.client.del([...keysStore.selectedKeys.flatMap(keyToDelete => {
+    if (keyToDelete.substring(keyToDelete.length - 1) === '*') {
+      return Object.keys(keysStore.list).filter(loadedKey => loadedKey.substring(0, keyToDelete.length - 1) === keyToDelete.substring(0, keyToDelete.length - 1))
+    }
+
+    return keyToDelete
+  })])
+  hideSelection()
+  loadKeys()
+  shouldShowDeleteSelectedDialog.value = false
+}
 </script>
 
 <template>
@@ -114,16 +134,21 @@ const hideSelection = () => {
       :add-keys="{main: ['a'], forced: ['ctrl', 'a']}"
       class="px-2"
     />
-    <ActionButton v-if="!keysStore.checkboxesVisible" @click="keysStore.checkboxesVisible = true">
-      Select keys
-    </ActionButton>
-    <div v-else>
-      <ActionButton @click="alert('TODO')">
-        Select all
+    <div class="px-2 mt-2 flex space-x-2">
+      <ActionButton v-if="!keysStore.checkboxesVisible" class="flex-1" @click="keysStore.checkboxesVisible = true">
+        Select keys
       </ActionButton>
-      <ActionButton @click="hideSelection">
-        Unselect keys
-      </ActionButton>
+      <template v-else>
+        <ActionButton class="flex-1" @click="selectAll">
+          Select all
+        </ActionButton>
+        <ActionButton class="flex-1" @click="hideSelection">
+          Unselect keys
+        </ActionButton>
+        <ActionButton v-tooltip="'This will delete loaded keys only.'" class="hover:text-red-500" @click="shouldShowDeleteSelectedDialog = true">
+          <DeleteIcon class="w-3 h-3" />
+        </ActionButton>
+      </template>
     </div>
     <div class="overflow-y-auto h-full px-1" :class="{'opacity-50': !serverStore.connected || keysStore.loading}">
       <Keys
@@ -156,5 +181,8 @@ const hideSelection = () => {
       v-if="shouldShowShortKeysModal"
       @close="shouldShowShortKeysModal = false"
     />
+    <ConfirmDialog danger :show="shouldShowDeleteSelectedDialog" @close="shouldShowDeleteSelectedDialog = false" @confirm="deleteSelectedKeys">
+      Delete selected keys?
+    </ConfirmDialog>
   </div>
 </template>
