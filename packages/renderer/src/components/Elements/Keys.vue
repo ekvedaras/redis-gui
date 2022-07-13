@@ -27,6 +27,7 @@ const asKeys = (key: KeyType | Record<string, KeyType>) => (key as Record<string
     <li
       v-for="(key, name) in keys"
       :key="name"
+      class="flex items-center"
     >
       <Key
         v-if="isKey(key)"

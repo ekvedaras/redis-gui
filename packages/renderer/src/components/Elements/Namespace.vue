@@ -8,6 +8,7 @@ import FolderIcon from '/@/components/Icons/FolderIcon.vue'
 import LaravelIcon from '/@/components/Icons/LaravelIcon.vue'
 import HorizonIcon from '/@/components/Icons/HorizonIcon.vue'
 import LevelTab from '/@/components/Elements/LevelTab.vue'
+import { useKeysStore } from '/@/store/keys'
 
 export type NamespaceProps = {
   namespace: string;
@@ -43,17 +44,36 @@ const overlayIcon = computed(() => {
 })
 
 const totalKeys = computed(() => Object.keys(props.keys).length)
+
+const keysStore = useKeysStore()
+const namespaceForSelection = computed(() => `${namespaceWithDots.value}${redis.namespaceSeparator}*`)
+const toggleNamespaceSelection = (namespace: string) => {
+  const index = keysStore.selectedKeys.indexOf(namespace)
+
+  if (index === -1) {
+    const newList : string[] = [namespace]
+    keysStore.selectedKeys.forEach((key, index) => {
+      if (!(keysStore.selectedKeys[index].substring(0, namespace.length - 2) === namespace.substring(0, namespace.length - 2))) {
+        newList.push(key)
+      }
+    })
+    keysStore.selectedKeys = newList
+  } else {
+    keysStore.selectedKeys.splice(index, 1)
+  }
+}
 </script>
 
 <template>
   <div>
     <div
-      class="flex cursor-pointer rounded hover:bg-gray-200 dark:hover:bg-white-10p px-2"
+      class="flex items-center cursor-pointer rounded hover:bg-gray-200 dark:hover:bg-white-10p px-2"
       tabindex="1"
       @keypress.enter="toggle"
       @click="toggle"
     >
       <LevelTab :level="level" />
+      <input v-if="keysStore.checkboxesVisible" :key="keysStore.selectedKeys.join()" type="checkbox" :checked="keysStore.isKeySelected(namespaceForSelection)" class="mr-1" @click.stop="toggleNamespaceSelection(namespaceForSelection)" />
       <div class="flex items-start">
         <OpenFolderIcon
           v-if="expanded"
