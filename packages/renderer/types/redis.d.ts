@@ -17,7 +17,7 @@ export type KeysResult = {
 export type Redis = {
   pageSize: number,
   namespaceSeparator: string,
-  client: RedisClient & RedisClientType & RedisExtension,
+  client: RedisClient & RedisClientType & RedisExtension | null,
   connect: (server: string, options?: { onReady?: () => void }) => Promise<RedisClientType>,
   buildConnectionConfig: (config: Server) => RedisClientOptions,
   disconnect: () => Promise<void>,

@@ -15,7 +15,7 @@ export function useRedis(): Redis {
   return {
     pageSize,
     namespaceSeparator: database.data.settings.namespaceSeparator,
-    client: window.redisApi.client,
+    client: window.redisApi?.client,
     async connect(server, options): Promise<RedisClientType> {
       const serversStore = useServersStore()
       serversStore.connected = false
