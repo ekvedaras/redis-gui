@@ -1,5 +1,5 @@
 import type {Server} from '/@/use/database'
-import type {RedisClient, RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client';
+import type {RedisClient, RedisClientOptions, RedisClientType} from '@redis/client/dist/lib/client';
 import type {RedisExtension} from '../../preload/types/redis-api';
 
 export type Key = {

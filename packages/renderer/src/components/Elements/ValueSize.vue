@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import usePrettyBytes from '/@/use/prettyBytes'
+import prettyBytes from 'pretty-bytes'
 
 defineProps<{
   length: number;
 }>()
-
-const prettyBytes = usePrettyBytes()
 </script>
 
 <template>

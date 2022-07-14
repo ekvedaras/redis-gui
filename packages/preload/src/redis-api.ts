@@ -1,12 +1,13 @@
-import type {RedisMultiQueuedCommand} from '@node-redis/client/dist/lib/multi-command'
-import type {RedisCommandRawReply} from '@node-redis/client/dist/lib/commands'
-import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client'
-import RedisClient from '@node-redis/client/dist/lib/client'
+import type {RedisMultiQueuedCommand} from '@redis/client/dist/lib/multi-command'
+import type {RedisCommandRawReply} from '@redis/client/dist/lib/commands'
+import type {RedisClientOptions, RedisClientType,ClientCommandOptions} from '@redis/client/dist/lib/client'
+import RedisClient from '@redis/client/dist/lib/client'
 import type {Client, ConnectConfig} from 'ssh2'
 import {exposeInMainWorld} from './exposeInMainWorld';
 import type {SshConfig} from '../../renderer/types/database'
 import * as fs from 'node:fs'
 import * as net from 'node:net'
+import type {CommandOptions} from '@redis/client/dist/lib/command-options';
 
 const SshClient = require('ssh2').Client
 const redis = require('redis')
@@ -32,7 +33,7 @@ export interface RedisApi {
 
   testThroughSsh(sshOptions: SshConfig, redisOptions: RedisClientOptions, onSuccess?: () => void, onError?: (error: string) => void): Promise<void>,
 
-  client: RedisClient<never, Record<string, never>> | RedisExtension
+  client: RedisClient<never, Record<string, never>, never> | RedisExtension
 }
 
 const connectToSsh = async (sshConfig: ConnectConfig): Promise<Client> => new Promise((resolve, reject) => {
@@ -180,7 +181,7 @@ export const redisApi : RedisApi = {
   client: {
     isConnectionOpen: () => client?.isOpen ?? false,
     connect: () => client.connect(),
-    select: (db) => client.select(db as number),
+    select: (options: number | CommandOptions<ClientCommandOptions>, db?: number) => client.select(db ?? options as number),
     quit: () => client.quit(),
     // @ts-ignore
     on: (...args) => {
@@ -190,7 +191,7 @@ export const redisApi : RedisApi = {
     },
     // @ts-ignore
     sendCommand: (...args) => client.sendCommand(...args),
-    multiExecutor: (commands: Array<RedisMultiQueuedCommand>, chainId?: symbol): Promise<Array<RedisCommandRawReply>> => client.multiExecutor(commands, chainId),
+    multiExecutor: (commands: Array<RedisMultiQueuedCommand>, selectedDB?: number, chainId?: symbol): Promise<Array<RedisCommandRawReply>> => client.multiExecutor(commands, selectedDB, chainId),
   },
 };
 

@@ -2,7 +2,7 @@ import {useDatabase} from '/@/use/database'
 import type {KeysResult, Redis} from '../../types/redis'
 import {useToaster} from '/@/use/toaster'
 import type {Server} from '../../types/database'
-import type {RedisClientOptions, RedisClientType} from '@node-redis/client/dist/lib/client'
+import type {RedisClientOptions, RedisClientType} from '@redis/client/dist/lib/client'
 import {pickBy} from 'lodash'
 import {useServersStore} from '/@/store/servers';
 
