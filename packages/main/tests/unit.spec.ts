@@ -10,7 +10,6 @@ import {BrowserWindow} from 'electron';
 vi.mock('electron', () => {
 
   const bw = vi.fn() as MaybeMocked<typeof BrowserWindow>;
-  // @ts-expect-error It's work in runtime, but I Haven't idea how to fix this type error
   bw.getAllWindows = vi.fn(() => bw.mock.instances);
   bw.prototype.loadURL = vi.fn();
   bw.prototype.on = vi.fn();

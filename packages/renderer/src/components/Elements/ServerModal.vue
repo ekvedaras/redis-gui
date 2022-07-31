@@ -38,6 +38,7 @@ const ssh = ref<SshConfig>({
   user: undefined,
   password: undefined,
   privateKey: undefined,
+  passphrase: undefined,
 })
 
 const title = computed(() => props.serverKey ? 'Edit server' : 'Add new server')
@@ -72,6 +73,7 @@ const fillForm = () => {
       user: undefined,
       password: undefined,
       privateKey: undefined,
+      passphrase: undefined,
     }
   }
 }
@@ -170,6 +172,9 @@ const test = async () => {
       </div>
       <div class="flex space-x-4">
         <input v-model="ssh.privateKey" type="text" :placeholder="privateKeyPlaceholder" class="flex-1" />
+      </div>
+      <div class="flex space-x-4">
+        <input v-model="ssh.passphrase" type="password" placeholder="Private key password (optional)" class="flex-1" />
       </div>
     </div>
     <div class="flex justify-end space-x-4">

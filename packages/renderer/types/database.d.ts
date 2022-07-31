@@ -5,6 +5,7 @@ export type SshConfig = {
   user?: string,
   password?: string,
   privateKey?: string,
+  passphrase?: string,
 }
 
 export type Server = {
