@@ -31,7 +31,7 @@ const asKeys = (key: KeyType | Record<string, KeyType>) => (key as Record<string
     >
       <Key
         v-if="isKey(key)"
-        :name="name.replace(/_/, '')"
+        :name="name.replace(/^_/, '')"
         :redis-key="asKey(key)"
         :level="level"
       />
