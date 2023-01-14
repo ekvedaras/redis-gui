@@ -13,11 +13,6 @@ window.addEventListener('DOMContentLoaded', () => {
       window.matchMedia('(prefers-color-scheme: dark)').matches
         ? titleBarColors.dark : titleBarColors.light,
     ),
-    onMinimize: () => ipcRenderer.send('window-minimize'),
-    onMaximize: () => ipcRenderer.send('window-maximize'),
-    onClose: () => ipcRenderer.send('window-close'),
-    isMaximized: () => ipcRenderer.sendSync('window-is-maximized'),
-    onMenuItemClick: (commandId) => ipcRenderer.send('menu-event', commandId),
   });
 })
 
