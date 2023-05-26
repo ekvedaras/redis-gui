@@ -13,6 +13,7 @@ import HashContent from '/@/components/Elements/Content/HashContent.vue'
 import ListContent from '/@/components/Elements/Content/ListContent.vue'
 import SetContent from '/@/components/Elements/Content/SetContent.vue'
 import StringContent from '/@/components/Elements/Content/StringContent.vue'
+import ReJsonContent from '/@/components/Elements/Content/ReJsonContent.vue'
 import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import IFrameModal from '/@/components/Elements/IFrameModal.vue'
@@ -77,6 +78,8 @@ const typeDocs = computed(() => {
       return 'https://redis.io/topics/data-types#sets'
     case 'zset':
       return 'https://redis.io/topics/data-types#sorted-sets'
+    case 'ReJSON-RL':
+      return 'https://redis.io/docs/stack/json'
     case 'string':
       return 'https://redis.io/topics/data-types#strings'
     default:
@@ -98,6 +101,8 @@ const currentContent = computed(() => {
       return SetContent
     case 'zset':
       return ZSetContent
+    case 'ReJSON-RL':
+      return ReJsonContent
     default:
       return StringContent
   }
