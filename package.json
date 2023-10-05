@@ -43,7 +43,7 @@
     "@vue/test-utils": "2.2.7",
     "autoprefixer": "10.4.13",
     "cross-env": "7.0.3",
-    "electron": "19.1.9",
+    "electron": "22.3.25",
     "electron-builder": "23.6.0",
     "electron-devtools-installer": "3.2.0",
     "eslint": "8.31.0",
