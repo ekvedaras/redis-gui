@@ -86,6 +86,8 @@ jobs :
     needs : [ draft ]
 
     strategy :
+      # One platform failing should not cancel the artifacts the others already built.
+      fail-fast : false
       matrix :
         os : [ windows-latest, macos-latest, ubuntu-latest ]
 
@@ -120,4 +122,12 @@ jobs :
         env :
           VITE_APP_VERSION : ${{ needs.draft.outputs.version }}
           GH_TOKEN : ${{ secrets.github_token }}
+
+      # electron-builder only publishes the snap to GitHub, so this cannot fail the release.
+      # `edge` matches the channel electron-builder defaulted to when it owned this upload.
+      - name : Publish snap to the Snap Store
+        if : startsWith(matrix.os, 'ubuntu')
+        continue-on-error : true
+        env :
           SNAPCRAFT_STORE_CREDENTIALS : ${{ secrets.snapcraft_token }}
+        run : snapcraft upload dist/*.snap --release edge
