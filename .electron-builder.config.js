@@ -14,6 +14,11 @@ const config = {
   files: [
     'packages/**/dist/**',
   ],
+  snap: {
+    // The Snap Store upload is a separate best-effort step in the release workflow, so an
+    // expired store token cannot stop the GitHub artifacts from publishing.
+    publish: ['github'],
+  },
   extraMetadata: {
     version: process.env.VITE_APP_VERSION,
   },
