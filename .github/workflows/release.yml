@@ -30,17 +30,17 @@ jobs :
       version : ${{ steps.version.outputs.build-version }}
 
     steps :
-      - uses : actions/checkout@v2
+      - uses : actions/checkout@v5
         with :
           fetch-depth : 0
 
-      - uses : actions/setup-node@v2
+      - uses : actions/setup-node@v5
         with :
-          node-version : 14
+          node-version : 24
 
       - name : Get last git tag
         id : tag
-        run : echo "::set-output name=last-tag::$(git describe --tags --abbrev=0 || git rev-list --max-parents=0 ${{github.ref}})"
+        run : echo "last-tag=$(git describe --tags --abbrev=0 || git rev-list --max-parents=0 ${{github.ref}})" >> "$GITHUB_OUTPUT"
 
       - name : Generate release notes
         uses : ./.github/actions/release-notes
@@ -53,23 +53,23 @@ jobs :
 
       - name : Get version from current date
         id : version
-        run : echo "::set-output name=build-version::$(node -e "try{console.log(require('./.electron-builder.config.js').extraMetadata.version)}catch(e){console.error(e);process.exit(1)}")"
+        run : echo "build-version=$(node -e "try{console.log(require('./.electron-builder.config.js').extraMetadata.version)}catch(e){console.error(e);process.exit(1)}")" >> "$GITHUB_OUTPUT"
 
 
       - name : Waiting on All checks
-        uses : lewagon/wait-on-check-action@v0.2
+        uses : lewagon/wait-on-check-action@v1.9.1
         with :
           ref : ${{ github.ref }}
           repo-token : ${{ secrets.GITHUB_TOKEN }}
           running-workflow-name : 'draft'
 
       - name : Delete outdated drafts
-        uses : hugo19941994/delete-draft-releases@v1.0.0
+        uses : hugo19941994/delete-draft-releases@v3.0.0
         env :
           GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN }}
 
       - name : Create Release Draft
-        uses : softprops/action-gh-release@v1
+        uses : softprops/action-gh-release@v3
         env :
           GITHUB_TOKEN : ${{ secrets.github_token }}
         with :
@@ -89,15 +89,15 @@ jobs :
     runs-on : ${{ matrix.os }}
 
     steps :
-      - uses : actions/checkout@v2
+      - uses : actions/checkout@v5
 
-      - uses : actions/setup-node@v2
+      - uses : actions/setup-node@v5
         with :
-          node-version : 16 # Need for npm >=7.7
+          node-version : 24
           cache : 'yarn'
 
       - name : Install dependencies
-        run : yarn install
+        run : yarn install --frozen-lockfile
 
       # The easiest way to transfer release notes to a compiled application is create `release-notes.md` in the build resources.
       # See https://github.com/electron-userland/electron-builder/issues/1511#issuecomment-310160119
@@ -107,45 +107,14 @@ jobs :
         run : echo "$RELEASE_NOTE" >> ./buildResources/release-notes.md
 
       - name : Install Snapcraft
-        uses : samuelmeuli/action-snapcraft@v1
+        uses : samuelmeuli/action-snapcraft@v2
         # Only install Snapcraft on Ubuntu
         if : startsWith(matrix.os, 'ubuntu')
-        with :
-          # Log in to Snap Store
-          snapcraft_token : ${{ secrets.snapcraft_token }}
 
       # Compile app and upload artifacts
       - name : Compile & release Electron app
-        uses : samuelmeuli/action-electron-builder@v1
+        run : yarn run build && npx electron-builder --publish always --config .electron-builder.config.js
         env :
           VITE_APP_VERSION : ${{ needs.draft.outputs.version }}
-        with :
-          build_script_name : build
-          args : --config .electron-builder.config.js
-
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token : ${{ secrets.github_token }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release : true
-
-          # Sometimes the build may fail due to a connection problem with Apple, GitHub, etc. servers.
-          # This option will restart the build as many attempts as possible
-          max_attempts : 3
-
-
-          # Code Signing params
-
-          # Base64-encoded code signing certificate for Windows
-          # windows_certs: ''
-
-          # Password for decrypting `windows_certs`
-          # windows_certs_password: ''
-
-          # Base64-encoded code signing certificate for macOS
-          # mac_certs: ''
-
-          # Password for decrypting `mac_certs`
-          # mac_certs_password: ''
+          GH_TOKEN : ${{ secrets.github_token }}
+          SNAPCRAFT_STORE_CREDENTIALS : ${{ secrets.snapcraft_token }}
