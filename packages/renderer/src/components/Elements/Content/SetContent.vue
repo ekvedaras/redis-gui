@@ -34,9 +34,10 @@ const {
 useReloadOnKeyUpdate(props.name, () => loadKeys())
 
 const save = async ({value: newValue, key}: { key: number | string, value: string }) => {
+  // `key` is the position in the list, not a member, so only the new value is added back.
   const commands = [
     {args: ['srem', props.name, value.value[key as number]]},
-    {args: ['sadd', props.name, String(key), newValue]},
+    {args: ['sadd', props.name, newValue]},
   ]
 
   try {

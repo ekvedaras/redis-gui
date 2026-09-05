@@ -49,26 +49,31 @@ const toaster = useToaster()
 const keysStore = useKeysStore()
 const emitter = useEmitter()
 const save = async () => {
-  switch (type.value) {
-    case 'string':
-      await redis.client.set(name.value, values.value[0], ttl.value ? {EX: ttl.value} : undefined)
-      break
-    case 'hash':
-      await redis.client.hSet(name.value, hashName.value, values.value[0])
-      break
-    case 'list':
-      if (index.value !== '' && values.value.length === 1) {
-        await redis.client.lSet(name.value, index.value, values.value[0])
-      } else {
-        await redis.client.lPush(name.value, Object.values(values.value).reverse())
-      }
-      break
-    case 'set':
-      await redis.client.sAdd(name, Object.values(values.value))
-      break
-    case 'zset':
-      await redis.client.zAdd(name.value, {score: score.value, value: values.value[0]})
-      break
+  try {
+    switch (type.value) {
+      case 'string':
+        await redis.client.set(name.value, values.value[0], ttl.value ? {EX: ttl.value} : undefined)
+        break
+      case 'hash':
+        await redis.client.hSet(name.value, hashName.value, values.value[0])
+        break
+      case 'list':
+        if (index.value !== '' && values.value.length === 1) {
+          await redis.client.lSet(name.value, index.value, values.value[0])
+        } else {
+          await redis.client.lPush(name.value, Object.values(values.value).reverse())
+        }
+        break
+      case 'set':
+        await redis.client.sAdd(name.value, Object.values(values.value))
+        break
+      case 'zset':
+        await redis.client.zAdd(name.value, {score: score.value, value: values.value[0]})
+        break
+    }
+  } catch (error) {
+    toaster.error(String(error))
+    return
   }
 
   emit('close')
