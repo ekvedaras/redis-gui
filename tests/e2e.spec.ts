@@ -28,11 +28,14 @@ test('Main window state', async () => {
       isCrashed: mainWindow.webContents.isCrashed(),
     });
 
+    // The app shows the window once loadURL resolves rather than on `ready-to-show`,
+    // which never fires for a hidden window on Wayland.
     return new Promise((resolve) => {
       if (mainWindow.isVisible()) {
         resolve(getState());
-      } else
-        mainWindow.once('ready-to-show', () => setTimeout(() => resolve(getState()), 0));
+      } else {
+        mainWindow.once('show', () => resolve(getState()));
+      }
     });
   });
 

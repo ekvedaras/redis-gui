@@ -29,17 +29,24 @@ const emit = defineEmits<{
 <style>
 @reference "../../../assets/index.css";
 
-button {
-  @apply text-gray-500
-}
+/**
+ * Tailwind 4 puts utilities in a cascade layer, and unlayered rules beat any layer
+ * regardless of specificity. Without `base` these defaults would override the text
+ * colour utilities that PrimaryButton and friends set.
+ */
+@layer base {
+  button {
+    @apply text-gray-500
+  }
 
-button:hover, button:focus {
-  @apply text-gray-900
-}
-
-@media (prefers-color-scheme: dark) {
   button:hover, button:focus {
-    @apply text-gray-300
+    @apply text-gray-900
+  }
+
+  @media (prefers-color-scheme: dark) {
+    button:hover, button:focus {
+      @apply text-gray-300
+    }
   }
 }
 </style>
