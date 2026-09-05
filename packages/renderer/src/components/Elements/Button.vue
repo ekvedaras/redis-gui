@@ -17,7 +17,7 @@ const emit = defineEmits<{
 <template>
   <button
     :type="type"
-    class="btn transition transition-colors duration-100 ease-in-out p-2 rounded shadow-none hover:underline focus:underline"
+    class="btn transition transition-colors duration-100 ease-in-out p-2 rounded-sm shadow-none hover:underline focus:underline"
     :class="{'opacity-50' : disabled}"
     :disabled="disabled"
     @click="emit('click')"
@@ -27,6 +27,8 @@ const emit = defineEmits<{
 </template>
 
 <style>
+@reference "../../../assets/index.css";
+
 button {
   @apply text-gray-500
 }

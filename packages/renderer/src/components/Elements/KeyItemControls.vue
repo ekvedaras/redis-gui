@@ -28,7 +28,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="absolute h-6 p-0 top-0 right-0 rounded bg-white-80p dark:bg-black-10p dark:group-hover:bg-black-50p text-gray-400 group-hover:text-gray-900 dark:text-gray-700 dark:group-hover:text-gray-500 ">
+  <div class="absolute h-6 p-0 top-0 right-0 rounded-sm bg-white-80p dark:bg-black-10p dark:group-hover:bg-black-50p text-gray-400 group-hover:text-gray-900 dark:text-gray-700 dark:group-hover:text-gray-500 ">
     <IconButton v-if="!withoutWordBreak && !deleteOnly" v-tooltip="'Toggle word break'" class="z-10" @click="emit('toggleWordBreak')">
       <WordBreakIcon class="w-4 m-1" />
     </IconButton>

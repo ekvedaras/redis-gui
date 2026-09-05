@@ -67,6 +67,8 @@ const save = async () => {
 </template>
 
 <style scoped>
+@reference "../../../assets/index.css";
+
 table th {
   width: 33.3%;
   text-align: right;

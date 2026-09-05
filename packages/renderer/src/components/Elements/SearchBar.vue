@@ -6,6 +6,7 @@ import type { ClickKeys } from 'types/models'
 import { onBeforeMount, ref } from 'vue'
 import type { AddModalFillOptions } from '/@/components/Elements/AddKeyModal.vue'
 import AddKeyModal from '/@/components/Elements/AddKeyModal.vue'
+import { useShortcut } from '/@/use/shortcut'
 
 const props = withDefaults(defineProps<{
   value: string,
@@ -40,6 +41,8 @@ const emit = defineEmits<{
 }>()
 
 const showKeyAddModal = ref(false)
+
+useShortcut(props.addKeys, () => showKeyAddModal.value = true)
 </script>
 
 <template>
@@ -52,9 +55,7 @@ const showKeyAddModal = ref(false)
     />
     <IconButton
       v-if="props.withAdd"
-      v-shortkey="addKeys"
       @click="showKeyAddModal = true"
-      @shortkey="showKeyAddModal = true"
     >
       <AddIcon class="w-10" />
     </IconButton>

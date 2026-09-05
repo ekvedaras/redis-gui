@@ -1,7 +1,7 @@
-import { chrome } from '../../.electron-vendors.cache.json'
+import { chrome } from '../../.electron-vendors.cache.json' with { type: 'json' }
 import { builtinModules } from 'module'
 
-const PACKAGE_ROOT = __dirname
+const PACKAGE_ROOT = import.meta.dirname
 
 /**
  * @type {import('vite').UserConfig}
@@ -24,6 +24,8 @@ const config = {
     rollupOptions: {
       external: [
         'electron',
+        'ssh2',
+        'redis',
         ...builtinModules.flatMap(p => [p, `node:${p}`]),
       ],
       output: {
@@ -31,7 +33,7 @@ const config = {
       },
     },
     emptyOutDir: true,
-    brotliSize: false,
+    reportCompressedSize: false,
   },
 }
 

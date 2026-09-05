@@ -59,7 +59,7 @@ const toggleKeySelection = (key: string) => {
 
 <template>
   <div
-    class="flex items-center rounded cursor-pointer px-2 hover:bg-gray-200 dark:hover:bg-white-10p"
+    class="flex items-center rounded-sm cursor-pointer px-2 hover:bg-gray-200 dark:hover:bg-white-10p"
     :class="{'font-bold text-redis': isSelected}"
     tabindex="1"
     @keypress.enter="keysStore.selected = redisKey.name"

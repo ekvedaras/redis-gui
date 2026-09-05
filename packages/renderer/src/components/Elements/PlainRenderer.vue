@@ -25,7 +25,7 @@ const toggleWordBreak = () => {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col justify-center min-h-16">
+  <div class="bg-white dark:bg-gray-800 font-mono rounded-sm shadow-sm p-3 flex flex-col justify-center min-h-16">
     <div class="sticky right-0 text-right justify-end h-5" :class="[withKeys ? 'controls' : 'top-0']">
       <KeyItemControls
         :without-delete="withoutDelete"

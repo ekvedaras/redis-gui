@@ -1,4 +1,5 @@
 import {BrowserWindow} from 'electron';
+import {attachTitlebarToWindow} from 'custom-electron-titlebar/main';
 import {join} from 'path';
 import {URL} from 'url';
 
@@ -8,23 +9,10 @@ async function createWindow() {
     titleBarStyle: 'hidden',
     frame: false,
     webPreferences: {
+      sandbox: false, // preload loads ssh2/redis from node_modules, which a sandboxed preload cannot do
       webviewTag: false, // The webview tag is not recommended. Consider alternatives like iframe or Electron's BrowserView. https://www.electronjs.org/docs/latest/api/webview-tag#warning
       preload: join(__dirname, '../../preload/dist/index.cjs'),
     },
-  });
-
-  /**
-   * If you install `show: true` then it can cause issues when trying to close the window.
-   * Use `show: false` and listener events `ready-to-show` to fix these issues.
-   *
-   * @see https://github.com/electron/electron/issues/25012
-   */
-  browserWindow.on('ready-to-show', () => {
-    browserWindow?.show();
-
-    if (import.meta.env.DEV) {
-      browserWindow?.webContents.openDevTools();
-    }
   });
 
   /**
@@ -37,7 +25,20 @@ async function createWindow() {
     : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
 
 
+  attachTitlebarToWindow(browserWindow);
+
   await browserWindow.loadURL(pageUrl);
+
+  /**
+   * The window is created hidden so it never appears half-painted.
+   * `ready-to-show` never fires for a hidden window on Wayland, so the load
+   * completing is what we wait for instead.
+   */
+  browserWindow.show();
+
+  if (import.meta.env.DEV) {
+    browserWindow.webContents.openDevTools();
+  }
 
   return browserWindow;
 }

@@ -6,7 +6,9 @@ import {URL} from 'url';
  *
  * In development mode you need allow open `VITE_DEV_SERVER_URL`
  */
-const ALLOWED_ORIGINS_AND_PERMISSIONS = new Map<string, Set<'clipboard-read' | 'media' | 'display-capture' | 'mediaKeySystem' | 'geolocation' | 'notifications' | 'midi' | 'midiSysex' | 'pointerLock' | 'fullscreen' | 'openExternal' | 'unknown'>>(
+type Permission = Parameters<NonNullable<Parameters<Electron.Session['setPermissionRequestHandler']>[0]>>[1]
+
+const ALLOWED_ORIGINS_AND_PERMISSIONS = new Map<string, Set<Permission>>(
   import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL
     ? [[new URL(import.meta.env.VITE_DEV_SERVER_URL).origin, new Set]]
     : [],

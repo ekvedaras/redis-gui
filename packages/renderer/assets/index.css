@@ -1,9 +1,26 @@
-@import "fonts.css";
+@import './fonts.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
+@config '../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 @layer base {
     body {
@@ -11,11 +28,11 @@
     }
 
     * {
-        outline-color: theme('colors.redis.default') !important;
+        outline-color: var(--color-redis-default) !important;
     }
 
     input, textarea, select {
-        @apply p-2 rounded shadow;
+        @apply p-2 rounded-sm shadow-sm;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -26,7 +43,7 @@
 
     /*<editor-fold desc="Table" defaultstate="collapsed">*/
     table {
-        @apply rounded overflow-hidden shadow bg-white;
+        @apply rounded-sm overflow-hidden shadow-sm bg-white;
     }
 
     table th {
@@ -77,7 +94,7 @@
         font-family: Avenir, Helvetica, Arial, sans-serif;
         word-break: break-word;
 
-        @apply rounded py-2 px-4 shadow-lg;
+        @apply rounded-sm py-2 px-4 shadow-lg;
     }
 
     div.c-toast.c-toast--default {
@@ -116,8 +133,8 @@
     }
 
     .tooltip .tooltip-inner {
-        @apply rounded shadow-lg py-2 px-3 text-justify;
-        background: theme("colors.gray.700");
+        @apply rounded-sm shadow-lg py-2 px-3 text-justify;
+        background: var(--color-gray-700);
         color: white;
     }
 
@@ -127,7 +144,7 @@
         border-style: solid;
         position: absolute;
         margin: 5px;
-        border-color: theme("colors.gray.700");
+        border-color: var(--color-gray-700);
         z-index: 1;
     }
 
@@ -267,15 +284,8 @@
     }
     /*</editor-fold>*/
     /*<editor-fold desc="Modal" defaultstate="collapsed">*/
-    .vue-universal-modal {
-        background-color: rgba(0, 0, 0, 0.6);
-        z-index: 20;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .vue-universal-modal {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
+    body:has(dialog[open]) {
+        overflow: hidden;
     }
     /*</editor-fold>*/
 }

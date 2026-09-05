@@ -51,11 +51,11 @@ const deleteServer = (server: Server) => {
 
 <template>
   <AppModal title="Servers" @close="emit('close')">
-    <table class="rounded">
+    <table class="rounded-sm">
       <tr
         v-for="(server, key) in serversStore.list"
         :key="key"
-        class="rounded hover:bg-gray-300 dark:hover:bg-gray-700"
+        class="rounded-sm hover:bg-gray-300 dark:hover:bg-gray-700"
       >
         <th class="p-2 font-semibold">
           {{ server.name }}
@@ -63,7 +63,7 @@ const deleteServer = (server: Server) => {
         <td class="w-full whitespace-no-wrap p-2 text-gray-600">
           <span
             v-if="server.ssh.tunnel"
-            class="rounded shadow bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 px-1 mx-1"
+            class="rounded-sm shadow-sm bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100 px-1 mx-1"
           >SSH</span>
           {{ representServer(server) }}
         </td>

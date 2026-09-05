@@ -3,18 +3,21 @@
     "module": "esnext",
     "target": "esnext",
     "sourceMap": false,
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "strict": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
     "types": [
       "node"
     ],
-    "baseUrl": ".",
     "paths": {
       "/@/*": [
         "./src/*"
+      ],
+      "types/*": [
+        "./types/*"
       ]
     },
     "lib": [

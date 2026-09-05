@@ -114,7 +114,7 @@ const send = async (cmd?: string) => {
     full-width
     @close="emit('close')"
   >
-    <div class="rounded bg-white dark:bg-black w-full font-mono shadow flex-1 flex flex-col">
+    <div class="rounded-sm bg-white dark:bg-black w-full font-mono shadow-sm flex-1 flex flex-col">
       <div class="relative flex-1">
         <CommandInfo
           v-if="!hideInfo"

@@ -3,14 +3,13 @@
     "module": "esnext",
     "target": "esnext",
     "sourceMap": false,
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "strict": true,
     "isolatedModules": true,
     "types": [
       "node"
     ],
-    "baseUrl": ".",
     "paths": {
       "/@/*": [
         "./src/*"

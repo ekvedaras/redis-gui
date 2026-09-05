@@ -23,7 +23,7 @@ onMounted(() => setTimeout(() => iframe.value?.blur(), 500))
       ref="iframe"
       :src="url"
       :style="{height: '80vh'}"
-      class="shadow rounded mt-4 w-full"
+      class="shadow-sm rounded-sm mt-4 w-full"
     />
   </AppModal>
 </template>

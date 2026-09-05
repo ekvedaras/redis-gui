@@ -13,6 +13,8 @@ vi.mock('electron', () => {
   bw.getAllWindows = vi.fn(() => bw.mock.instances);
   bw.prototype.loadURL = vi.fn();
   bw.prototype.on = vi.fn();
+  bw.prototype.show = vi.fn();
+  bw.prototype.webContents = {openDevTools: vi.fn()};
   bw.prototype.destroy = vi.fn();
   bw.prototype.isDestroyed = vi.fn();
   bw.prototype.isMinimized = vi.fn();
@@ -21,6 +23,8 @@ vi.mock('electron', () => {
 
   return {BrowserWindow: bw};
 });
+
+vi.mock('custom-electron-titlebar/main', () => ({attachTitlebarToWindow: vi.fn()}));
 
 
 beforeEach(() => {

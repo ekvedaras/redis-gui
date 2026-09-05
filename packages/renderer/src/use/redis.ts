@@ -43,7 +43,7 @@ export function useRedis(): Redis {
         toaster.info('Connected')
         serversStore.connecting = false
         serversStore.connected = true
-        options?.onReady && options.onReady()
+        options?.onReady?.()
       }).on('error', (error: unknown) => {
         if (serversStore.connectingTo === server) {
           toaster.error(String(error))

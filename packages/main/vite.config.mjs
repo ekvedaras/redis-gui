@@ -1,8 +1,8 @@
-import { node } from '../../.electron-vendors.cache.json'
+import { node } from '../../.electron-vendors.cache.json' with { type: 'json' }
 import { join } from 'path'
 import { builtinModules } from 'module'
 
-const PACKAGE_ROOT = __dirname
+const PACKAGE_ROOT = import.meta.dirname
 
 /**
  * @type {import('vite').UserConfig}
@@ -38,7 +38,7 @@ const config = {
       },
     },
     emptyOutDir: true,
-    brotliSize: false,
+    reportCompressedSize: false,
   },
 }
 

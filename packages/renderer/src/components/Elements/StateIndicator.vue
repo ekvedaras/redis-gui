@@ -19,12 +19,14 @@ const stateClass = computed(() => {
 
 <template>
   <div
-    class="rounded-full w-3 h-3 shadow"
+    class="rounded-full w-3 h-3 shadow-sm"
     :class="stateClass"
   />
 </template>
 
 <style scoped>
+@reference "../../../assets/index.css";
+
 div.green {
   @apply bg-emerald-500
 }

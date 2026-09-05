@@ -1,13 +1,13 @@
-import type {RedisMultiQueuedCommand} from '@redis/client/dist/lib/multi-command'
-import type {RedisCommandRawReply} from '@redis/client/dist/lib/commands'
-import type {RedisClientOptions, RedisClientType,ClientCommandOptions} from '@redis/client/dist/lib/client'
-import RedisClient from '@redis/client/dist/lib/client'
+import type {RedisClientOptions, RedisClientType} from '@redis/client'
 import type {Client, ConnectConfig} from 'ssh2'
 import {exposeInMainWorld} from './exposeInMainWorld';
 import type {SshConfig} from '../../renderer/types/database'
 import * as fs from 'node:fs'
 import * as net from 'node:net'
-import type {CommandOptions} from '@redis/client/dist/lib/command-options';
+
+export interface QueuedCommand {
+  args: Array<string>
+}
 
 const SshClient = require('ssh2').Client
 const redis = require('redis')
@@ -33,7 +33,7 @@ export interface RedisApi {
 
   testThroughSsh(sshOptions: SshConfig, redisOptions: RedisClientOptions, onSuccess?: () => void, onError?: (error: string) => void): Promise<void>,
 
-  client: RedisClient<never, Record<string, never>, never> | RedisExtension
+  client: RedisClientType | RedisExtension
 }
 
 const connectToSsh = async (sshConfig: ConnectConfig): Promise<Client> => new Promise((resolve, reject) => {
@@ -64,6 +64,29 @@ const createProxyServer = async (sshConnection: Client, redisConfig: RedisClient
     .listen(0, () => resolve(server));
 })
 
+/**
+ * contextBridge rebuilds an Error in the renderer without its message, so anything the renderer
+ * needs to read has to cross as a primitive.
+ */
+const readable = (value: unknown): unknown => {
+  // redis wraps socket failures in an AggregateError whose own message is empty.
+  if (value instanceof AggregateError) {
+    return value.errors.map(readable).join(', ')
+  }
+
+  return value instanceof Error ? value.message || String(value) : value
+}
+
+const rejectReadably = <T>(result: Promise<T>): Promise<T> => result.catch(error => Promise.reject(readable(error)))
+
+const commandNames = (instance: object): Set<string> => {
+  const names = new Set<string>()
+  for (let proto = Object.getPrototypeOf(instance); proto && proto !== Object.prototype; proto = Object.getPrototypeOf(proto)) {
+    Object.getOwnPropertyNames(proto).forEach(name => names.add(name))
+  }
+  return names
+}
+
 let client: RedisClientType;
 let closeSshTunnel: (() => Promise<void>) | undefined;
 
@@ -75,7 +98,7 @@ const disconnect = async () => {
     }
 
     await client.disconnect()
-  } catch (e) {
+  } catch {
     // ignore
   }
 }
@@ -141,10 +164,10 @@ export const redisApi : RedisApi = {
 
     testClient.on('ready', () => {
       testClient.quit()
-      onSuccess && onSuccess()
+      onSuccess?.()
     }).on('error', (error: unknown) => {
       testClient.quit()
-      onError && onError(String(error))
+      onError?.(String(readable(error)))
     })
 
     await testClient.connect()
@@ -172,32 +195,40 @@ export const redisApi : RedisApi = {
       proxyServer.close()
       sshConnection.end()
 
-      onSuccess && onSuccess()
+      onSuccess?.()
     } catch (error) {
-      onError && onError(String(error))
+      onError?.(String(readable(error)))
     }
   },
 
   client: {
     isConnectionOpen: () => client?.isOpen ?? false,
     connect: () => client.connect(),
-    select: (options: number | CommandOptions<ClientCommandOptions>, db?: number) => client.select(db ?? options as number),
+    select: (db: number) => client.select(db),
     quit: () => client.quit(),
     // @ts-ignore
-    on: (...args) => {
+    on: (event, listener) => {
       // @ts-ignore
-      client.on(...args)
+      client.on(event, (...args) => listener(...args.map(readable)))
       return redisApi.client
     },
     // @ts-ignore
-    sendCommand: (...args) => client.sendCommand(...args),
-    multiExecutor: (commands: Array<RedisMultiQueuedCommand>, selectedDB?: number, chainId?: symbol): Promise<Array<RedisCommandRawReply>> => client.multiExecutor(commands, selectedDB, chainId),
+    sendCommand: (...args) => rejectReadably(client.sendCommand(...args)),
+    multiExecutor: (commands: Array<QueuedCommand>) => rejectReadably(commands
+      .reduce((multi, {args}) => multi.addCommand(args), client.multi())
+      .exec()),
   },
 };
 
-for (const method of Object.keys(RedisClient.prototype)) {
+// Command methods live on the prototype chain of the concrete client class redis builds at runtime,
+// so a throwaway instance is the only way to enumerate them before any server is configured.
+for (const method of commandNames(redis.createClient())) {
+  // The walk also reaches EventEmitter, so it would clobber the hand-written wrappers above
+  // (notably the chainable `on`) with ones that return the raw, non-cloneable client.
+  if (method in redisApi.client) continue
+
   // @ts-ignore
-  redisApi.client[method] = (...args) => client[method](...args)
+  redisApi.client[method] = (...args) => rejectReadably(client[method](...args))
 }
 
 exposeInMainWorld('redisApi', redisApi)
