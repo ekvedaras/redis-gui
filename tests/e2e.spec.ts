@@ -9,11 +9,13 @@ let electronApp: ElectronApplication;
 
 beforeAll(async () => {
   electronApp = await electron.launch({args: ['.']});
+  // The window is created asynchronously, so evaluating before this resolves can find none.
+  await electronApp.firstWindow();
 });
 
 
 afterAll(async () => {
-  await electronApp.close();
+  await electronApp?.close();
 });
 
 

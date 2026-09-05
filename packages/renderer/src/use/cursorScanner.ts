@@ -6,9 +6,9 @@ import type {Tuple, ZMember} from '../../types/models'
 type ScanType = 'scan' | 'sScan' | 'hScan' | 'zScan'
 
 interface Result {
-  cursor: number,
+  cursor: string,
   members?: string[] | ZMember[]
-  tuples?: Tuple[],
+  entries?: Tuple[],
   nextCursor?: number,
   lastLoad?: number,
 }
@@ -30,11 +30,12 @@ export function useCursorScanner(name: string, scanUsing: ScanType, setValueUsin
     isLoading.value = true
     await keysStore.loadKeyInfo(name)
     try {
-      const result = await redis.client[scanUsing](name, cursor, {MATCH: pattern, COUNT: limit}) as Result
-      result.lastLoad = result.members?.length ?? Object.keys(result.tuples ?? {}).length
-      nextCursor.value = result.cursor
+      // redis 5 takes and returns the cursor as a string, and renamed HSCAN's `tuples` to `entries`.
+      const result = await redis.client[scanUsing](name, String(cursor), {MATCH: pattern, COUNT: limit}) as Result
+      result.lastLoad = result.members?.length ?? Object.keys(result.entries ?? {}).length
+      nextCursor.value = Number(result.cursor)
 
-      setValueUsing(result.members ?? result.tuples ?? [], cursor > 0)
+      setValueUsing(result.members ?? result.entries ?? [], cursor > 0)
 
       if (result.nextCursor && lastLoad + result.lastLoad < limit) {
         return loadKeys(pattern, result.nextCursor, limit, lastLoad + result.lastLoad)

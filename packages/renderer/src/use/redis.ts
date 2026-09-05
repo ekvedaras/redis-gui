@@ -93,8 +93,9 @@ export function useRedis(): Redis {
         keys: {},
       }
 
-      const scanResult = await this.client.scan(cursor, {MATCH: pattern})
-      result.nextCursor = scanResult.cursor
+      // redis 5 takes and returns the SCAN cursor as a string; the app counts in numbers.
+      const scanResult = await this.client.scan(String(cursor), {MATCH: pattern})
+      result.nextCursor = Number(scanResult.cursor)
 
       for await (const key of scanResult.keys) {
         result.keys[key] = {
