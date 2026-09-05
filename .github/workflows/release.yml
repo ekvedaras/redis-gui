@@ -62,6 +62,9 @@ jobs :
           ref : ${{ github.ref }}
           repo-token : ${{ secrets.GITHUB_TOKEN }}
           running-workflow-name : 'draft'
+          # Dependabot reports its security updates as a check on the same commit, and a
+          # dependency with no safe version yet would otherwise block releasing entirely.
+          ignore-checks : Dependabot
 
       - name : Delete outdated drafts
         uses : hugo19941994/delete-draft-releases@v3.0.0
