@@ -8,7 +8,7 @@ const emit = defineEmits<{
 
 <template>
   <IconButton
-    class="underline rounded transition duration-200 ease-in-out hover:bg-white hover:shadow hover:no-underline m-2 p-1"
+    class="underline rounded-sm transition duration-200 ease-in-out hover:bg-white hover:shadow-sm hover:no-underline m-2 p-1"
     @click="emit('click')"
   >
     Load more...

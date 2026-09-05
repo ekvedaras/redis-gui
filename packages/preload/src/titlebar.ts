@@ -1,30 +1,19 @@
-import {Color, Titlebar} from 'custom-electron-titlebar'
-import {ipcRenderer} from 'electron'
+import {Titlebar, TitlebarColor} from 'custom-electron-titlebar'
 
-let titlebar: unknown;
+let titlebar: Titlebar | undefined;
 const titleBarColors = {
   dark: '#111827',
   light: '#F3F4F6',
 };
 
+const currentColor = (isDark: boolean) => TitlebarColor.fromHex(isDark ? titleBarColors.dark : titleBarColors.light)
+
 window.addEventListener('DOMContentLoaded', () => {
   titlebar = new Titlebar({
-    backgroundColor: Color.fromHex(
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? titleBarColors.dark : titleBarColors.light,
-    ),
+    backgroundColor: currentColor(window.matchMedia('(prefers-color-scheme: dark)').matches),
   });
 })
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-  if (titlebar instanceof Titlebar) {
-    titlebar.updateBackground(Color.fromHex(e.matches ? titleBarColors.dark : titleBarColors.light))
-  }
+  titlebar?.updateBackground(currentColor(e.matches))
 });
-
-ipcRenderer.on('titlebar-menu', (event, menu) => {
-  if (titlebar instanceof Titlebar) {
-    titlebar.updateMenu(menu)
-    titlebar.updateTitle('Redis GUI')
-  }
-})

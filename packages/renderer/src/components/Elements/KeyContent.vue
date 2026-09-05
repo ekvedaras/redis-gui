@@ -18,6 +18,7 @@ import ZSetContent from '/@/components/Elements/Content/ZSetContent.vue'
 import ConfirmDialog from '/@/components/Elements/ConfirmDialog.vue'
 import IFrameModal from '/@/components/Elements/IFrameModal.vue'
 import useEmitter from '/@/use/emitter'
+import { useShortcut } from '/@/use/shortcut'
 
 const redis = useRedis()
 const keysStore = useKeysStore()
@@ -58,13 +59,17 @@ const rename = async (save: boolean) => {
 
 const showDeleteDialog = ref(false)
 const deleteKey = () => {
-  keysStore.selected && keysStore.deleteKey(keysStore.selected)
+  if (keysStore.selected) keysStore.deleteKey(keysStore.selected)
   databasesStore.load()
   showDeleteDialog.value = false
 }
 
 const emitter = useEmitter()
 const emitUpdate = () => emitter.emit('key-updated', keysStore.selected)
+
+useShortcut(['r'], emitUpdate)
+useShortcut(['e'], startRename)
+useShortcut(['d'], () => showDeleteDialog.value = true)
 
 const showDocs = ref(false)
 const docsTitle = computed(() => `${ keysStore.current?.type.substring(0, 1).toUpperCase() }${ keysStore.current?.type.substr(1) } documentation`)
@@ -113,15 +118,15 @@ const currentContent = computed(() => {
   <div>
     <NoKeySelected v-if="!keysStore.current" />
     <template v-else>
-      <div v-shortkey="['r']" class="flex pt-2 items-center" @shortkey="emitUpdate">
+      <div class="flex pt-2 items-center">
         <KeyIcon :redis-key="keysStore.current" class="mr-2" />
         <h2 class="text-xl flex-1">
-          <span v-show="!isRenaming" ref="keyName" v-tooltip="'Click to edit'" v-shortkey="['e']" class="break-all" tabindex="0" @shortkey="startRename" @keydown.enter="startRename" @click="startRename">{{ keysStore.current.name }}</span>
+          <span v-show="!isRenaming" ref="keyName" v-tooltip="'Click to edit'" class="break-all" tabindex="0" @keydown.enter="startRename" @click="startRename">{{ keysStore.current.name }}</span>
           <!--suppress HtmlFormInputWithoutLabel -->
           <input v-show="isRenaming" ref="renameField" v-model="newName" type="text" placeholder="New name..." class="p-1 text-sm" @keydown.esc="rename(false)" @keydown.enter="rename(true)" @blur="rename(true)" />
           <span class="text-sm ml-2" style="cursor: help" @click="showDocs = true">{{ keysStore.current.type }} ({{ keysStore.current.encoding }})</span>
         </h2>
-        <IconButton v-shortkey="['d']" tabindex="0" @shortkey="showDeleteDialog = true" @click="showDeleteDialog = true">
+        <IconButton tabindex="0" @click="showDeleteDialog = true">
           <DeleteIcon class="w-4 m-1" />
         </IconButton>
         <TTL :redis-key="keysStore.current" />

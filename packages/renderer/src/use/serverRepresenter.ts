@@ -2,7 +2,13 @@ import type {Server} from '../../types/database'
 
 export function useServerRepresenter() {
   return {
-    representServer: (server: Server) => {
+    // The selected server can briefly be missing from the list, both while connecting and
+    // after the selected one is deleted, so a lookup that misses must not break rendering.
+    representServer: (server?: Server) => {
+      if (!server) {
+        return ''
+      }
+
       if (server.host) {
         return server.host
       }

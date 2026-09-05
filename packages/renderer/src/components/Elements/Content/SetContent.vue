@@ -34,12 +34,14 @@ const {
 useReloadOnKeyUpdate(props.name, () => loadKeys())
 
 const save = async ({value: newValue, key}: { key: number | string, value: string }) => {
-  let commands = []
-  commands.push(['srem', props.name, value.value[key as number]])
-  commands.push(['sadd', props.name, key, newValue])
+  // `key` is the position in the list, not a member, so only the new value is added back.
+  const commands = [
+    {args: ['srem', props.name, value.value[key as number]]},
+    {args: ['sadd', props.name, newValue]},
+  ]
 
   try {
-    await redis.client.multi(commands).exec()
+    await redis.client.multiExecutor(commands)
     value.value[key as number] = newValue
     toaster.success('Saved')
     await loadKeys()
@@ -63,7 +65,7 @@ const deleteItem = (item: string) => {
       :show-spinner="isLoading"
       with-add :add-name="name" add-type="set"
     />
-    <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
+    <div class="overflow-y-auto h-full rounded-sm overflow-x-hidden mt-4">
       <Value
         v-for="(item, i) in value"
         :key="i"

@@ -71,7 +71,7 @@ watch(() => serversStore.hasServers, connectToFirst)
     <select
       id="server"
       v-tooltip="'Choose redis server'"
-      class="ml-2 bg-gray-300 dark:bg-gray-700 rounded p-1"
+      class="ml-2 bg-gray-300 dark:bg-gray-700 rounded-sm p-1"
       :title="connectionMessage"
       @change="connect"
     >

@@ -46,14 +46,16 @@ const save = async () => {
 <template>
   <AppModal title="Settings" @close="emit('close')">
     <table>
-      <tr v-tooltip="'Applies to key list on the left and key items. However, if key contains not too many items, redis might return more then this, since it is more efficient.'">
-        <th><label for="items-per-page" class="font-semibold mr-2">Items per page</label></th>
-        <td><input id="items-per-page" v-model="itemsPerPage" type="number" step="1" min="1" /></td>
-      </tr>
-      <tr v-tooltip="'Key containing this symbol will be split into nested folders for easier management.'">
-        <th><label for="namespace-separator" class="font-semibold mr-2">Namespace separator</label></th>
-        <td><input id="namespace-separator" v-model="namespaceSeparator" type="text" min="1" /></td>
-      </tr>
+      <tbody>
+        <tr v-tooltip="'Applies to key list on the left and key items. However, if key contains not too many items, redis might return more then this, since it is more efficient.'">
+          <th><label for="items-per-page" class="font-semibold mr-2">Items per page</label></th>
+          <td><input id="items-per-page" v-model="itemsPerPage" type="number" step="1" min="1" /></td>
+        </tr>
+        <tr v-tooltip="'Key containing this symbol will be split into nested folders for easier management.'">
+          <th><label for="namespace-separator" class="font-semibold mr-2">Namespace separator</label></th>
+          <td><input id="namespace-separator" v-model="namespaceSeparator" type="text" min="1" /></td>
+        </tr>
+      </tbody>
     </table>
     <div class="flex justify-end space-x-4">
       <Button @click="emit('close')">
@@ -67,6 +69,8 @@ const save = async () => {
 </template>
 
 <style scoped>
+@reference "../../../assets/index.css";
+
 table th {
   width: 33.3%;
   text-align: right;

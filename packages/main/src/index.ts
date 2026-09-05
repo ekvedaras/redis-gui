@@ -1,5 +1,5 @@
-import type {MenuItem} from 'electron'
-import {app, BrowserWindow, ipcMain, Menu} from 'electron'
+import {app, Menu} from 'electron'
+import {setupTitlebar} from 'custom-electron-titlebar/main'
 import menu from '/@/menu'
 import './security-restrictions'
 import {restoreOrCreateWindow} from '/@/mainWindow'
@@ -14,6 +14,8 @@ if (!isSingleInstance) {
   process.exit(0);
 }
 app.on('second-instance', restoreOrCreateWindow);
+
+setupTitlebar();
 
 
 /**
@@ -50,7 +52,7 @@ app.whenReady()
 if (import.meta.env.DEV) {
   app.whenReady()
     .then(() => import('electron-devtools-installer'))
-    .then(({default: installExtension, VUEJS3_DEVTOOLS}) => installExtension(VUEJS3_DEVTOOLS, {
+    .then(({default: installExtension, VUEJS_DEVTOOLS}) => installExtension(VUEJS_DEVTOOLS, {
       loadExtensionOptions: {
         allowFileAccess: true,
       },
@@ -67,45 +69,6 @@ if (import.meta.env.PROD) {
     .then(({autoUpdater}) => autoUpdater.checkForUpdatesAndNotify())
     .catch((e) => console.error('Failed check updates:', e));
 }
-
-ipcMain.handle('request-application-menu', function (event) {
-  const menu = Menu.getApplicationMenu();
-  const jsonMenu = JSON.parse(JSON.stringify(menu, parseMenu()));
-  event.sender.send('titlebar-menu', jsonMenu);
-});
-
-ipcMain.on('menu-event', (event, commandId) => {
-  const menu = Menu.getApplicationMenu();
-  const item = getMenuItemByCommandId(commandId, menu);
-  item?.click(undefined, BrowserWindow.fromWebContents(event.sender), event.sender);
-});
-
-// Parse menu to send it to the title bar
-const parseMenu = () => {
-  const menu = new WeakSet();
-  return (key: string, value?: object) => {
-    if (key === 'commandsMap') return;
-    if (typeof value === 'object' && value !== null) {
-      if (menu.has(value)) return;
-      menu.add(value);
-    }
-    return value;
-  };
-}
-
-// Gets the menu item on click
-const getMenuItemByCommandId = (commandId: number, menu = Menu.getApplicationMenu()): MenuItem | null => {
-  let menuItem: MenuItem | undefined;
-  menu?.items.forEach(item => {
-    if (item.submenu) {
-      const submenuItem = getMenuItemByCommandId(commandId, item.submenu);
-      if (submenuItem) menuItem = submenuItem;
-    }
-    if (item.commandId === commandId) menuItem = item;
-  });
-
-  return menuItem || null;
-};
 
 app.whenReady()
   .then(() => {

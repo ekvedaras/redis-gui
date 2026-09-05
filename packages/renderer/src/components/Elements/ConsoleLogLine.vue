@@ -11,7 +11,6 @@ import RefreshIcon from '/@/components/Icons/RefreshIcon.vue'
 import DocumentIcon from '/@/components/Icons/DocumentIcon.vue'
 import CodeIcon from '/@/components/Icons/CodeIcon.vue'
 import WordBreakIcon from '/@/components/Icons/WordBreakIcon.vue'
-import useClipboard from 'vue-clipboard3'
 
 const props = defineProps<{
   log: ConsoleLog,
@@ -30,16 +29,15 @@ const breakWords = ref(false)
 const asJson = ref(shouldAttemptJson.value && isJSON.value)
 
 const toaster = useToaster()
-const {toClipboard} = useClipboard()
 const copy = async () => {
-  await toClipboard(String(props.log.content))
+  await navigator.clipboard.writeText(String(props.log.content))
   toaster.info('Copied')
 }
 </script>
 
 <template>
-  <div class="overflow-x-auto relative" :class="{'text-redis': log.isError, 'sent-command rounded-t border-b z-30 border-gray-200 dark:border-gray-800 mb-2 -mx-4 font-bold sticky py-2 px-4 top-0 shadow-sm bg-white dark:bg-black': log.wasSent}">
-    <div class="absolute z-20 top-0 right-0 bg-white-80p dark:bg-black-50p rounded flex space-x-2 items-center" :class="{'mt-2 mr-2': log.wasSent}">
+  <div class="overflow-x-auto relative" :class="{'text-redis': log.isError, 'sent-command rounded-t border-b z-30 border-gray-200 dark:border-gray-800 mb-2 -mx-4 font-bold sticky py-2 px-4 top-0 shadow-xs bg-white dark:bg-black': log.wasSent}">
+    <div class="absolute z-20 top-0 right-0 bg-white-80p dark:bg-black-50p rounded-sm flex space-x-2 items-center" :class="{'mt-2 mr-2': log.wasSent}">
       <IconButton v-if="!log.wasSent" @click="collapsed = !collapsed">
         <DownIcon v-if="collapsed" class="w-5" />
         <UpIcon v-else class="w-5" />
@@ -82,7 +80,7 @@ const copy = async () => {
         </div>
       </div>
     </div>
-    <div v-if="collapsed" class="inline cursor-pointer leading-none collapse-indicator rounded text-gray-500 dark:text-gray-600 bg-gray-200 dark:bg-gray-900 px-2" @click="collapsed = false">
+    <div v-if="collapsed" class="inline cursor-pointer leading-none collapse-indicator rounded-sm text-gray-500 dark:text-gray-600 bg-gray-200 dark:bg-gray-900 px-2" @click="collapsed = false">
       •••
     </div>
   </div>

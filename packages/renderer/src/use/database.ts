@@ -1,7 +1,7 @@
-import {LocalStorage, LowSync} from 'lowdb'
+import {LocalStoragePreset} from 'lowdb/browser'
 import type {DatabaseSettings} from '../../types/database'
 
-const defaultDatabase: DatabaseSettings = {
+const database = LocalStoragePreset<DatabaseSettings>('redis-gui', {
   servers: {},
   history: {},
   settings: {
@@ -9,22 +9,8 @@ const defaultDatabase: DatabaseSettings = {
     namespaceSeparator: ':',
     leftPaneSize: '25%',
   },
-}
+})
 
-const database = new LowSync<DatabaseSettings>(
-  new LocalStorage<DatabaseSettings>('redis-gui'),
-)
-
-await database.read()
-
-database.data ||= defaultDatabase
-
-await database.write()
-
-type DB = Omit<LowSync, 'data'> & {
-  data: DatabaseSettings,
-}
-
-export function useDatabase(): DB {
-  return database as DB
+export function useDatabase() {
+  return database
 }

@@ -318,18 +318,12 @@ function getChangeLog (groups) {
   return changelog.trim()
 }
 
-function escapeData (s) {
-  return String(s)
-    .replace(/%/g, '%25')
-    .replace(/\r/g, '%0D')
-    .replace(/\n/g, '%0A')
-}
-
 try {
   const commits = getCommits()
   const grouped = getGroupedCommits(commits)
   const changelog = getChangeLog(grouped)
-  process.stdout.write('::set-output name=release-note::' + escapeData(changelog) + '\r\n')
+  const delimiter = `EOF_${require('crypto').randomUUID()}`
+  require('fs').appendFileSync(process.env.GITHUB_OUTPUT, `release-note<<${delimiter}\n${changelog}\n${delimiter}\n`)
 // require('fs').writeFileSync('../CHANGELOG.md', changelog, {encoding: 'utf-8'})
 } catch (e) {
   console.error(e)

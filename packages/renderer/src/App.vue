@@ -2,19 +2,20 @@
 import { onUnmounted } from 'vue'
 import { useRedis } from '/@/use/redis'
 import { useDatabase } from '/@/use/database'
-import type { SplitpaneIndexedType } from 'splitpanes'
+import type { SplitpanesResizePayload } from 'splitpanes'
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import Header from '/@/components/Elements/Header.vue'
 import KeysSidebar from '/@/components/Elements/KeysSidebar.vue'
 import KeyContent from '/@/components/Elements/KeyContent.vue'
+import Toaster from '/@/components/Elements/Toaster.vue'
 import { useServersStore } from '/@/store/servers'
 
 const redis = useRedis()
 const database = useDatabase()
 const serversStore = useServersStore()
 
-const saveLayout = (panes: SplitpaneIndexedType) => {
+const saveLayout = ({ panes }: SplitpanesResizePayload) => {
   database.data.settings.leftPaneSize = `${ panes[0].size }%`
   database.write()
 }
@@ -46,9 +47,12 @@ onUnmounted(() => redis.disconnect())
       />
     </Pane>
   </Splitpanes>
+  <Toaster />
 </template>
 
 <style>
+@reference "../assets/index.css";
+
 .splitpanes.default-theme .splitpanes__pane {
   @apply bg-gray-100 dark:bg-gray-900
 }

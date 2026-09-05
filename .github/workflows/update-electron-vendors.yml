@@ -22,20 +22,20 @@ jobs :
     runs-on : ubuntu-latest
 
     steps :
-      - uses : actions/checkout@v2
-      - uses : actions/setup-node@v2
+      - uses : actions/checkout@v5
+      - uses : actions/setup-node@v5
         with :
-          node-version : 16 # Need for npm >=7.7
+          node-version : 24
           cache : 'yarn'
 
       # TODO: Install not all dependencies, but only those required for this workflow
       - name : Install dependencies
-        run : yarn install
+        run : yarn install --frozen-lockfile
 
       - run : node ./scripts/update-electron-vendors.js
 
       - name : Create Pull Request
-        uses : peter-evans/create-pull-request@v3
+        uses : peter-evans/create-pull-request@v8
         with :
           delete-branch : true
           commit-message : Update electron vendors

@@ -56,7 +56,7 @@ const overlayIcon = computed(() => {
     <component
       :is="overlayIcon"
       v-if="overlayIcon"
-      class="w-4 h-4 rounded bg-white dark:bg-gray-800 shadow mr-1 -ml-1 -mb-2"
+      class="w-4 h-4 rounded-sm bg-white dark:bg-gray-800 shadow-sm mr-1 -ml-1 -mb-2"
     />
   </div>
 </template>

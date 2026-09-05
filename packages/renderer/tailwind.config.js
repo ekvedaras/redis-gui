@@ -1,16 +1,7 @@
-// eslint-disable-next-line no-undef
 module.exports = {
   content: [
     './index.html',
     './src/**/*.{vue,ts}',
-  ],
-  safelist: [
-    'c-toast',
-    'c-toast--default',
-    'c-toast--success',
-    'c-toast--info',
-    'c-toast--error',
-    'c-toast--warning',
   ],
   theme: {
     extend: {

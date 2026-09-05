@@ -58,7 +58,7 @@ const deleteItem = (item: string) => {
       :show-spinner="isLoading"
       with-add :add-name="name" add-type="zset"
     />
-    <div class="overflow-y-auto h-full rounded mt-4">
+    <div class="overflow-y-auto h-full rounded-sm mt-4">
       <Value
         v-for="item in value"
         :key="item.value"

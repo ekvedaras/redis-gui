@@ -8,6 +8,7 @@ import KeyspaceInfo from '/@/components/Elements/KeyspaceInfo.vue'
 import AppModal from '/@/components/Elements/AppModal.vue'
 import { markRaw, onBeforeMount, ref } from 'vue'
 import { useRedis } from '/@/use/redis'
+import { useShortcut } from '/@/use/shortcut'
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -83,6 +84,8 @@ const fetch = async () => {
 }
 
 onBeforeMount(fetch)
+
+useShortcut(['r'], fetch)
 </script>
 
 <template>
@@ -93,7 +96,7 @@ onBeforeMount(fetch)
     @close="emit('close')"
   >
     <template #header>
-      <IconButton v-tooltip.bottom="'Refresh'" v-shortkey="['r']" @click="fetch" @shortkey="fetch">
+      <IconButton v-tooltip.bottom="'Refresh'" @click="fetch">
         <RefreshIcon class="w-8" />
       </IconButton>
     </template>

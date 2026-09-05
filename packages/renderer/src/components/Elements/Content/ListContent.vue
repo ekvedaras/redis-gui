@@ -64,7 +64,7 @@ const deleteItem = (index: number) => {
       :show-spinner="isLoading"
       with-add :add-name="name" add-type="list"
     />
-    <div class="overflow-y-auto h-full rounded overflow-x-hidden mt-4">
+    <div class="overflow-y-auto h-full rounded-sm overflow-x-hidden mt-4">
       <Value
         v-for="(item, i) in filtered"
         :key="i"

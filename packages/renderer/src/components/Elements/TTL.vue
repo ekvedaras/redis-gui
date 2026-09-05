@@ -5,6 +5,7 @@ import { useKeysStore } from '/@/store/keys'
 import { useRedis } from '/@/use/redis'
 import TimeIcon from '/@/components/Icons/TimeIcon.vue'
 import { useTime } from '/@/use/time'
+import { useShortcut } from '/@/use/shortcut'
 
 const props = defineProps<{
   redisKey: Key,
@@ -27,6 +28,8 @@ const startEditing = () => {
   newTtl.value = seconds.value
   nextTick(() => ttlField.value?.focus())
 }
+
+useShortcut(['t'], startEditing)
 
 const edit = async (save: boolean) => {
   if (save && isEditing.value && newTtl.value !== props.redisKey.ttl) {
@@ -59,11 +62,9 @@ const edit = async (save: boolean) => {
     <div
       ref="ttlText"
       v-tooltip="{ content: 'Set TTL (Time To Live) in seconds. Use <code><b>-1</b></code> to disable.', html: true}"
-      v-shortkey="['t']"
       tabindex="0"
-      class="flex cursor-pointer rounded text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
+      class="flex cursor-pointer rounded-sm text-gray-500 hover:bg-red-200 focus:bg-red-200 hover:text-redis dark:hover:bg-redis-700 dark:focus:bg-redis-700 dark:hover:text-redis-300 focus:text-redis"
       :class="{'text-gray-500': redisKey.ttl < 1}"
-      @shortkey="startEditing"
       @keydown.enter="startEditing"
       @click="startEditing"
     >

@@ -67,7 +67,7 @@ const toggleNamespaceSelection = (namespace: string) => {
 <template>
   <div>
     <div
-      class="flex items-center cursor-pointer rounded hover:bg-gray-200 dark:hover:bg-white-10p px-2"
+      class="flex items-center cursor-pointer rounded-sm hover:bg-gray-200 dark:hover:bg-white-10p px-2"
       tabindex="1"
       @keypress.enter="toggle"
       @click="toggle"
@@ -86,7 +86,7 @@ const toggleNamespaceSelection = (namespace: string) => {
         <component
           :is="overlayIcon"
           v-if="overlayIcon"
-          class="w-4 h-4 rounded bg-white dark:bg-gray-800 shadow mr-1 -ml-2 mt-2"
+          class="w-4 h-4 rounded-sm bg-white dark:bg-gray-800 shadow-sm mr-1 -ml-2 mt-2"
         />
       </div>
       <div class="ml-2">

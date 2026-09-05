@@ -24,7 +24,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-800 font-mono rounded shadow p-3 flex flex-col overflow-y-auto justify-center min-h-16">
+  <div class="bg-white dark:bg-gray-800 font-mono rounded-sm shadow-sm p-3 flex flex-col overflow-y-auto justify-center min-h-16">
     <div v-if="!withoutControls" class="sticky right-0 text-right flex justify-end z-10 h-5" :class="[withKeys ? 'controls' : 'top-0']">
       <KeyItemControls
         without-word-break

@@ -1,11 +1,10 @@
-/* eslint-env node */
 
-import { chrome } from '../../.electron-vendors.cache.json'
+import { chrome } from '../../.electron-vendors.cache.json' with { type: 'json' }
 import { join } from 'path'
 import { builtinModules } from 'module'
 import vue from '@vitejs/plugin-vue'
 
-const PACKAGE_ROOT = __dirname
+const PACKAGE_ROOT = import.meta.dirname
 const _builtinModules = [...builtinModules]
 _builtinModules.splice(_builtinModules.indexOf('fs'), 1)
 _builtinModules.splice(_builtinModules.indexOf('path'), 1)
@@ -42,7 +41,7 @@ const config = {
       ],
     },
     emptyOutDir: true,
-    brotliSize: false,
+    reportCompressedSize: false,
   },
   test: {
     environment: 'happy-dom',
