@@ -6,14 +6,6 @@ A graphical UI for managing Redis databases.
 
 <img src="packages/renderer/assets/redis.svg" width="192" height="192"/>
 
----
-
-# ℹ️ Looking for maintainers ℹ️
-
-Especially if you have access to Windows and Linux 🙂
-
----
-
 ## Main features
 
 * SSH tunneling
