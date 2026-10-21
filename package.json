@@ -57,7 +57,7 @@
     "typescript": "npm:@typescript/typescript6@6.0.2",
     "typescript-eslint": "8.69.0",
     "typescript7": "npm:typescript@7.0.2",
-    "vite": "8.2.2",
+    "vite": "8.2.4",
     "vitest": "5.0.0",
     "vue-eslint-parser": "10.4.1",
     "vue-tsc": "3.3.11"
