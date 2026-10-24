@@ -42,7 +42,7 @@
     "@vue/devtools-api": "8.2.1",
     "@vue/test-utils": "2.5.0",
     "cross-env": "10.1.0",
-    "electron": "44.2.0",
+    "electron": "44.9.1",
     "electron-builder": "26.15.3",
     "electron-devtools-installer": "4.0.0",
     "eslint": "10.10.0",
